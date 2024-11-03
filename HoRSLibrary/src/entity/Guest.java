@@ -5,46 +5,118 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.OneToMany;
 
 /**
  *
  * @author kevinlim
  */
 @Entity
-public class Guest implements Serializable {
+@Inheritance(strategy=InheritanceType.JOINED)
+public class Guest extends Visitor implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long guestID;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String phoneNumber;
+    private String passportNumber;
+    
+    @OneToMany(mappedBy = "guest")
+    private List<Reservation> reservations = new ArrayList<Reservation>();
 
-    public Long getId() {
-        return id;
+    public Guest(String firstName, String lastName, String email, String phoneNumber, String passportNumber) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.passportNumber = passportNumber;
+    }
+    
+
+    public Long getGuestID() {
+        return guestID;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setGuestID(Long guestID) {
+        this.guestID = guestID;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getPassportNumber() {
+        return passportNumber;
+    }
+
+    public void setPassportNumber(String passportNumber) {
+        this.passportNumber = passportNumber;
+    }
+
+    public Reservation getReservation() {
+        return reservation;
+    }
+
+    public void setReservation(Reservation reservation) {
+        this.reservation = reservation;
+    }
+
+  
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += (guestID != null ? guestID.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        // TODO: Warning - this method won't work in the case the guestID fields are not set
         if (!(object instanceof Guest)) {
             return false;
         }
         Guest other = (Guest) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.guestID == null && other.guestID != null) || (this.guestID != null && !this.guestID.equals(other.guestID))) {
             return false;
         }
         return true;
@@ -52,7 +124,7 @@ public class Guest implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.Guest[ id=" + id + " ]";
+        return "entity.Guest[ id=" + guestID + " ]";
     }
     
 }
