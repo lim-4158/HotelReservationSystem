@@ -9,5 +9,7 @@ package util;
  * @author kevinlim
  */
 public enum ReservationTypeEnum {
-    
+    WALKIN,
+    ONLINE,
+    PARTNER
 }

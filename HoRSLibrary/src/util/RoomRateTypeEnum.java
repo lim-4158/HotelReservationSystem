@@ -9,5 +9,8 @@ package util;
  * @author kevinlim
  */
 public enum RoomRateTypeEnum {
-    
+    PUBLISHED,
+    NORMAL,
+    PEAK,
+    PROMOTION
 }

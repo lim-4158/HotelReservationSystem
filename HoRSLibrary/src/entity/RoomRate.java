@@ -20,31 +20,31 @@ public class RoomRate implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long roomRateID;
 
-    public Long getId() {
-        return id;
+    public Long getRoomRateID() {
+        return roomRateID;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setRoomRateID(Long roomRateID) {
+        this.roomRateID = roomRateID;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += (roomRateID != null ? roomRateID.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        // TODO: Warning - this method won't work in the case the roomRateID fields are not set
         if (!(object instanceof RoomRate)) {
             return false;
         }
         RoomRate other = (RoomRate) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.roomRateID == null && other.roomRateID != null) || (this.roomRateID != null && !this.roomRateID.equals(other.roomRateID))) {
             return false;
         }
         return true;
@@ -52,7 +52,7 @@ public class RoomRate implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.RoomRate[ id=" + id + " ]";
+        return "entity.RoomRate[ id=" + roomRateID + " ]";
     }
     
 }

@@ -9,5 +9,8 @@ package util;
  * @author kevinlim
  */
 public enum EmployeeRoleEnum {
-    
+    GUESTRELATIONOFFIER,
+    SALESMANAGER,
+    OPERATIONSMANAGER,
+    SYSTEMADMIN
 }

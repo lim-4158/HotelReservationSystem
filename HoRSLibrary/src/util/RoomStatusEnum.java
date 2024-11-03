@@ -9,5 +9,7 @@ package util;
  * @author kevinlim
  */
 public enum RoomStatusEnum {
-    
+    AVAILABLE,
+    UNAVAILABLE, 
+    DISABLED
 }
