@@ -20,7 +20,6 @@ import javax.persistence.OneToMany;
  * @author kevinlim
  */
 @Entity
-@Inheritance(strategy=InheritanceType.JOINED)
 public class Guest extends Visitor implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -93,12 +92,8 @@ public class Guest extends Visitor implements Serializable {
         this.passportNumber = passportNumber;
     }
 
-    public Reservation getReservation() {
-        return reservation;
-    }
-
-    public void setReservation(Reservation reservation) {
-        this.reservation = reservation;
+    public List<Reservation> getReservation() {
+        return reservations;
     }
 
   
