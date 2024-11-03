@@ -5,10 +5,13 @@
 package entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import util.RoomRateTypeEnum;
 
 /**
  *
@@ -19,8 +22,14 @@ public class RoomRate implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomRateID;
+    private String roomRateName;
+    private String roomType;
+    private RoomRateTypeEnum rateType;
+    private BigDecimal nightlyRateAmount; 
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     public Long getRoomRateID() {
         return roomRateID;
@@ -53,6 +62,90 @@ public class RoomRate implements Serializable {
     @Override
     public String toString() {
         return "entity.RoomRate[ id=" + roomRateID + " ]";
+    }
+
+    /**
+     * @return the roomRateName
+     */
+    public String getRoomRateName() {
+        return roomRateName;
+    }
+
+    /**
+     * @param roomRateName the roomRateName to set
+     */
+    public void setRoomRateName(String roomRateName) {
+        this.roomRateName = roomRateName;
+    }
+
+    /**
+     * @return the roomType
+     */
+    public String getRoomType() {
+        return roomType;
+    }
+
+    /**
+     * @param roomType the roomType to set
+     */
+    public void setRoomType(String roomType) {
+        this.roomType = roomType;
+    }
+
+    /**
+     * @return the rateType
+     */
+    public RoomRateTypeEnum getRateType() {
+        return rateType;
+    }
+
+    /**
+     * @param rateType the rateType to set
+     */
+    public void setRateType(RoomRateTypeEnum rateType) {
+        this.rateType = rateType;
+    }
+
+    /**
+     * @return the nightlyRateAmount
+     */
+    public BigDecimal getNightlyRateAmount() {
+        return nightlyRateAmount;
+    }
+
+    /**
+     * @param nightlyRateAmount the nightlyRateAmount to set
+     */
+    public void setNightlyRateAmount(BigDecimal nightlyRateAmount) {
+        this.nightlyRateAmount = nightlyRateAmount;
+    }
+
+    /**
+     * @return the startDate
+     */
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    /**
+     * @param startDate the startDate to set
+     */
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    /**
+     * @return the endDate
+     */
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    /**
+     * @param endDate the endDate to set
+     */
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
     }
     
 }
