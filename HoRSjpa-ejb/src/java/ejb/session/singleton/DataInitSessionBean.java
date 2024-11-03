@@ -117,10 +117,11 @@ public class DataInitSessionBean {
 
         // Log initialization
         System.out.println("Database initialized with sample data.");
+        
+        // VERY IMPT: A default system administrator account should be created as
+        // part of data initialisation
+    
     }
     
-    
-
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+   
 }
