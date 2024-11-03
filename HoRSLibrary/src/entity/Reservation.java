@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import util.ReservationTypeEnum;
 
@@ -32,13 +33,14 @@ public class Reservation implements Serializable {
     private BigDecimal totalAmount;
     private ReservationTypeEnum reservationType;
     
-    @Column(nullable = true)
     @ManyToOne
     private Guest guest;
     
-    @Column(nullable = true)
     @ManyToOne
     private Partner partner;
+    
+    @ManyToOne
+    private RoomType roomType;
 
     public Reservation() {
     }
@@ -106,6 +108,24 @@ public class Reservation implements Serializable {
     public void setGuest(Guest guest) {
         this.guest = guest;
     }
+
+    public Partner getPartner() {
+        return partner;
+    }
+
+    public void setPartner(Partner partner) {
+        this.partner = partner;
+    }
+
+    public RoomType getRoomType() {
+        return roomType;
+    }
+
+    public void setRoomType(RoomType roomType) {
+        this.roomType = roomType;
+    }
+    
+    
 
     @Override
     public int hashCode() {

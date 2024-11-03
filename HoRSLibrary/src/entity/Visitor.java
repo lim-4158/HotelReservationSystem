@@ -14,7 +14,6 @@ import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public class Visitor {
-    @Id
     protected Long id;
     
     

@@ -26,23 +26,47 @@ public class Guest extends Visitor implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long guestID;
+    
     private String firstName;
     private String lastName;
     private String email;
     private String phoneNumber;
     private String passportNumber;
+    private String username;
+    private String password;
     
     @OneToMany(mappedBy = "guest")
     private List<Reservation> reservations = new ArrayList<Reservation>();
 
-    public Guest(String firstName, String lastName, String email, String phoneNumber, String passportNumber) {
+    public Guest(String firstName, String lastName, String email, String phoneNumber, String passportNumber, String username, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.passportNumber = passportNumber;
+        this.username = username;
+        this.password = password;
     }
-    
+
+    public Guest() {
+        
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public Long getGuestID() {
         return guestID;
