@@ -4,6 +4,7 @@
  */
 package ejb.session.stateless;
 
+import entity.RoomType;
 import javax.ejb.Stateless;
 
 /**
@@ -12,6 +13,16 @@ import javax.ejb.Stateless;
  */
 @Stateless
 public class OperationManagerSessionBean implements OperationManagerSessionBeanRemote, OperationManagerSessionBeanLocal {
+
+    @Override
+    public Long createNewRoomType(RoomType rt) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public RoomType viewRoomTypeDetails(String typeName) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")

@@ -6,6 +6,7 @@ package ejb.session.stateless;
 
 import entity.Employee;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,12 +20,13 @@ public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeS
 
     @PersistenceContext(unitName = "HoRSjpa-ejbPU")
     private EntityManager em;
-    
+    @EJB
+    private SystemAdminSessionBeanLocal systemAdminSessionBeanLocal;
     // USE CASE 1
     @Override
     public Employee employeeLogin(String username, String password) // throws EntityManagerException, InvalidLoginCredentialException
     {
-        List<Employee> employees = retrieveAllEmployees();
+        List<Employee> employees = systemAdminSessionBeanLocal.retrieveAllEmployees();
         
         for(Employee employee:employees)
         {
@@ -41,20 +43,5 @@ public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeS
     }
     
     
-    // USE CASE 4
-    @Override 
-    public List<Employee> retrieveAllEmployees() {
-        return em.createQuery("SELECT e FROM Employee e", Employee.class).getResultList();
-    }
-    
-    // USE CASE 3
-    @Override
-    public Long createNewEmployee(Employee newEmployee) // throws EntityManagerException 
-    {
-        em.persist(newEmployee);
-        em.flush();
-        
-        return newEmployee.getEmployeeID();
-    }
-    
+
 }

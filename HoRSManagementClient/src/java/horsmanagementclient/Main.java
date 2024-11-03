@@ -4,6 +4,13 @@
  */
 package horsmanagementclient;
 
+import ejb.session.stateless.EmployeeSessionBeanRemote;
+import ejb.session.stateless.GuestRelationOfficerSessionBeanRemote;
+import ejb.session.stateless.OperationManagerSessionBeanRemote;
+import ejb.session.stateless.SalesManagerSessionBeanRemote;
+import ejb.session.stateless.SystemAdminSessionBeanRemote;
+import javax.ejb.EJB;
+
 /**
  *
  * @author kevinlim
@@ -13,8 +20,23 @@ public class Main {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        // TODO code application logic here
-    }
+    @EJB 
+    private static EmployeeSessionBeanRemote employeeSessionBeanRemote; 
+    @EJB 
+    private static GuestRelationOfficerSessionBeanRemote guestRelationOfficerSessionBeanRemote;
+    @EJB 
+    private static OperationManagerSessionBeanRemote operationManagerSessionBeanRemote;
+    @EJB 
+    private static SalesManagerSessionBeanRemote salesManagerSessionBeanRemote;
+    @EJB 
+    private static SystemAdminSessionBeanRemote systemAdminSessionBeanRemote;
     
+
+    public static void main(String[] args)
+    {
+        MainApp mainApp = new MainApp(employeeSessionBeanRemote, guestRelationOfficerSessionBeanRemote, operationManagerSessionBeanRemote, salesManagerSessionBeanRemote, systemAdminSessionBeanRemote);
+        mainApp.runApp();   
+    }
 }
+    
+

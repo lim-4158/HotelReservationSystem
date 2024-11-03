@@ -39,6 +39,19 @@ public class RoomRate implements Serializable {
         this.roomRateID = roomRateID;
     }
 
+    public RoomRate() {
+        
+    }
+    
+    public RoomRate(String roomRateName, String roomType, RoomRateTypeEnum rateType, BigDecimal nightlyRateAmount, LocalDate startDate, LocalDate endDate) {
+        this.roomRateName = roomRateName;
+        this.roomType = roomType;
+        this.rateType = rateType;
+        this.nightlyRateAmount = nightlyRateAmount;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;

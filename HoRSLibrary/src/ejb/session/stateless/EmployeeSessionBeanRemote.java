@@ -17,8 +17,6 @@ public interface EmployeeSessionBeanRemote {
     
     public Employee employeeLogin(String username, String password);
 
-    public List<Employee> retrieveAllEmployees();
-    
-    public Long createNewEmployee(Employee newEmployee);
+
     
 }

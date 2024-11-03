@@ -91,7 +91,7 @@ public class DataInitSessionBean {
         Employee employee = new Employee();
         employee.setUsername("markjohnson");
         employee.setPassword("emp1234");
-        employee.setRole(EmployeeRoleEnum.SALESMANAGER);
+        employee.setRole(EmployeeRoleEnum.SYSTEMADMIN);
         em.persist(employee);
 //
 //        // Initialize Reservation

@@ -4,6 +4,8 @@
  */
 package ejb.session.stateless;
 
+import entity.Employee;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -12,5 +14,11 @@ import javax.ejb.Local;
  */
 @Local
 public interface SystemAdminSessionBeanLocal {
+    // USE CASE 4
+    public List<Employee> retrieveAllEmployees();
+    
+    // USE CASE 3
+    public Long createNewEmployee(Employee newEmployee); 
+   
     
 }
