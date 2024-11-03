@@ -4,7 +4,11 @@
  */
 package ejb.session.stateless;
 
+import entity.Employee;
+import java.util.List;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  *
@@ -13,6 +17,44 @@ import javax.ejb.Stateless;
 @Stateless
 public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeSessionBeanLocal {
 
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+    @PersistenceContext(unitName = "HoRSjpa-ejbPU")
+    private EntityManager em;
+    
+    // USE CASE 1
+    @Override
+    public Employee employeeLogin(String username, String password) // throws EntityManagerException, InvalidLoginCredentialException
+    {
+        List<Employee> employees = retrieveAllEmployees();
+        
+        for(Employee employee:employees)
+        {
+            if(employee.getUsername().equals(username) && employee.getPassword().equals(password))
+            {
+                return employee;
+            }
+        }
+        // PLACEHOLDER CODE
+        
+        return new Employee();
+        
+        // throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
+    }
+    
+    
+    // USE CASE 4
+    @Override 
+    public List<Employee> retrieveAllEmployees() {
+        return em.createQuery("SELECT e FROM Employee e", Employee.class).getResultList();
+    }
+    
+    // USE CASE 3
+    @Override
+    public Long createNewEmployee(Employee newEmployee) // throws EntityManagerException 
+    {
+        em.persist(newEmployee);
+        em.flush();
+        
+        return newEmployee.getEmployeeID();
+    }
+    
 }

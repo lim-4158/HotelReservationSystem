@@ -4,6 +4,8 @@
  */
 package ejb.session.stateless;
 
+import entity.Employee;
+import java.util.List;
 import javax.ejb.Remote;
 
 /**
@@ -12,5 +14,11 @@ import javax.ejb.Remote;
  */
 @Remote
 public interface EmployeeSessionBeanRemote {
+    
+    public Employee employeeLogin(String username, String password);
+
+    public List<Employee> retrieveAllEmployees();
+    
+    public Long createNewEmployee(Employee newEmployee);
     
 }
