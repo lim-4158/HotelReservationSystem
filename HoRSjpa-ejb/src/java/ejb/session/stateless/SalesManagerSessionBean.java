@@ -31,33 +31,43 @@ public class SalesManagerSessionBean implements SalesManagerSessionBeanRemote, S
         return roomRate.getRoomRateID();
     }
     
-    public void updateRateName(String rateName, String roomType, String rateType, String newRateName) {
+    public void updateRateName(String rateName, String newRateName) {
+        RoomRate rate = retrieveRoomRateByName(rateName);
+        rate.setRoomRateName(newRateName);
+        em.merge(rate);
     
     }
     
-    public void updateRoomType(String rateName, String roomType, String rateType, String newRoomType) {
+    public void updateRoomType(String rateName, String newRoomType) {
+        RoomRate rate = retrieveRoomRateByName(rateName);
+        rate.setRoomType(newRoomType);
+        em.merge(rate);
     
     }
     
-    public void updateRateType(String rateName, String roomType, String rateType, RoomRateTypeEnum rateTypeEnum) {
-    
+    public void updateRateType(String rateName, RoomRateTypeEnum rateTypeEnum) {
+        RoomRate rate = retrieveRoomRateByName(rateName);
+        rate.setRateType(rateTypeEnum);
+        em.merge(rate);
     }
     
-    public void updateRateAmount(String rateName, String roomType, String rateType, BigDecimal newAmount) {
-    
+    public void updateRateAmount(String rateName, BigDecimal newAmount) {
+        RoomRate rate = retrieveRoomRateByName(rateName);
+        rate.setNightlyRateAmount(newAmount);
+        em.merge(rate);
     }
     
-    public void updateStartDate(String rateName, String roomType, String rateType, LocalDate newDate) {
-    
+    public void updateStartDate(String rateName, LocalDate newDate) {
+        RoomRate rate = retrieveRoomRateByName(rateName);
+        rate.setStartDate(newDate);
+        em.merge(rate);
     }
     
-    public void updateEndDate(String rateName, String roomType, String rateType, LocalDate newDate) {
-    
-    }
-    
-    
-    
-    
+    public void updateEndDate(String rateName, LocalDate newDate) {
+        RoomRate rate = retrieveRoomRateByName(rateName);
+        rate.setEndDate(newDate);
+        em.merge(rate);
+    }  
     
     public void deleteRoomRate(String rateName) {
         RoomRate rate = retrieveRoomRateByName(rateName);
@@ -76,10 +86,9 @@ public class SalesManagerSessionBean implements SalesManagerSessionBeanRemote, S
     
     
     public RoomRate retrieveRoomRateByName(String rateName) {
-        Query q = em.createQuery("SELECT r FROM RoomRate r WHERE r.rateName = :rateName ");
+        Query q = em.createQuery("SELECT r FROM RoomRate r WHERE r.roomRateName = :rateName ");
         q.setParameter("rateName", rateName);
  
-
         return (RoomRate) q.getSingleResult();
     }
     

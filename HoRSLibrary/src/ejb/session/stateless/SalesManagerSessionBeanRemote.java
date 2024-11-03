@@ -20,17 +20,17 @@ public interface SalesManagerSessionBeanRemote {
     
     public Long createNewRoomRate(RoomRate roomRate);
 
-    public void updateRateName(String rateName, String roomType, String rateType, String newRateName);
+    public void updateRateName(String rateName, String newRateName);
 
-    public void updateRoomType(String rateName, String roomType, String rateType, String newRoomType);
+    public void updateRoomType(String rateName, String newRoomType);
 
-    public void updateRateType(String rateName, String roomType, String rateType, RoomRateTypeEnum rateTypeEnum);
+    public void updateRateType(String rateName, RoomRateTypeEnum rateTypeEnum);
 
-    public void updateRateAmount(String rateName, String roomType, String rateType, BigDecimal newAmount);
+    public void updateRateAmount(String rateName, BigDecimal newAmount);
 
-    public void updateStartDate(String rateName, String roomType, String rateType, LocalDate newDate);
+    public void updateStartDate(String rateName, LocalDate newDate);
 
-    public void updateEndDate(String rateName, String roomType, String rateType, LocalDate newDate);
+    public void updateEndDate(String rateName, LocalDate newDate);
 
     public void deleteRoomRate(String rateName);
 
