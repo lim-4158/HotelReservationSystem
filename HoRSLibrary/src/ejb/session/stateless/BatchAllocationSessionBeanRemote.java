@@ -4,6 +4,10 @@
  */
 package ejb.session.stateless;
 
+import entity.Reservation;
+import entity.Room;
+import java.time.LocalDate;
+import java.util.List;
 import javax.ejb.Remote;
 
 /**
@@ -12,5 +16,5 @@ import javax.ejb.Remote;
  */
 @Remote
 public interface BatchAllocationSessionBeanRemote {
-    
+    public void allocateRooms(LocalDate date, List<Reservation> reservations, List<Room> rooms); 
 }

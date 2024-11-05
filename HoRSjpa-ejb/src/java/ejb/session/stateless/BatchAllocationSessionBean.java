@@ -4,6 +4,10 @@
  */
 package ejb.session.stateless;
 
+import entity.Reservation;
+import entity.Room;
+import java.time.LocalDate;
+import java.util.List;
 import javax.ejb.Stateless;
 
 /**
@@ -12,6 +16,11 @@ import javax.ejb.Stateless;
  */
 @Stateless
 public class BatchAllocationSessionBean implements BatchAllocationSessionBeanRemote, BatchAllocationSessionBeanLocal {
+
+    @Override
+    public void allocateRooms(LocalDate date, List<Reservation> reservations, List<Room> rooms) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")

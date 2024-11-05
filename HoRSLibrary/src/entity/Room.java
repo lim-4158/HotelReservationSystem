@@ -5,10 +5,12 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import util.RoomStatusEnum;
 
 /**
@@ -25,7 +27,19 @@ public class Room implements Serializable {
     private String partnerName;
     private String roomNumber;
     private RoomStatusEnum roomStatus;
-    private Long roomTypeID;
+    @ManyToOne
+    private RoomType roomType;
+
+    public Room(){
+        
+    }
+    
+    public Room(String partnerName, String roomNumber, RoomStatusEnum roomStatus, RoomType roomType) {
+        this.partnerName = partnerName;
+        this.roomNumber = roomNumber;
+        this.roomStatus = roomStatus;
+        this.roomType = roomType;
+    }
 
     public Long getRoomID() {
         return roomID;
@@ -102,18 +116,5 @@ public class Room implements Serializable {
         this.roomStatus = roomStatus;
     }
 
-    /**
-     * @return the roomTypeID
-     */
-    public Long getRoomTypeID() {
-        return roomTypeID;
-    }
 
-    /**
-     * @param roomTypeID the roomTypeID to set
-     */
-    public void setRoomTypeID(Long roomTypeID) {
-        this.roomTypeID = roomTypeID;
-    }
-    
 }
