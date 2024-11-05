@@ -28,7 +28,7 @@ public class RoomReservation implements Serializable {
     @ManyToOne
     private Reservation reservation;
 
-    @OneToOne
+    @OneToOne (mappedBy = "roomReservation")
     private ExceptionReport exceptionReport;
     
 

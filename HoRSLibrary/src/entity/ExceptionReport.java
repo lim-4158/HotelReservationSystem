@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import util.ExceptionReportTypeEnum;
 
 /**
@@ -23,10 +24,37 @@ public class ExceptionReport implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reportID;
-    private Long roomReservationID;
+    private Long reservationID;
+    
+    @OneToOne 
+    private RoomReservation roomReservation;
+    
     private ExceptionReportTypeEnum reportType;
     private LocalDate creationDate;
-    
+
+    public ExceptionReport() {
+    }
+
+    public ExceptionReport(RoomReservation roomReservation, ExceptionReportTypeEnum reportType, LocalDate creationDate, Long reservationID) {
+        this.roomReservation = roomReservation;
+        this.reportType = reportType;
+        this.creationDate = creationDate;
+        this.reservationID = reservationID;
+    }
+
+    public ExceptionReport(ExceptionReportTypeEnum reportType, LocalDate creationDate, Long reservationID) {
+        this.reportType = reportType;
+        this.creationDate = creationDate;
+        this.reservationID = reservationID;
+    }
+
+    public Long getReservationID() {
+        return reservationID;
+    }
+
+    public void setReservationID(Long reservationID) {
+        this.reservationID = reservationID;
+    }
 
     public Long getReportID() {
         return reportID;
