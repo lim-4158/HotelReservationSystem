@@ -6,10 +6,15 @@ package entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import util.RoomTypeStatusEnum;
 
 /**
@@ -32,14 +37,35 @@ public class RoomType implements Serializable {
     private RoomTypeStatusEnum roomTypeStatus;
     private Integer tierNumber;
     private Long inventory;
+    @OneToMany(mappedBy =  "roomType", fetch = FetchType.EAGER)
+    private List<Room> rooms = new ArrayList<Room>(); 
+    @OneToMany (mappedBy = "roomType", fetch = FetchType.EAGER)
+    private List<Reservation> reservations;
+    @ManyToOne
+    private RoomRate roomRate; 
 
+    public RoomType() {
+    }
+
+    public RoomType(String typeName, String description, BigDecimal size, String bed, Long capacity, String amenities, RoomTypeStatusEnum roomTypeStatus, Integer tierNumber, Long inventory) {
+        this.typeName = typeName;
+        this.description = description;
+        this.size = size;
+        this.bed = bed;
+        this.capacity = capacity;
+        this.amenities = amenities;
+        this.roomTypeStatus = roomTypeStatus;
+        this.tierNumber = tierNumber;
+        this.inventory = inventory;
+    }
+    
     public Long getRoomTypeID() {
         return roomTypeID;
     }
 
     public void setRoomTypeID(Long roomTypeID) {
         this.roomTypeID = roomTypeID;
-    }
+    }    
 
     @Override
     public int hashCode() {
@@ -190,6 +216,48 @@ public class RoomType implements Serializable {
      */
     public void setInventory(Long inventory) {
         this.inventory = inventory;
+    }
+
+    /**
+     * @return the rooms
+     */
+    public List<Room> getRooms() {
+        return rooms;
+    }
+
+    /**
+     * @param rooms the rooms to set
+     */
+    public void setRooms(List<Room> rooms) {
+        this.rooms = rooms;
+    }
+
+    /**
+     * @return the reservations
+     */
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    /**
+     * @param reservations the reservations to set
+     */
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
+
+    /**
+     * @return the roomRate
+     */
+    public RoomRate getRoomRate() {
+        return roomRate;
+    }
+
+    /**
+     * @param roomRate the roomRate to set
+     */
+    public void setRoomRate(RoomRate roomRate) {
+        this.roomRate = roomRate;
     }
     
 }
