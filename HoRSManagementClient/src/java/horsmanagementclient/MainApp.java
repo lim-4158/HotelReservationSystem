@@ -179,7 +179,7 @@ public class MainApp {
                 //delete
                 doDeleteRoomRate(); 
             } else if (response == 5) {
-                //view all
+                doViewAllRoomRates();
             
             }
         }
@@ -197,7 +197,8 @@ public class MainApp {
      
             System.out.println("1: Create new employee");
             System.out.println("2: Create new partner");
-            System.out.println("3: View all partners");
+            System.out.println("3 : View all employees");
+            System.out.println("4: View all partners");
             response = sc.nextInt(); 
             sc.nextLine(); 
             
@@ -222,6 +223,13 @@ public class MainApp {
                 systemAdminSessionBeanRemote.createNewPartner(partner); 
    
             } else if (response == 3) {
+                List<Employee> employees = systemAdminSessionBeanRemote.retrieveAllEmployees();
+                int count = 1; 
+                for (Employee e : employees) {                    
+                    System.out.println(count + ": " + e.getUsername());
+                    count++; 
+                }           
+            } else if (response == 4) {
                 List<Partner> partners = systemAdminSessionBeanRemote.retrieveAllPartners();
                 int count = 1; 
                 for (Partner p : partners) {                    
