@@ -41,8 +41,8 @@ public class RoomType implements Serializable {
     private List<Room> rooms = new ArrayList<Room>(); 
     @OneToMany (mappedBy = "roomType", fetch = FetchType.EAGER)
     private List<Reservation> reservations;
-    @ManyToOne
-    private RoomRate roomRate; 
+    @OneToMany(mappedBy = "roomType", fetch = FetchType.EAGER)
+    private List<RoomRate> roomRates; 
 
     public RoomType() {
     }
@@ -249,15 +249,15 @@ public class RoomType implements Serializable {
     /**
      * @return the roomRate
      */
-    public RoomRate getRoomRate() {
-        return roomRate;
+    public List<RoomRate> getRoomRates() {
+        return roomRates;
     }
 
     /**
      * @param roomRate the roomRate to set
      */
-    public void setRoomRate(RoomRate roomRate) {
-        this.roomRate = roomRate;
+    public void setRoomRates(List<RoomRate> roomRates) {
+        this.roomRates = roomRates;
     }
     
 }

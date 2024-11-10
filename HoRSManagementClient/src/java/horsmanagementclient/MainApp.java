@@ -12,6 +12,7 @@ import ejb.session.stateless.SystemAdminSessionBeanRemote;
 import entity.Employee;
 import entity.Partner;
 import entity.RoomRate;
+import entity.RoomType;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -115,8 +116,6 @@ public class MainApp {
                 // create new room rate
                 System.out.println("Enter Rate Name: ");
                 String rateName = sc.nextLine(); 
-                System.out.println("Enter Room Type: ");
-                String roomType = sc.nextLine(); 
                 System.out.println("Enter Rate type: ");
                 RoomRateTypeEnum rrtEnum = selectEnum(RoomRateTypeEnum.class); 
                 System.out.println("Enter nightly rate: ");
@@ -128,7 +127,7 @@ public class MainApp {
                 System.out.print("Enter end date (yyyy-MM-dd): ");
                 LocalDate endDate = getInputDate();      
                                 
-                RoomRate rate = new RoomRate(rateName, roomType, rrtEnum, nightlyRate, startDate, endDate);
+                RoomRate rate = new RoomRate(rateName, rrtEnum, nightlyRate, startDate, endDate);
                 salesManagerSessionBeanRemote.createNewRoomRate(rate); 
             
             } else if (response == 2) {
@@ -149,8 +148,8 @@ public class MainApp {
                     salesManagerSessionBeanRemote.updateRateName(rateName, newName);
 
                 } else if (choice == 2) {
-                    System.out.println("Enter new room type: ");
-                    String newRoomType = sc.nextLine(); 
+                    System.out.println("Select new room type: ");
+                    RoomType newRoomType = selectRoomType(); 
                     salesManagerSessionBeanRemote.updateRoomType(rateName, newRoomType);
 
                 } else if (choice == 3) {
@@ -316,8 +315,8 @@ public class MainApp {
             salesManagerSessionBeanRemote.updateRateName(rateName, newName);
             
         } else if (response == 2) {
-            System.out.println("Enter new room type: ");
-            String newRoomType = sc.nextLine(); 
+            System.out.println("Select new room type: ");
+            RoomType newRoomType = selectRoomType();
             salesManagerSessionBeanRemote.updateRoomType(rateName, newRoomType);
             
         } else if (response == 3) {
@@ -356,6 +355,30 @@ public class MainApp {
         }
     }
     
+    public RoomType selectRoomType() {
+        List<RoomType> roomTypes = salesManagerSessionBeanRemote.retrieveAllRoomTypes(); 
+        for (int i = 0; i < roomTypes.size(); i++) {
+            System.out.println((i + 1) + ". " + roomTypes.get(i).getTypeName()); // Display name or other relevant information
+        }
+
+        Scanner scanner = new Scanner(System.in);
+        int choice = -1;
+
+        while (choice < 1 || choice > roomTypes.size()) {
+            System.out.print("Please select a room type by entering the corresponding number: ");
+            while (!scanner.hasNextInt()) {
+                System.out.print("Invalid input. Please enter a number between 1 and " + roomTypes.size() + ": ");
+                scanner.next(); // Consume invalid input
+            }
+            choice = scanner.nextInt();
+
+            if (choice < 1 || choice > roomTypes.size()) {
+                System.out.println("Invalid choice. Please enter a number between 1 and " + roomTypes.size() + ".");
+            }
+        }
+
+        return roomTypes.get(choice - 1);
+    }    
 
     
 }

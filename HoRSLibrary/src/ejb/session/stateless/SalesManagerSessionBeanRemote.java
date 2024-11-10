@@ -5,6 +5,7 @@
 package ejb.session.stateless;
 
 import entity.RoomRate;
+import entity.RoomType;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -22,7 +23,7 @@ public interface SalesManagerSessionBeanRemote {
 
     public void updateRateName(String rateName, String newRateName);
 
-    public void updateRoomType(String rateName, String newRoomType);
+    public void updateRoomType(String rateName, RoomType newRoomType);
 
     public void updateRateType(String rateName, RoomRateTypeEnum rateTypeEnum);
 
@@ -37,5 +38,9 @@ public interface SalesManagerSessionBeanRemote {
     public List<RoomRate> retrieveAllRoomRates();
 
     public RoomRate retrieveRoomRateByName(String rateName);
+
+    public List<RoomType> retrieveAllRoomTypes();
+    
+    
     
 }

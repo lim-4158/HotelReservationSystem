@@ -5,6 +5,7 @@
 package ejb.session.stateless;
 
 import entity.RoomRate;
+import entity.RoomType;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -38,7 +39,7 @@ public class SalesManagerSessionBean implements SalesManagerSessionBeanRemote, S
     
     }
     
-    public void updateRoomType(String rateName, String newRoomType) {
+    public void updateRoomType(String rateName, RoomType newRoomType) {
         RoomRate rate = retrieveRoomRateByName(rateName);
         rate.setRoomType(newRoomType);
         em.merge(rate);
@@ -93,7 +94,10 @@ public class SalesManagerSessionBean implements SalesManagerSessionBeanRemote, S
     }
     
     
-    
+    public List<RoomType> retrieveAllRoomTypes() {
+        Query q = em.createQuery("SELECT rt FROM RoomType rt"); 
+        return q.getResultList(); 
+    }
     
     
     
@@ -101,4 +105,6 @@ public class SalesManagerSessionBean implements SalesManagerSessionBeanRemote, S
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
+
+ 
 }
