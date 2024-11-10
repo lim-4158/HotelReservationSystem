@@ -49,19 +49,23 @@ public class OperationManagerSessionBean implements OperationManagerSessionBeanR
         em.flush();
         return rt.getRoomTypeID();
     }
-
-    @Override
-    public RoomType viewRoomTypeDetails(String typeName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     
     @Override
     public void deleteRoomType(String typeName) {
         
-        // check if it is in use
+        // get input date
+        LocalDate currentDate = LocalDate.now();
         
         RoomType roomType = retrieveRoomTypeByName(typeName);
         em.remove(roomType);
+        
+       if (roomTypeIsInUse(roomType, currentDate)) {
+           em.remove(roomType);
+       } else {
+           roomType.setRoomTypeStatus(RoomTypeStatusEnum.DISABLED);
+           em.merge(roomType);
+       }
+        
     }
     
     @Override
@@ -139,20 +143,56 @@ public class OperationManagerSessionBean implements OperationManagerSessionBeanR
     @Override
     public void deleteRoom(String roomNumber ) {
         
-        // check if in use
+        Room r = retrieveRoomByNumber(roomNumber);
+        
+        if (!roomIsInUse(r, LocalDate.now())){
+            r.getRoomType().getRooms().remove(r);
+            em.merge(r);
+        } else {
+            r.setIsDisabled(true);
+            
+        }
         
         Room room = retrieveRoomByNumber(roomNumber);
         em.remove(room);
     }
     
-    @Override
-    public boolean roomIsInUse(Room r) {
-        return true;
+    public boolean roomIsInUse(Room room, LocalDate inputDate) {
+        Query query = em.createQuery(
+            "SELECT COUNT(rr) " +
+            "FROM RoomReservation rr " +
+            "JOIN rr.reservation res " +
+            "WHERE rr.room = :room " +
+            "AND res.checkOutDate > :inputDate"
+        );
+        query.setParameter("room", room);
+        query.setParameter("inputDate", inputDate);
+
+        Long count = (Long) query.getSingleResult();
+        return count > 0;
     }
+
     
-    @Override
-    public boolean roomTypeIsInUse(RoomType rt) {
-        return true;
+    public boolean roomTypeIsInUse(RoomType roomType, LocalDate inputDate) {
+//        Query query = em.createQuery(
+//            "SELECT COUNT(rr) " +
+//            "FROM RoomReservation rr " +
+//            "JOIN rr.reservation res " +
+//            "WHERE res.roomType = :roomType " +
+//            "AND rr.exceptionReport IS NULL"
+//        );
+//        query.setParameter("roomType", roomType);
+//
+//        Long count = (Long) query.getSingleResult();
+//        return count > 0;
+        
+        List<Room> rooms = roomType.getRooms();
+        for (Room r : rooms) {
+            if (roomIsInUse(r, inputDate)) {
+                return true;
+            }
+        }
+        return false;
     }
     
     @Override

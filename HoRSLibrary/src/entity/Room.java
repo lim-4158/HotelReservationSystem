@@ -27,17 +27,10 @@ public class Room implements Serializable {
     private String partnerName;
     private String roomNumber;
     private RoomStatusEnum roomStatus;
+    private boolean isDisabled = false;
     @ManyToOne
     private RoomType roomType;
-
-    public RoomType getRoomType() {
-        return roomType;
-    }
-
-    public void setRoomType(RoomType roomType) {
-        this.roomType = roomType;
-    }
-
+    
     public Room(){
         
     }
@@ -47,6 +40,28 @@ public class Room implements Serializable {
         this.roomNumber = roomNumber;
         this.roomStatus = roomStatus;
         this.roomType = roomType;
+    }
+
+    public RoomType getRoomType() {
+        return roomType;
+    }
+
+    public void setRoomType(RoomType roomType) {
+        this.roomType = roomType;
+    }
+    
+    /**
+     * @return the isDisabled
+     */
+    public boolean isIsDisabled() {
+        return isDisabled;
+    }
+
+    /**
+     * @param isDisabled the isDisabled to set
+     */
+    public void setIsDisabled(boolean isDisabled) {
+        this.isDisabled = isDisabled;
     }
 
     public Long getRoomID() {

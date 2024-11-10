@@ -10,5 +10,5 @@ package util;
  */
 public enum RoomTypeStatusEnum {
     DISABLED, 
-    ENEABLED
+    ENABLED
 }

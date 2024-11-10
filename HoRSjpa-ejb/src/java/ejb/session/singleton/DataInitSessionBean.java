@@ -51,6 +51,8 @@ public class DataInitSessionBean {
         // Check if data is already initialized by verifying the presence of at least one Employee
         TypedQuery<Long> query = em.createQuery("SELECT COUNT(e) FROM Employee e", Long.class);
         Long count = query.getSingleResult();
+        
+        System.out.println("FUCKKKKKK");
 
         if (count == 0) {
             System.out.println("Initializing database with sample data...");
@@ -63,7 +65,7 @@ public class DataInitSessionBean {
             singleRoomType.setBed("Single Bed");
             singleRoomType.setCapacity(1L);
             singleRoomType.setAmenities("WiFi, TV, Mini Bar");
-            singleRoomType.setRoomTypeStatus(RoomTypeStatusEnum.ENEABLED);
+            singleRoomType.setRoomTypeStatus(RoomTypeStatusEnum.ENABLED);
             singleRoomType.setTierNumber(1);
             singleRoomType.setInventory(50L);
             em.persist(singleRoomType);
@@ -75,10 +77,11 @@ public class DataInitSessionBean {
             doubleRoomType.setBed("Double Bed");
             doubleRoomType.setCapacity(2L);
             doubleRoomType.setAmenities("WiFi, TV, Mini Bar, Coffee Maker");
-            doubleRoomType.setRoomTypeStatus(RoomTypeStatusEnum.ENEABLED);
+            doubleRoomType.setRoomTypeStatus(RoomTypeStatusEnum.ENABLED);
             doubleRoomType.setTierNumber(2);
             doubleRoomType.setInventory(30L);
             em.persist(doubleRoomType);
+            
 
             // Additional RoomTypes can be added here (up to 10)
             RoomType deluxeRoomType = new RoomType();
@@ -88,10 +91,12 @@ public class DataInitSessionBean {
             deluxeRoomType.setBed("King Bed");
             deluxeRoomType.setCapacity(3L);
             deluxeRoomType.setAmenities("WiFi, TV, Mini Bar, Coffee Maker, Jacuzzi");
-            deluxeRoomType.setRoomTypeStatus(RoomTypeStatusEnum.ENEABLED);
+            deluxeRoomType.setRoomTypeStatus(RoomTypeStatusEnum.ENABLED);
             deluxeRoomType.setTierNumber(3);
             deluxeRoomType.setInventory(20L);
             em.persist(deluxeRoomType);
+            
+            em.flush();
 
             // ---------- Initialize Room Rates ----------
             RoomRate standardRateSingle = new RoomRate();
@@ -129,6 +134,8 @@ public class DataInitSessionBean {
             premiumRateSingle.setEndDate(LocalDate.of(2024, 12, 31));
             premiumRateSingle.setRoomType(doubleRoomType);
             em.persist(premiumRateSingle);
+            
+            em.flush();
 
             // ---------- Initialize Rooms ----------
             Room room101 = new Room();
@@ -155,6 +162,8 @@ public class DataInitSessionBean {
             room104.setRoomStatus(RoomStatusEnum.AVAILABLE);
             room104.setRoomType(deluxeRoomType);
             em.persist(room104);
+            
+            em.flush();
 
             // ---------- Initialize Guests ----------
             Guest guest1 = new Guest();
@@ -187,6 +196,8 @@ public class DataInitSessionBean {
             guest3.setPhoneNumber("11223344");
             guest3.setPassportNumber("C9876543");
             em.persist(guest3);
+            
+            em.flush();
 
             // ---------- Initialize Partners ----------
             Partner partner1 = new Partner();
@@ -207,6 +218,8 @@ public class DataInitSessionBean {
             partner3.setUsername("travelc");
             partner3.setPassword("travelpassC");
             em.persist(partner3);
+            
+            em.flush();
 
             // ---------- Initialize Employees ----------
             Employee employee1 = new Employee();
@@ -233,6 +246,8 @@ public class DataInitSessionBean {
             employee4.setPassword("emp3456");
             employee4.setRole(EmployeeRoleEnum.GUESTRELATIONOFFIER);
             em.persist(employee4);
+            
+            em.flush();
 
             // ---------- Initialize Reservations ----------
             Reservation reservation1 = new Reservation();
@@ -243,6 +258,9 @@ public class DataInitSessionBean {
             reservation1.setGuest(guest1);
             reservation1.setRoomType(singleRoomType);
             em.persist(reservation1);
+            em.flush(); // Ensure reservationID is generated
+            
+            System.out.println("reservation1" + reservation1.getReservationID());
 
             Reservation reservation2 = new Reservation();
             reservation2.setReservationDate(LocalDate.now());
@@ -252,8 +270,8 @@ public class DataInitSessionBean {
             reservation2.setGuest(guest2);
             reservation2.setRoomType(doubleRoomType);
             em.persist(reservation2);
+            em.flush(); // Ensure reservationID is generated
 
-            // Additional Reservations can be added here (up to 10)
             Reservation reservation3 = new Reservation();
             reservation3.setReservationDate(LocalDate.now());
             reservation3.setCheckInDate(LocalDate.of(2024, 12, 10));
@@ -262,28 +280,27 @@ public class DataInitSessionBean {
             reservation3.setGuest(guest3);
             reservation3.setRoomType(deluxeRoomType);
             em.persist(reservation3);
+            em.flush(); // Ensure reservationID is generated
+            
+            System.out.println("FUCKNOW rr");
 
             // ---------- Initialize Room Reservations ----------
             RoomReservation roomReservation1 = new RoomReservation();
             roomReservation1.setRoom(room101);
-            roomReservation1.setReservation(reservation1);
+            roomReservation1.setReservation(reservation1); // Now reservation1 has a valid ID
             em.persist(roomReservation1);
+            em.flush();
+            System.out.println("THIS IS RUNNIG HEREEEEEEEE room reservation" + roomReservation1.getId());
 
             RoomReservation roomReservation2 = new RoomReservation();
             roomReservation2.setRoom(room102);
-            roomReservation2.setReservation(reservation2);
+            roomReservation2.setReservation(reservation2); // Now reservation2 has a valid ID
             em.persist(roomReservation2);
 
             RoomReservation roomReservation3 = new RoomReservation();
             roomReservation3.setRoom(room104);
-            roomReservation3.setReservation(reservation3);
+            roomReservation3.setReservation(reservation3); // Now reservation3 has a valid ID
             em.persist(roomReservation3);
-
-            // Additional RoomReservations can be added here (up to 10)
-            RoomReservation roomReservation4 = new RoomReservation();
-            roomReservation4.setRoom(room103);
-            roomReservation4.setReservation(reservation1); // Example: multiple rooms for one reservation
-            em.persist(roomReservation4);
 
             // ---------- Initialize Exception Reports ----------
             // Assuming ExceptionReport has fields like reportID, reservationID, reportType, creationDate, etc.
@@ -291,18 +308,20 @@ public class DataInitSessionBean {
 
             // Exception Report 1
             ExceptionReport exceptionReport1 = new ExceptionReport();
-            exceptionReport1.setReservationID(reservation1.getReservationID());
+            exceptionReport1.setResID(reservation1.getReservationID());
             em.persist(exceptionReport1);
 
             // Exception Report 2
             ExceptionReport exceptionReport2 = new ExceptionReport();
-            exceptionReport2.setReservationID(reservation2.getReservationID());
+            exceptionReport2.setResID(reservation2.getReservationID());
             em.persist(exceptionReport2);
 
             // Additional ExceptionReports can be added here (up to 10)
             ExceptionReport exceptionReport3 = new ExceptionReport();
-            exceptionReport3.setReservationID(reservation3.getReservationID());
+            exceptionReport3.setResID(reservation3.getReservationID());
             em.persist(exceptionReport3);
+            
+            em.flush();
 
             // ---------- Completion Message ----------
             System.out.println("Database initialized with sample data.");

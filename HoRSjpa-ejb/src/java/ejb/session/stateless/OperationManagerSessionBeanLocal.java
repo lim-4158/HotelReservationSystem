@@ -50,10 +50,6 @@ public interface OperationManagerSessionBeanLocal {
 
     public void deleteRoom(String roomNumber);
 
-    public boolean roomIsInUse(Room r);
-
-    public boolean roomTypeIsInUse(RoomType rt);
-
     public void updateRoomNumber(String currentRoomNumber, String newRoomNumber);
 
     public void updateRoomStatus(String roomNumber, RoomStatusEnum newRoomStatus);
@@ -67,7 +63,5 @@ public interface OperationManagerSessionBeanLocal {
     public ExceptionReport retrieveExceptionReportByID(Long exceptionReportID);
 
     public Long createNewRoomType(RoomType rt);
-
-    public RoomType viewRoomTypeDetails(String typeName);
     
 }

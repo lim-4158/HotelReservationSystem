@@ -24,7 +24,7 @@ public class ExceptionReport implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reportID;
-    private Long reservationID;
+    private Long resID;
     
     @OneToOne 
     private RoomReservation roomReservation;
@@ -39,21 +39,21 @@ public class ExceptionReport implements Serializable {
         this.roomReservation = roomReservation;
         this.reportType = reportType;
         this.creationDate = creationDate;
-        this.reservationID = reservationID;
+        this.resID = reservationID;
     }
 
     public ExceptionReport(ExceptionReportTypeEnum reportType, LocalDate creationDate, Long reservationID) {
         this.reportType = reportType;
         this.creationDate = creationDate;
-        this.reservationID = reservationID;
+        this.resID = reservationID;
     }
 
-    public Long getReservationID() {
-        return reservationID;
+    public Long getResID() {
+        return resID;
     }
 
-    public void setReservationID(Long reservationID) {
-        this.reservationID = reservationID;
+    public void setResID(Long resID) {
+        this.resID = resID;
     }
 
     public Long getReportID() {
