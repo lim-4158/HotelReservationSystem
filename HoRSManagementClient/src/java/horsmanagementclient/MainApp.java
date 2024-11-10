@@ -95,95 +95,192 @@ public class MainApp {
         System.out.println("10: View room allocation exceptioin report");         
     }
     
+    // ---------- Sales Manager View ----------
+    
     public void salesManagerView() {
-        System.out.println("Your role : Sales Manager \n");
-
         Scanner sc = new Scanner(System.in); 
         int response;
         
         while (true) {
+            System.out.println("\n*** Sales Manager Menu ***\n");
             System.out.println("1: Create new room rate");
             System.out.println("2: View room rate details");
             System.out.println("3: Update room rate");
             System.out.println("4: Delete room rate");
-            System.out.println("5: View all room rate");
-        
+            System.out.println("5: View all room rates");
+            System.out.println("6: Return to Main Menu");
+            System.out.println("0: Logout");
+            
+            System.out.print("Enter choice: ");
             response = sc.nextInt(); 
-            sc.nextLine(); 
+            sc.nextLine(); // Consume newline
             
             if (response == 1){
-                
-                // create new room rate
-                System.out.println("Enter Rate Name: ");
-                String rateName = sc.nextLine(); 
-                System.out.println("Enter Rate type: ");
-                RoomRateTypeEnum rrtEnum = selectEnum(RoomRateTypeEnum.class); 
-                System.out.println("Enter nightly rate: ");
-                BigDecimal nightlyRate = sc.nextBigDecimal(); 
-                System.out.println("Enter start date");
-                
-                System.out.print("Enter start date (yyyy-MM-dd): ");
-                LocalDate startDate = getInputDate();                  
-                System.out.print("Enter end date (yyyy-MM-dd): ");
-                LocalDate endDate = getInputDate();      
-                                
-                RoomRate rate = new RoomRate(rateName, rrtEnum, nightlyRate, startDate, endDate);
-                salesManagerSessionBeanRemote.createNewRoomRate(rate); 
-            
+                createNewRoomRate();
             } else if (response == 2) {
-                String rate = doViewRateDetail(); 
-             
-                
+                viewRoomRateDetails();
             } else if (response == 3) {
-                // updateUpdateRate(); 
-//                doUpdateRate(); 
-                String rateName = doViewRateDetail();
-                System.out.println("Select detail to change (1-6): ");
-               
-                int choice = sc.nextInt(); 
-                sc.nextLine();
-                if (choice == 1) { 
-                    System.out.println("Enter new rate name: ");
-                    String newName = sc.nextLine(); 
-                    salesManagerSessionBeanRemote.updateRateName(rateName, newName);
-
-                } else if (choice == 2) {
-                    System.out.println("Select new room type: ");
-                    RoomType newRoomType = selectRoomType(); 
-                    salesManagerSessionBeanRemote.updateRoomType(rateName, newRoomType);
-
-                } else if (choice == 3) {
-                    System.out.println(salesManagerSessionBeanRemote.retrieveRoomRateByName(rateName).getRateType());
-                    RoomRateTypeEnum rrtEnum = selectEnum(RoomRateTypeEnum.class); 
-                    System.out.println(rrtEnum);
-                    salesManagerSessionBeanRemote.updateRateType(rateName, rrtEnum);
-                    System.out.println("success!");
-
-                } else if (choice == 4) {
-                    System.out.println("Enter new nightly rate: ");
-                    BigDecimal nightlyRate = sc.nextBigDecimal(); 
-                    salesManagerSessionBeanRemote.updateRateAmount(rateName, nightlyRate);
-
-                } else if (choice == 5) {
-                    System.out.println("Enter new start date (yyyy-MM-dd): ");
-                    LocalDate newDate = getInputDate(); 
-                    salesManagerSessionBeanRemote.updateStartDate(rateName, newDate);
-
-                } else if (choice == 6) {
-                    System.out.println("Enter new end date (yyyy-MM-dd): ");
-                    LocalDate newDate = getInputDate(); 
-                    salesManagerSessionBeanRemote.updateEndDate(rateName, newDate);
-                }
+                updateRoomRate();
             } else if (response == 4) {
-                //delete
-                doDeleteRoomRate(); 
+                deleteRoomRate();
             } else if (response == 5) {
-                doViewAllRoomRates();
-            
+                viewAllRoomRates();
+            } else if (response == 6) {
+                System.out.println("Returning to Main Menu...");
+                break; // Exit the Sales Manager view loop
+            } else if (response == 0) {
+                System.out.println("Logging out...");
+                System.exit(0); // Terminate the application
+            } else {
+                System.out.println("Invalid choice. Please try again.");
             }
         }
+    }
+    
+    // ---------- Sales Manager Functionalities ----------
+    
+    private void createNewRoomRate() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("\n--- Create New Room Rate ---");
         
+        System.out.print("Enter Rate Name: ");
+        String rateName = sc.nextLine(); 
         
+        System.out.println("Select Rate Type: ");
+        RoomRateTypeEnum rateType = selectEnum(RoomRateTypeEnum.class); 
+        
+        System.out.print("Enter Nightly Rate Amount: ");
+        BigDecimal nightlyRate = sc.nextBigDecimal(); 
+        sc.nextLine(); // Consume newline
+        
+        System.out.print("Enter Start Date (yyyy-MM-dd): ");
+        LocalDate startDate = getInputDate();                  
+        System.out.print("Enter End Date (yyyy-MM-dd): ");
+        LocalDate endDate = getInputDate();      
+                        
+        RoomRate rate = new RoomRate();
+        rate.setRoomRateName(rateName);
+        rate.setRateType(rateType);
+        rate.setNightlyRateAmount(nightlyRate);
+        rate.setStartDate(startDate);
+        rate.setEndDate(endDate);
+        // Assuming RoomType association is handled elsewhere or optional
+        // If necessary, prompt for RoomType and set it here
+        
+        Long roomRateID = salesManagerSessionBeanRemote.createNewRoomRate(rate); 
+        System.out.println("New Room Rate created with ID: " + roomRateID);
+    }
+    
+    private void viewRoomRateDetails() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("\n--- View Room Rate Details ---");
+        
+        System.out.print("Enter Room Rate Name: ");
+        String rateName = sc.nextLine(); 
+        
+        RoomRate rate = salesManagerSessionBeanRemote.retrieveRoomRateByName(rateName); 
+        
+        if (rate != null) {
+            displayRoomRate(rate);
+        } else {
+            System.out.println("Room Rate not found.");
+        }
+    }
+    
+    private void updateRoomRate() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("\n--- Update Room Rate ---");
+        
+        System.out.print("Enter Room Rate Name to Update: ");
+        String rateName = sc.nextLine(); 
+        
+        RoomRate rate = salesManagerSessionBeanRemote.retrieveRoomRateByName(rateName); 
+        
+        if (rate != null) {
+            System.out.println("Current Details:");
+            displayRoomRate(rate);
+            
+            System.out.println("\nEnter new details (leave blank to keep unchanged):");
+            
+            System.out.print("New Rate Name: ");
+            String newRateName = sc.nextLine(); 
+            if (!newRateName.isEmpty()) {
+                salesManagerSessionBeanRemote.updateRateName(rateName, newRateName);
+                rate.setRoomRateName(newRateName);
+            }
+            
+            System.out.println("Select new Rate Type (enter 0 to keep unchanged): ");
+            RoomRateTypeEnum newRateType = selectEnum(RoomRateTypeEnum.class); 
+            if (newRateType != null) {
+                salesManagerSessionBeanRemote.updateRateType(rateName, newRateType);
+                rate.setRateType(newRateType);
+            }
+            
+            System.out.print("Enter new Nightly Rate Amount (enter 0 to keep unchanged): ");
+            BigDecimal newNightlyRate = sc.nextBigDecimal(); 
+            sc.nextLine(); // Consume newline
+            if (newNightlyRate.compareTo(BigDecimal.ZERO) > 0) {
+                salesManagerSessionBeanRemote.updateRateAmount(rateName, newNightlyRate);
+                rate.setNightlyRateAmount(newNightlyRate);
+            }
+            
+            System.out.print("Enter new Start Date (yyyy-MM-dd) (leave blank to keep unchanged): ");
+            String startDateInput = sc.nextLine();
+            if (!startDateInput.isEmpty()) {
+                LocalDate newStartDate = LocalDate.parse(startDateInput, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                salesManagerSessionBeanRemote.updateStartDate(rateName, newStartDate);
+                rate.setStartDate(newStartDate);
+            }
+            
+            System.out.print("Enter new End Date (yyyy-MM-dd) (leave blank to keep unchanged): ");
+            String endDateInput = sc.nextLine();
+            if (!endDateInput.isEmpty()) {
+                LocalDate newEndDate = LocalDate.parse(endDateInput, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                salesManagerSessionBeanRemote.updateEndDate(rateName, newEndDate);
+                rate.setEndDate(newEndDate);
+            }
+            
+            System.out.println("Room Rate updated successfully.");
+        } else {
+            System.out.println("Room Rate not found.");
+        }
+    }
+    
+    private void deleteRoomRate() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("\n--- Delete Room Rate ---");
+        
+        System.out.print("Enter Room Rate Name to Delete: ");
+        String rateName = sc.nextLine(); 
+        
+        RoomRate rate = salesManagerSessionBeanRemote.retrieveRoomRateByName(rateName); 
+        
+        if (rate != null) {
+            System.out.print("Are you sure you want to delete this Room Rate? (yes/no): ");
+            String confirmation = sc.nextLine();
+            if (confirmation.equalsIgnoreCase("yes")) {
+                salesManagerSessionBeanRemote.deleteRoomRate(rateName);
+                System.out.println("Room Rate deleted successfully.");
+            } else {
+                System.out.println("Deletion cancelled.");
+            }
+        } else {
+            System.out.println("Room Rate not found.");
+        }
+    }
+    
+    private void viewAllRoomRates() {
+        System.out.println("\n--- All Room Rates ---");
+        List<RoomRate> roomRates = salesManagerSessionBeanRemote.retrieveAllRoomRates(); 
+        
+        if (!roomRates.isEmpty()) {
+            for (RoomRate r : roomRates) {
+                displayRoomRate(r);
+                System.out.println("----------------------------");
+            }
+        } else {
+            System.out.println("No Room Rates found.");
+        }
     }
     
     public void systemAdminView() {
@@ -380,5 +477,46 @@ public class MainApp {
         return roomTypes.get(choice - 1);
     }    
 
+    /**
+     * Displays the details of a RoomRate entity.
+     *
+     * @param rate The RoomRate entity to display.
+     */
+    private void displayRoomRate(RoomRate rate) {
+        System.out.println("Room Rate ID: " + rate.getRoomRateID());
+        System.out.println("Rate Name: " + rate.getRoomRateName());
+        System.out.println("Rate Type: " + rate.getRateType());
+        System.out.println("Nightly Rate Amount: $" + rate.getNightlyRateAmount());
+        System.out.println("Start Date: " + rate.getStartDate());
+        System.out.println("End Date: " + rate.getEndDate());
+        // If associated with RoomType, display it
+        if (rate.getRoomType() != null) {
+            System.out.println("Associated Room Type: " + rate.getRoomType().getTypeName());
+        }
+    }
     
+    /**
+     * Displays the details of an Employee entity.
+     *
+     * @param employee The Employee entity to display.
+     */
+    private void displayEmployee(Employee employee) {
+        System.out.println("Employee ID: " + employee.getEmployeeID());
+        System.out.println("Username: " + employee.getUsername());
+        System.out.println("Role: " + employee.getRole());
+        // Avoid displaying passwords for security reasons
+    }
+    
+    /**
+     * Displays the details of a Partner entity.
+     *
+     * @param partner The Partner entity to display.
+     */
+    private void displayPartner(Partner partner) {
+        System.out.println("Partner ID: " + partner.getPartnerID());
+        System.out.println("Partner Name: " + partner.getPartnerName());
+        System.out.println("Username: " + partner.getUsername());
+        // Avoid displaying passwords for security reasons
+   
+    }
 }

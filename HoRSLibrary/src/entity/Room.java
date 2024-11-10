@@ -30,6 +30,14 @@ public class Room implements Serializable {
     @ManyToOne
     private RoomType roomType;
 
+    public RoomType getRoomType() {
+        return roomType;
+    }
+
+    public void setRoomType(RoomType roomType) {
+        this.roomType = roomType;
+    }
+
     public Room(){
         
     }
