@@ -25,7 +25,7 @@ public class RoomRate implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomRateID;
     private String roomRateName;
-    private String roomType;
+    private RoomType roomType;
     private RoomRateTypeEnum rateType;
     private BigDecimal nightlyRateAmount; 
     private LocalDate startDate;
@@ -43,7 +43,7 @@ public class RoomRate implements Serializable {
         
     }
     
-    public RoomRate(String roomRateName, String roomType, RoomRateTypeEnum rateType, BigDecimal nightlyRateAmount, LocalDate startDate, LocalDate endDate) {
+    public RoomRate(String roomRateName, RoomType roomType, RoomRateTypeEnum rateType, BigDecimal nightlyRateAmount, LocalDate startDate, LocalDate endDate) {
         this.roomRateName = roomRateName;
         this.roomType = roomType;
         this.rateType = rateType;
@@ -94,14 +94,14 @@ public class RoomRate implements Serializable {
     /**
      * @return the roomType
      */
-    public String getRoomType() {
+    public RoomType getRoomType() {
         return roomType;
     }
 
     /**
      * @param roomType the roomType to set
      */
-    public void setRoomType(String roomType) {
+    public void setRoomType(RoomType roomType) {
         this.roomType = roomType;
     }
 
