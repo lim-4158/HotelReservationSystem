@@ -123,13 +123,13 @@ public class TestDataInitSessionBean {
 
             // Create Reservations for the allocation date
             // Using the new constructor
-            Reservation reservation1 = new Reservation(LocalDate.now(), allocationDate, allocationDate.plusDays(3), ReservationTypeEnum.ONLINE, guest1, grandSuite);
-            Reservation reservation2 = new Reservation(LocalDate.now(), allocationDate, allocationDate.plusDays(2), ReservationTypeEnum.ONLINE, guest2, juniorSuite);
-            Reservation reservation3 = new Reservation(LocalDate.now(), allocationDate, allocationDate.plusDays(4), ReservationTypeEnum.ONLINE, guest3, juniorSuite);
-            Reservation reservation4 = new Reservation(LocalDate.now(), allocationDate, allocationDate.plusDays(5), ReservationTypeEnum.ONLINE, guest4, deluxeRoom);
-            Reservation reservation5 = new Reservation(LocalDate.now(), allocationDate, allocationDate.plusDays(2), ReservationTypeEnum.ONLINE, guest5, deluxeRoom);
-            Reservation reservation6 = new Reservation(LocalDate.now(), allocationDate, allocationDate.plusDays(3), ReservationTypeEnum.ONLINE, guest1); // For Type 2 test
-            Reservation reservation7 = new Reservation(LocalDate.now(), allocationDate, allocationDate.plusDays(3), ReservationTypeEnum.ONLINE, guest2); // For Type 2 test
+            Reservation reservation1 = new Reservation(LocalDate.now(), allocationDate, allocationDate.plusDays(3), ReservationTypeEnum.ONLINE, guest1, grandSuite,1);
+            Reservation reservation2 = new Reservation(LocalDate.now(), allocationDate, allocationDate.plusDays(2), ReservationTypeEnum.ONLINE, guest2, juniorSuite,3);
+            Reservation reservation3 = new Reservation(LocalDate.now(), allocationDate, allocationDate.plusDays(4), ReservationTypeEnum.ONLINE, guest3, juniorSuite,2);
+            Reservation reservation4 = new Reservation(LocalDate.now(), allocationDate, allocationDate.plusDays(5), ReservationTypeEnum.ONLINE, guest4, deluxeRoom,1);
+            Reservation reservation5 = new Reservation(LocalDate.now(), allocationDate, allocationDate.plusDays(2), ReservationTypeEnum.ONLINE, guest5, deluxeRoom,1);
+            Reservation reservation6 = new Reservation(LocalDate.now(), allocationDate, allocationDate.plusDays(3), ReservationTypeEnum.ONLINE, guest1, deluxeRoom, 2); // For Type 2 test
+            Reservation reservation7 = new Reservation(LocalDate.now(), allocationDate, allocationDate.plusDays(3), ReservationTypeEnum.ONLINE, guest2, familyRoom, 2); // For Type 2 test
 
             em.persist(reservation1);
             em.persist(reservation2);

@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import util.EmployeeRoleEnum;
@@ -87,7 +88,9 @@ public class MainApp {
                    systemAdminView();
                 }                     
             } else if (choice == 2) {
-                
+                System.out.println("Enter date (yyyy-MM-dd): ");
+                LocalDate date = getInputDate();
+                batchAllocationSessionBeanRemote.allocateRooms(date);
             }
             
                     
