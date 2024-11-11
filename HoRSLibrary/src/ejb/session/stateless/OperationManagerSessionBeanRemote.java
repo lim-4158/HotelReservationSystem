@@ -46,6 +46,8 @@ public interface OperationManagerSessionBeanRemote {
     public void updateInventory(String typeName, Long newInventory);
 
     public Long createNewRoom(Room r);
+    
+    public Long createNewRoomType(RoomType rt);
 
     public void deleteRoom(String roomNumber);
 
@@ -60,4 +62,5 @@ public interface OperationManagerSessionBeanRemote {
     public List<ExceptionReport> retrieveExceptionReportsByDate(LocalDate date);
 
     public ExceptionReport retrieveExceptionReportByID(Long exceptionReportID);
+    
 }
