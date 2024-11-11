@@ -38,6 +38,8 @@ public class TestDataInitSessionBean {
         Long count = query.getSingleResult();
         
         if (count == 0) {
+            // -----------------------------created employee--------------------------------
+
             Employee sysadmin = new Employee("sysadmin", "password", EmployeeRoleEnum.SYSTEMADMIN);
             Employee opManager = new Employee("opmanager", "password", EmployeeRoleEnum.OPERATIONSMANAGER);
             Employee salesManager = new Employee("salesmanager", "password", EmployeeRoleEnum.SALESMANAGER);
@@ -48,6 +50,7 @@ public class TestDataInitSessionBean {
             em.persist(salesManager);
             em.persist(guestRelOfficer);
 
+            // -----------------------------created room type--------------------------------
             RoomType grandSuite = new RoomType("Grand Suite", 1);
             RoomType juniorSuite = new RoomType("Junior Suite", 2);
             RoomType familyRoom = new RoomType("Family Room", 3);
@@ -60,6 +63,7 @@ public class TestDataInitSessionBean {
             em.persist(juniorSuite);
             em.persist(grandSuite);
 
+            // -----------------------------created room rate--------------------------------
             em.persist(new RoomRate("Deluxe Room Published", deluxeRoom, RoomRateTypeEnum.PUBLISHED, new BigDecimal("100")));
             em.persist(new RoomRate("Deluxe Room Normal", deluxeRoom, RoomRateTypeEnum.NORMAL, new BigDecimal("50")));
             em.persist(new RoomRate("Premier Room Published", premierRoom, RoomRateTypeEnum.PUBLISHED, new BigDecimal("200")));
@@ -71,6 +75,7 @@ public class TestDataInitSessionBean {
             em.persist(new RoomRate("Grand Suite Published", grandSuite, RoomRateTypeEnum.PUBLISHED, new BigDecimal("500")));
             em.persist(new RoomRate("Grand Suite Normal", grandSuite, RoomRateTypeEnum.NORMAL, new BigDecimal("250")));
 
+            // -----------------------------created room--------------------------------
             // Creating Deluxe Room instances
             for (int i = 1; i <= 5; i++) {
                 em.persist(new Room(deluxeRoom, "0" + i + "01", RoomStatusEnum.AVAILABLE));
