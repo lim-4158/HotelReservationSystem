@@ -88,5 +88,47 @@ public class ExceptionReport implements Serializable {
     public String toString() {
         return "entity.ExceptionReport[ id=" + reportID + " ]";
     }
+
+    /**
+     * @return the roomReservation
+     */
+    public RoomReservation getRoomReservation() {
+        return roomReservation;
+    }
+
+    /**
+     * @param roomReservation the roomReservation to set
+     */
+    public void setRoomReservation(RoomReservation roomReservation) {
+        this.roomReservation = roomReservation;
+    }
+
+    /**
+     * @return the reportType
+     */
+    public ExceptionReportTypeEnum getReportType() {
+        return reportType;
+    }
+
+    /**
+     * @param reportType the reportType to set
+     */
+    public void setReportType(ExceptionReportTypeEnum reportType) {
+        this.reportType = reportType;
+    }
+
+    /**
+     * @return the creationDate
+     */
+    public LocalDate getCreationDate() {
+        return creationDate;
+    }
+
+    /**
+     * @param creationDate the creationDate to set
+     */
+    public void setCreationDate(LocalDate creationDate) {
+        this.creationDate = creationDate;
+    }
     
 }

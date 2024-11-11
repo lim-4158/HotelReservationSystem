@@ -13,6 +13,8 @@ import java.util.List;
 import javax.ejb.Remote;
 import util.RoomStatusEnum;
 import util.RoomTypeStatusEnum;
+import util.exceptions.RoomNotFoundException;
+import util.exceptions.RoomTypeNotFoundException;
 
 /**
  *
@@ -21,46 +23,41 @@ import util.RoomTypeStatusEnum;
 @Remote
 public interface OperationManagerSessionBeanRemote {
     
-    public RoomType retrieveRoomTypeByName(String typeName);
-
-    public Room retrieveRoomByNumber(String roomNum);
-
-    public void deleteRoomType(String typeName);
-
-    public void updateTypeName(String typeName, String newTypeName);
-
-    public void updateDescription(String typeName, String newDescription);
-
-    public void updateSize(String typeName, BigDecimal newSize);
-
-    public void updateBed(String typeName, String newBed);
-
-    public void updateCapacity(String typeName, Long newCapacity);
-
-    public void updateAmenities(String typeName, String newAmenities);
-
-    public void updateRoomTypeStatus(String typeName, RoomTypeStatusEnum newRoomTypeStatus);
-
-    public void updateTierNumber(String typeName, Integer newTierNumber);
-
-    public void updateInventory(String typeName, Long newInventory);
-
-    public Long createNewRoom(Room r);
+    // Retrieving By Name / Number Methods
+    public RoomType retrieveRoomTypeByName(String typeName) throws RoomTypeNotFoundException;
+    public Room retrieveRoomByNumber(String roomNum) throws RoomNotFoundException;
     
+    // Retrieving By Id Methods
+    public Room retrieveRoomById(Long roomId) throws RoomNotFoundException;
+    public RoomType retrieveRoomTypeByID(Long roomTypeId) throws RoomTypeNotFoundException;
+
+    // CRUD Room Type Methods
     public Long createNewRoomType(RoomType rt);
+    public void deleteRoomType(Long roomTypeID) throws RoomTypeNotFoundException;
+    public void updateTypeName(Long roomTypeID, String newTypeName) throws RoomTypeNotFoundException;
+    public void updateDescription(Long roomTypeID, String newDescription) throws RoomTypeNotFoundException;
+    public void updateSize(Long roomTypeID, BigDecimal newSize) throws RoomTypeNotFoundException;
+    public void updateBed(Long roomTypeID, String newBed) throws RoomTypeNotFoundException;
+    public void updateCapacity(Long roomTypeID, Long newCapacity) throws RoomTypeNotFoundException;
+    public void updateAmenities(Long roomTypeID, String newAmenities) throws RoomTypeNotFoundException;
+    public void updateRoomTypeStatus(Long roomTypeID, RoomTypeStatusEnum newRoomTypeStatus) throws RoomTypeNotFoundException;
+    public void updateTierNumber(Long roomTypeID, Integer newTierNumber) throws RoomTypeNotFoundException;
+    public void updateInventory(Long roomTypeID, Long newInventory) throws RoomTypeNotFoundException;
 
-    public void deleteRoom(String roomNumber);
+    // CRUD Room Methods
+    public Long createNewRoom(Room r);
+    public void deleteRoom(Long roomID) throws RoomNotFoundException;
+    public void updatePartnerName(Long roomID, String newPartnerName) throws RoomNotFoundException;
+    public void updateRoomNumber(Long roomID, String newRoomNumber) throws RoomNotFoundException; 
+    public void updateRoomStatus(Long roomID, RoomStatusEnum newRoomStatus) throws RoomNotFoundException;
+    public void updateRoomType(Long roomID, RoomType newRoomType) throws RoomNotFoundException;
 
-    public void updateRoomNumber(String currentRoomNumber, String newRoomNumber);
-
-    public void updateRoomStatus(String roomNumber, RoomStatusEnum newRoomStatus);
-
+    // Retrieving All Records Methods
     public List<Room> retrieveAllRooms();
-
     public List<RoomType> retrieveAllRoomTypes();
 
+    // Exception Report Methods
     public List<ExceptionReport> retrieveExceptionReportsByDate(LocalDate date);
-
     public ExceptionReport retrieveExceptionReportByID(Long exceptionReportID);
     
 }

@@ -12,10 +12,13 @@ import java.time.LocalDate;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.RoomStatusEnum;
 import util.RoomTypeStatusEnum;
+import util.exceptions.RoomNotFoundException;
+import util.exceptions.RoomTypeNotFoundException;
 
 /**
  *
@@ -28,21 +31,54 @@ public class OperationManagerSessionBean implements OperationManagerSessionBeanR
     private EntityManager em;
     
         
+    // Retrieving By Id Methods
     @Override
-    public RoomType retrieveRoomTypeByName(String typeName) {
-        Query q = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.typeName = :typeName ");
-        q.setParameter("typeName", typeName);
-        return (RoomType) q.getSingleResult();
+    public RoomType retrieveRoomTypeByID(Long roomTypeId) throws RoomTypeNotFoundException {
+        try {
+            Query q = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.roomTypeID = :roomTypeId");
+            q.setParameter("roomTypeId", roomTypeId);
+            return (RoomType) q.getSingleResult();
+        } catch (NoResultException e) {
+            System.out.println("NO ROOM TYPE FOUND");
+            throw new RoomTypeNotFoundException("No room type found with ID: " + roomTypeId);
+        }
     }
-    
-    @Override
-    public Room retrieveRoomByNumber(String roomNum) {
-        Query q = em.createQuery("SELECT r FROM Room r WHERE r.roomNumber = :roomNum");
-        q.setParameter("roomNum", roomNum);
-        return (Room) q.getSingleResult();
-    }
-    
 
+    @Override
+    public Room retrieveRoomById(Long roomId) throws RoomNotFoundException {
+        try {
+            Query q = em.createQuery("SELECT r FROM Room r WHERE r.roomID = :roomId");
+            q.setParameter("roomId", roomId);
+            return (Room) q.getSingleResult();
+        } catch (NoResultException e) {
+            throw new RoomNotFoundException("No room found with ID: " + roomId);
+        }
+    }
+    
+    // Retrieving By Name / Number Methods
+    @Override
+    public RoomType retrieveRoomTypeByName(String typeName) throws RoomTypeNotFoundException {
+        try {
+            Query q = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.typeName = :typeName ");
+            q.setParameter("typeName", typeName);
+            return (RoomType) q.getSingleResult();
+        } catch (NoResultException e) {
+            throw new RoomTypeNotFoundException("No room type found with the name: " + typeName);
+        }
+    }
+    
+    @Override
+    public Room retrieveRoomByNumber(String roomNum) throws RoomNotFoundException {
+        try {
+            Query q = em.createQuery("SELECT r FROM Room r WHERE r.roomNumber = :roomNum");
+            q.setParameter("roomNum", roomNum);
+            return (Room) q.getSingleResult();
+        } catch (NoResultException e) {
+            throw new RoomNotFoundException("No Room Found.");
+        }
+    }
+    
+    // CRUD Room Type Methods
     @Override
     public Long createNewRoomType(RoomType rt) {
         em.persist(rt);
@@ -51,112 +87,224 @@ public class OperationManagerSessionBean implements OperationManagerSessionBeanR
     }
     
     @Override
-    public void deleteRoomType(String typeName) {
+    public void deleteRoomType(Long roomTypeID) throws RoomTypeNotFoundException {
         
         // get input date
         LocalDate currentDate = LocalDate.now();
         
-        RoomType roomType = retrieveRoomTypeByName(typeName);
-        em.remove(roomType);
+        RoomType roomType = retrieveRoomTypeByID(roomTypeID);
         
        if (roomTypeIsInUse(roomType, currentDate)) {
-           em.remove(roomType);
-       } else {
+           System.out.println("entered here");
            roomType.setRoomTypeStatus(RoomTypeStatusEnum.DISABLED);
            em.merge(roomType);
+       } else {
+           em.remove(roomType);
+           System.out.println("it has entered here yayayayay");
+           
        }
         
     }
-    
+
     @Override
-   public void updateTypeName(String typeName, String newTypeName) {
-        RoomType roomType = retrieveRoomTypeByName(typeName);
-        roomType.setTypeName(newTypeName);
-        em.merge(roomType);
+    public void updateTypeName(Long roomTypeID, String newTypeName) throws RoomTypeNotFoundException {
+        try {
+            RoomType roomType = retrieveRoomTypeByID(roomTypeID);
+            roomType.setTypeName(newTypeName);
+            em.merge(roomType);
+        } catch (NoResultException e) {
+            throw new RoomTypeNotFoundException("No room type found with that name.");
+        }
+        
     }
 
     @Override
-    public void updateDescription(String typeName, String newDescription) {
-        RoomType roomType = retrieveRoomTypeByName(typeName);
-        roomType.setDescription(newDescription);
-        em.merge(roomType);
+    public void updateDescription(Long roomTypeID, String newDescription) throws RoomTypeNotFoundException {
+        try {
+            RoomType roomType = retrieveRoomTypeByID(roomTypeID);
+            roomType.setDescription(newDescription);
+            em.merge(roomType);
+        }
+        catch (NoResultException e) {
+            throw new RoomTypeNotFoundException("No room type found with that name.");
+        }
     }
 
     @Override
-    public void updateSize(String typeName, BigDecimal newSize) {
-        RoomType roomType = retrieveRoomTypeByName(typeName);
-        roomType.setSize(newSize);
-        em.merge(roomType);
+    public void updateSize(Long roomTypeID, BigDecimal newSize) throws RoomTypeNotFoundException {
+        try {
+            RoomType roomType = retrieveRoomTypeByID(roomTypeID);
+            roomType.setSize(newSize);
+            em.merge(roomType);
+        } catch (NoResultException e) {
+            throw new RoomTypeNotFoundException("No room type found with the specified ID.");
+        }
     }
 
     @Override
-    public void updateBed(String typeName, String newBed) {
-        RoomType roomType = retrieveRoomTypeByName(typeName);
-        roomType.setBed(newBed);
-        em.merge(roomType);
+    public void updateBed(Long roomTypeID, String newBed) throws RoomTypeNotFoundException {
+        try {
+            RoomType roomType = retrieveRoomTypeByID(roomTypeID);
+            roomType.setBed(newBed);
+            em.merge(roomType);
+        } catch (NoResultException e) {
+            throw new RoomTypeNotFoundException("No room type found with the specified ID.");
+        }
     }
 
     @Override
-    public void updateCapacity(String typeName, Long newCapacity) {
-        RoomType roomType = retrieveRoomTypeByName(typeName);
-        roomType.setCapacity(newCapacity);
-        em.merge(roomType);
+    public void updateCapacity(Long roomTypeID, Long newCapacity) throws RoomTypeNotFoundException {
+        try {
+            RoomType roomType = retrieveRoomTypeByID(roomTypeID);
+            roomType.setCapacity(newCapacity);
+            em.merge(roomType);
+        } catch (NoResultException e) {
+            throw new RoomTypeNotFoundException("No room type found with the specified ID.");
+        }
     }
 
     @Override
-    public void updateAmenities(String typeName, String newAmenities) {
-        RoomType roomType = retrieveRoomTypeByName(typeName);
-        roomType.setAmenities(newAmenities);
-        em.merge(roomType);
+    public void updateAmenities(Long roomTypeID, String newAmenities) throws RoomTypeNotFoundException {
+        try {
+            RoomType roomType = retrieveRoomTypeByID(roomTypeID);
+            roomType.setAmenities(newAmenities);
+            em.merge(roomType);
+        } catch (NoResultException e) {
+            throw new RoomTypeNotFoundException("No room type found with the specified ID.");
+        }
     }
 
     @Override
-    public void updateRoomTypeStatus(String typeName, RoomTypeStatusEnum newRoomTypeStatus) {
-        RoomType roomType = retrieveRoomTypeByName(typeName);
-        roomType.setRoomTypeStatus(newRoomTypeStatus);
-        em.merge(roomType);
+    public void updateRoomTypeStatus(Long roomTypeID, RoomTypeStatusEnum newRoomTypeStatus) throws RoomTypeNotFoundException {
+        try {
+            RoomType roomType = retrieveRoomTypeByID(roomTypeID);
+            roomType.setRoomTypeStatus(newRoomTypeStatus);
+            em.merge(roomType);
+        } catch (NoResultException e) {
+            throw new RoomTypeNotFoundException("No room type found with the specified ID.");
+        }
     }
 
     @Override
-    public void updateTierNumber(String typeName, Integer newTierNumber) {
-        RoomType roomType = retrieveRoomTypeByName(typeName);
-        roomType.setTierNumber(newTierNumber);
-        em.merge(roomType);
+    public void updateTierNumber(Long roomTypeID, Integer newTierNumber) throws RoomTypeNotFoundException {
+        try {
+            RoomType roomType = retrieveRoomTypeByID(roomTypeID);
+            roomType.setTierNumber(newTierNumber);
+            em.merge(roomType);
+        } catch (NoResultException e) {
+            throw new RoomTypeNotFoundException("No room type found with the specified ID.");
+        }
     }
 
     @Override
-    public void updateInventory(String typeName, Long newInventory) {
-        RoomType roomType = retrieveRoomTypeByName(typeName);
-        roomType.setInventory(newInventory);
-        em.merge(roomType);
+    public void updateInventory(Long roomTypeID, Long newInventory) throws RoomTypeNotFoundException {
+        try {
+            RoomType roomType = retrieveRoomTypeByID(roomTypeID);
+            roomType.setInventory(newInventory);
+            em.merge(roomType);
+        } catch (NoResultException e) {
+            throw new RoomTypeNotFoundException("No room type found with the specified ID.");
+        }
     }
 
-    
+    // CRUD Room Methods
     @Override
     public Long createNewRoom(Room r) {
         em.persist(r);
         em.flush();
         return r.getRoomID();
     }
-    
-    
+       
     @Override
-    public void deleteRoom(String roomNumber ) {
+    public void deleteRoom(Long roomID) throws RoomNotFoundException {
         
-        Room r = retrieveRoomByNumber(roomNumber);
+        try {
+            Room r = retrieveRoomById(roomID);
         
-        if (!roomIsInUse(r, LocalDate.now())){
-            r.getRoomType().getRooms().remove(r);
-            em.merge(r);
-        } else {
-            r.setIsDisabled(true);
-            
+            if (!roomIsInUse(r, LocalDate.now())){
+                r.getRoomType().getRooms().remove(r);
+                em.merge(r);
+            } else {
+                r.setIsDisabled(true);
+
+            }
+
+            Room room = retrieveRoomById(roomID);
+            em.remove(room);
+        } catch (NoResultException e) {
+            throw new RoomNotFoundException("no room found");
         }
-        
-        Room room = retrieveRoomByNumber(roomNumber);
-        em.remove(room);
     }
     
+    @Override
+    public void updatePartnerName(Long roomID, String newPartnerName) throws RoomNotFoundException {
+        try {
+            Room room = retrieveRoomById(roomID);
+            room.setPartnerName(newPartnerName);
+            em.merge(room);
+        } catch (Exception e) {
+            throw new RoomNotFoundException("room not found");
+        }
+    }
+   
+    @Override
+    public void updateRoomNumber(Long roomID, String newRoomNumber) throws RoomNotFoundException {
+        try {
+            Room room = retrieveRoomById(roomID);
+            room.setRoomNumber(newRoomNumber);
+            em.merge(room);
+        } catch (Exception e) {
+            throw new RoomNotFoundException("room not found");
+        }
+    }
+
+    @Override
+    public void updateRoomStatus(Long roomID, RoomStatusEnum newRoomStatus) throws RoomNotFoundException {
+        try {
+            Room room = retrieveRoomById(roomID);
+            room.setRoomStatus(newRoomStatus);
+            em.merge(room);
+        } catch (Exception e) {
+            throw new RoomNotFoundException("room not found");
+        } 
+    }
+
+    @Override
+    public void updateRoomType(Long roomID, RoomType newRoomType) throws RoomNotFoundException {
+        try {
+            Room room = retrieveRoomById(roomID);
+            room.setRoomType(newRoomType);
+            em.merge(room);
+        } catch (Exception e) {
+            throw new RoomNotFoundException("room not found");
+        }
+    }
+
+    // retrieving all rooms / roomtypes
+    @Override
+    public List<Room> retrieveAllRooms() {
+        return em.createQuery("SELECT r FROM Room r", Room.class).getResultList();
+    }
+    
+    @Override
+    public List<RoomType> retrieveAllRoomTypes() {
+        return em.createQuery("SELECT rt FROM RoomType rt", RoomType.class).getResultList();
+    }
+    
+    // exception report methods
+    @Override
+    public List<ExceptionReport> retrieveExceptionReportsByDate(LocalDate date) {
+        return em.createQuery("SELECT e FROM ExceptionReport e WHERE e.creationDate = :date", ExceptionReport.class)
+                 .setParameter("date", date)
+                 .getResultList();
+    }
+    
+    @Override
+    public ExceptionReport retrieveExceptionReportByID(Long exceptionReportID) {
+        return em.find(ExceptionReport.class, exceptionReportID);
+    }    
+    
+    // helper methods
     public boolean roomIsInUse(Room room, LocalDate inputDate) {
         Query query = em.createQuery(
             "SELECT COUNT(rr) " +
@@ -172,7 +320,6 @@ public class OperationManagerSessionBean implements OperationManagerSessionBeanR
         return count > 0;
     }
 
-    
     public boolean roomTypeIsInUse(RoomType roomType, LocalDate inputDate) {
 //        Query query = em.createQuery(
 //            "SELECT COUNT(rr) " +
@@ -194,41 +341,4 @@ public class OperationManagerSessionBean implements OperationManagerSessionBeanR
         }
         return false;
     }
-    
-    @Override
-    public void updateRoomNumber(String currentRoomNumber, String newRoomNumber) {
-    Room room = retrieveRoomByNumber(currentRoomNumber);
-    room.setRoomNumber(newRoomNumber);
-    em.merge(room);
-    }
-
-    @Override
-    public void updateRoomStatus(String roomNumber, RoomStatusEnum newRoomStatus) {
-        Room room = retrieveRoomByNumber(roomNumber);
-        room.setRoomStatus(newRoomStatus);
-        em.merge(room);
-    }
-
-
-    @Override
-    public List<Room> retrieveAllRooms() {
-        return em.createQuery("SELECT r FROM Room r", Room.class).getResultList();
-    }
-    
-    @Override
-    public List<RoomType> retrieveAllRoomTypes() {
-        return em.createQuery("SELECT rt FROM RoomType rt", RoomType.class).getResultList();
-    }
-    
-    @Override
-    public List<ExceptionReport> retrieveExceptionReportsByDate(LocalDate date) {
-        return em.createQuery("SELECT e FROM ExceptionReport e WHERE e.creationDate = :date", ExceptionReport.class)
-                 .setParameter("date", date)
-                 .getResultList();
-    }
-    
-    @Override
-    public ExceptionReport retrieveExceptionReportByID(Long exceptionReportID) {
-        return em.find(ExceptionReport.class, exceptionReportID);
-    }    
 }
