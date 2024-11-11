@@ -47,6 +47,13 @@ public class RoomType implements Serializable {
     public RoomType() {
     }
 
+    public RoomType(String typeName, Integer tierNumber) {
+        this.typeName = typeName;
+        this.tierNumber = tierNumber;
+    }
+    
+    
+
     public RoomType(String typeName, String description, BigDecimal size, String bed, Long capacity, String amenities, RoomTypeStatusEnum roomTypeStatus, Integer tierNumber, Long inventory) {
         this.typeName = typeName;
         this.description = description;
@@ -58,6 +65,8 @@ public class RoomType implements Serializable {
         this.tierNumber = tierNumber;
         this.inventory = inventory;
     }
+    
+    
     
     public Long getRoomTypeID() {
         return roomTypeID;

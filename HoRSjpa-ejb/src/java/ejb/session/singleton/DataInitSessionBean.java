@@ -36,7 +36,7 @@ import util.RoomTypeStatusEnum;
  */
 @Singleton
 @LocalBean
-@Startup
+//@Startup
 public class DataInitSessionBean {
 
     @PersistenceContext(unitName = "HoRSjpa-ejbPU")
@@ -285,12 +285,21 @@ public class DataInitSessionBean {
             System.out.println("FUCKNOW rr");
 
             // ---------- Initialize Room Reservations ----------
+            System.out.println("1");
             RoomReservation roomReservation1 = new RoomReservation();
+            System.out.println("2");
+            System.out.println("room id : " + room101.getRoomID());
             roomReservation1.setRoom(room101);
+            System.out.println("3");
+            System.out.println("res id : " + reservation1.getReservationID());            
             roomReservation1.setReservation(reservation1); // Now reservation1 has a valid ID
+            System.out.println("4");
             em.persist(roomReservation1);
+            System.out.println("5");
+
+
             em.flush();
-            System.out.println("THIS IS RUNNIG HEREEEEEEEE room reservation" + roomReservation1.getId());
+            System.out.println("THIS IS RUNNIG HEREEEEEEEE room reservation" + roomReservation1.getRoomReservationId());
 
             RoomReservation roomReservation2 = new RoomReservation();
             roomReservation2.setRoom(room102);

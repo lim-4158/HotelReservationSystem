@@ -34,6 +34,12 @@ public class Room implements Serializable {
     public Room(){
         
     }
+
+    public Room(RoomType roomType, String roomNumber, RoomStatusEnum roomStatus) {
+        this.roomNumber = roomNumber;
+        this.roomStatus = roomStatus;
+        this.roomType = roomType;
+    }
     
     public Room(String partnerName, String roomNumber, RoomStatusEnum roomStatus, RoomType roomType) {
         this.partnerName = partnerName;
