@@ -4,6 +4,7 @@
  */
 package horsmanagementclient;
 
+import ejb.session.stateless.BatchAllocationSessionBeanRemote;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.GuestRelationOfficerSessionBeanRemote;
 import ejb.session.stateless.OperationManagerSessionBeanRemote;
@@ -40,13 +41,15 @@ public class MainApp {
     private OperationManagerSessionBeanRemote operationManagerSessionBeanRemote;
     private SalesManagerSessionBeanRemote salesManagerSessionBeanRemote;
     private SystemAdminSessionBeanRemote systemAdminSessionBeanRemote;
+    private BatchAllocationSessionBeanRemote batchAllocationSessionBeanRemote; 
 
-    public MainApp(EmployeeSessionBeanRemote employeeSessionBeanRemote, GuestRelationOfficerSessionBeanRemote guestRelationOfficerSessionBeanRemote, OperationManagerSessionBeanRemote operationManagerSessionBeanRemote, SalesManagerSessionBeanRemote salesManagerSessionBeanRemote, SystemAdminSessionBeanRemote systemAdminSessionBeanRemote) {
+    public MainApp(EmployeeSessionBeanRemote employeeSessionBeanRemote, GuestRelationOfficerSessionBeanRemote guestRelationOfficerSessionBeanRemote, OperationManagerSessionBeanRemote operationManagerSessionBeanRemote, SalesManagerSessionBeanRemote salesManagerSessionBeanRemote, SystemAdminSessionBeanRemote systemAdminSessionBeanRemote, BatchAllocationSessionBeanRemote batchAllocationSessionBeanRemote) {
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
         this.guestRelationOfficerSessionBeanRemote = guestRelationOfficerSessionBeanRemote;
         this.operationManagerSessionBeanRemote = operationManagerSessionBeanRemote;
         this.salesManagerSessionBeanRemote = salesManagerSessionBeanRemote;
         this.systemAdminSessionBeanRemote = systemAdminSessionBeanRemote;
+        this.batchAllocationSessionBeanRemote = batchAllocationSessionBeanRemote;
     }
     
     public void runApp() {
@@ -55,27 +58,39 @@ public class MainApp {
         
         while(true) {
             System.out.println("*** Welcome to HoRS Management Client ***\n");
-            System.out.println("Log In Portal");
+            Integer choice; 
+            Scanner sc = new Scanner(System.in); 
             
-            System.out.print("Username : ");
-            String username = scanner.nextLine(); 
-            System.out.print("Password : ");
-            String password = scanner.nextLine(); 
             
-            Employee employee = employeeSessionBeanRemote.employeeLogin(username, password);
+            System.out.println("1 : Log In Portal");
+            System.out.println("2 : Run Batch Allocation");
             
-            if (employee.getRole().equals(EmployeeRoleEnum.GUESTRELATIONOFFIER)) {
-                guestRelationOfficerView();
-                
-            } else if (employee.getRole().equals(EmployeeRoleEnum.OPERATIONSMANAGER)) {
-                operationsManagerView();
+            choice = sc.nextInt(); 
+            if (choice == 1 ) {
+                System.out.print("Username : ");
+                String username = scanner.nextLine(); 
+                System.out.print("Password : ");
+                String password = scanner.nextLine(); 
 
-            } else if (employee.getRole().equals(EmployeeRoleEnum.SALESMANAGER)) {
-                salesManagerView();
+                Employee employee = employeeSessionBeanRemote.employeeLogin(username, password);
+
+                if (employee.getRole().equals(EmployeeRoleEnum.GUESTRELATIONOFFIER)) {
+                    guestRelationOfficerView();
+
+                } else if (employee.getRole().equals(EmployeeRoleEnum.OPERATIONSMANAGER)) {
+                    operationsManagerView();
+
+                } else if (employee.getRole().equals(EmployeeRoleEnum.SALESMANAGER)) {
+                    salesManagerView();
+
+                } else if (employee.getRole().equals(EmployeeRoleEnum.SYSTEMADMIN)) {
+                   systemAdminView();
+                }                     
+            } else if (choice == 2) {
+                
+            }
             
-            } else if (employee.getRole().equals(EmployeeRoleEnum.SYSTEMADMIN)) {
-               systemAdminView();
-            }                         
+                    
         }                
     }
     

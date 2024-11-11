@@ -5,10 +5,13 @@
 package ejb.session.singleton;
 
 import entity.Employee;
+import entity.Guest;
+import entity.Reservation;
 import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.LocalBean;
@@ -17,6 +20,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import util.EmployeeRoleEnum;
+import util.ReservationTypeEnum;
 import util.RoomRateTypeEnum;
 import util.RoomStatusEnum;
 
@@ -100,6 +104,41 @@ public class TestDataInitSessionBean {
             for (int i = 1; i <= 5; i++) {
                 em.persist(new Room(grandSuite, "0" + i + "05", RoomStatusEnum.AVAILABLE));
             }            
+            
+            Guest guest1 = new Guest("John", "Doe", "john.doe@example.com", "1234567890", "a", "guest1", "password");
+            Guest guest2 = new Guest("Jane", "Smith", "jane.smith@example.com", "0987654321", "a", "guest2", "password");
+            Guest guest3 = new Guest("Alice", "Johnson", "alice.johnson@example.com", "1122334455", "a", "guest3", "password");
+            Guest guest4 = new Guest("Bob", "Brown", "bob.brown@example.com", "5566778899", "a", "guest4", "password");
+            Guest guest5 = new Guest("Charlie", "Davis", "charlie.davis@example.com", "6677889900", "a", "guest5", "password");
+
+            em.persist(guest1);
+            em.persist(guest2);
+            em.persist(guest3);
+            em.persist(guest4);
+            em.persist(guest5);            
+            
+            
+            // -----------------------------Create Reservations and RoomReservations--------------------------------
+            LocalDate allocationDate = LocalDate.now().plusDays(1);
+
+            // Create Reservations for the allocation date
+            // Using the new constructor
+            Reservation reservation1 = new Reservation(LocalDate.now(), allocationDate, allocationDate.plusDays(3), ReservationTypeEnum.ONLINE, guest1, grandSuite);
+            Reservation reservation2 = new Reservation(LocalDate.now(), allocationDate, allocationDate.plusDays(2), ReservationTypeEnum.ONLINE, guest2, juniorSuite);
+            Reservation reservation3 = new Reservation(LocalDate.now(), allocationDate, allocationDate.plusDays(4), ReservationTypeEnum.ONLINE, guest3, juniorSuite);
+            Reservation reservation4 = new Reservation(LocalDate.now(), allocationDate, allocationDate.plusDays(5), ReservationTypeEnum.ONLINE, guest4, deluxeRoom);
+            Reservation reservation5 = new Reservation(LocalDate.now(), allocationDate, allocationDate.plusDays(2), ReservationTypeEnum.ONLINE, guest5, deluxeRoom);
+            Reservation reservation6 = new Reservation(LocalDate.now(), allocationDate, allocationDate.plusDays(3), ReservationTypeEnum.ONLINE, guest1); // For Type 2 test
+            Reservation reservation7 = new Reservation(LocalDate.now(), allocationDate, allocationDate.plusDays(3), ReservationTypeEnum.ONLINE, guest2); // For Type 2 test
+
+            em.persist(reservation1);
+            em.persist(reservation2);
+            em.persist(reservation3);
+            em.persist(reservation4);
+            em.persist(reservation5);
+            em.persist(reservation6);
+            em.persist(reservation7);
+            
             
         }
     }

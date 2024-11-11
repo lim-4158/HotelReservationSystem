@@ -4,6 +4,7 @@
  */
 package horsmanagementclient;
 
+import ejb.session.stateless.BatchAllocationSessionBeanRemote;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.GuestRelationOfficerSessionBeanRemote;
 import ejb.session.stateless.OperationManagerSessionBeanRemote;
@@ -30,11 +31,12 @@ public class Main {
     private static SalesManagerSessionBeanRemote salesManagerSessionBeanRemote;
     @EJB 
     private static SystemAdminSessionBeanRemote systemAdminSessionBeanRemote;
-    
+    @EJB
+    private static BatchAllocationSessionBeanRemote batchAllocationSessionBeanRemote;
 
     public static void main(String[] args)
     {
-        MainApp mainApp = new MainApp(employeeSessionBeanRemote, guestRelationOfficerSessionBeanRemote, operationManagerSessionBeanRemote, salesManagerSessionBeanRemote, systemAdminSessionBeanRemote);
+        MainApp mainApp = new MainApp(employeeSessionBeanRemote, guestRelationOfficerSessionBeanRemote, operationManagerSessionBeanRemote, salesManagerSessionBeanRemote, systemAdminSessionBeanRemote, batchAllocationSessionBeanRemote);
         mainApp.runApp();   
     }
 }

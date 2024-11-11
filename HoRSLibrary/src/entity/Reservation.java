@@ -32,6 +32,7 @@ public class Reservation implements Serializable {
     private LocalDate checkOutDate;
     private BigDecimal totalAmount;
     private ReservationTypeEnum reservationType;
+    private int numberOfRooms; 
     
     @ManyToOne
     private Guest guest;
@@ -45,13 +46,23 @@ public class Reservation implements Serializable {
     public Reservation() {
     }
 
-    public Reservation(LocalDate reservationDate, LocalDate checkInDate, LocalDate checkOutDate, ReservationTypeEnum reservationType, Guest guest) {
+    public Reservation(LocalDate reservationDate, LocalDate checkInDate, LocalDate checkOutDate, ReservationTypeEnum reservationType, Guest guest, RoomType roomType, int numberOfRooms) {
         this.reservationDate = reservationDate;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         this.reservationType = reservationType;
         this.guest = guest;
+        this.roomType = roomType; 
+        this.numberOfRooms = numberOfRooms;
     }   
+
+    public int getNumberOfRooms() {
+        return numberOfRooms;
+    }
+
+    public void setNumberOfRooms(int numberOfRooms) {
+        this.numberOfRooms = numberOfRooms;
+    }
 
     public Long getReservationID() {
         return reservationID;
