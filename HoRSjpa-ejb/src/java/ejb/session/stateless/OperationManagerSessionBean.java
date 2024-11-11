@@ -319,26 +319,14 @@ public class OperationManagerSessionBean implements OperationManagerSessionBeanR
         Long count = (Long) query.getSingleResult();
         return count > 0;
     }
-
+    
     public boolean roomTypeIsInUse(RoomType roomType, LocalDate inputDate) {
-//        Query query = em.createQuery(
-//            "SELECT COUNT(rr) " +
-//            "FROM RoomReservation rr " +
-//            "JOIN rr.reservation res " +
-//            "WHERE res.roomType = :roomType " +
-//            "AND rr.exceptionReport IS NULL"
-//        );
-//        query.setParameter("roomType", roomType);
-//
-//        Long count = (Long) query.getSingleResult();
-//        return count > 0;
-        
+    // Check if the room type has no associated rooms
         List<Room> rooms = roomType.getRooms();
-        for (Room r : rooms) {
-            if (roomIsInUse(r, inputDate)) {
-                return true;
-            }
+        if (rooms == null || rooms.isEmpty()) {
+            return false; // Room type is not in use if it has no rooms
         }
-        return false;
+
+        return true;
     }
 }
