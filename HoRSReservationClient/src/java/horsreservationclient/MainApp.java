@@ -140,6 +140,9 @@ public class MainApp {
 
     private void doReserveHotelRoom() {
         System.out.println("Reserving hotel room...\n");
+        
+        // put search for hotel room logic in here too
+        
         // Implement reservation logic
     }
 

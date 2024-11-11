@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Scanner;
 import util.EmployeeRoleEnum;
 import util.RoomRateTypeEnum;
+import util.RoomTypeStatusEnum;
 
 /**
  *
@@ -73,27 +74,135 @@ public class MainApp {
     }
     
     public void guestRelationOfficerView() {
-        System.out.println("Your role : Guest Relation Officer \n");
-        System.out.println("1: Walk-in search room");
-        System.out.println("2: Walk-in reserve room");
-        System.out.println("3: Check-in guest");
-        System.out.println("4: Check-out guest");
+        
+        Scanner sc = new Scanner(System.in); 
+        int response;
+        
+        while (true) {
+            System.out.println("Your role : Guest Relation Officer \n");
+            System.out.println("1: Walk-in search room");
+            System.out.println("2: Walk-in reserve room");
+            System.out.println("3: Check-in guest");
+            System.out.println("4: Check-out guest");
+            System.out.print("Enter choice: ");
+            response = sc.nextInt(); 
+            sc.nextLine(); // Consume newline
+            
+            if (response == 1){
+                // do walk in search room
+            } else if (response == 2) {
+               // do walk in reserve room
+            } else if (response == 3) {
+                // do check in guest
+            } else if (response == 4) {
+                // do check out guest
+            } else {
+                System.out.println("Invalid choice. Please try again.");
+            }
+        }
                 
     }
     
+    // ---------- Operations Manager View ----------
+    
     public void operationsManagerView() {
-        System.out.println("Your role : Operations Manager \n");
-        System.out.println("1: Create new room type");
-        System.out.println("2: View room type details");
-        System.out.println("3: Update room type");
-        System.out.println("4: Delete room type");
-        System.out.println("5: View all room type");
-        System.out.println("6: Create new room");
-        System.out.println("7: Update room");
-        System.out.println("8: Delete room");
-        System.out.println("9: View all rooms");
-        System.out.println("10: View room allocation exceptioin report");         
+        Scanner sc = new Scanner(System.in); 
+        int response;
+        
+        while (true) {
+            System.out.println("Your role : Operations Manager \n");
+            System.out.println("1: Create new room type");
+            System.out.println("2: View room type details");
+            System.out.println("3: Update room type");
+            System.out.println("4: Delete room type");
+            System.out.println("5: View all room types");
+            System.out.println("6: Create new room");
+            System.out.println("7: Update room");
+            System.out.println("8: Delete room");
+            System.out.println("9: View all rooms");
+            System.out.println("10: View room allocation exception report");        
+            
+            response = sc.nextInt(); 
+            sc.nextLine(); // Consume newline
+            
+            if (response == 1){
+                createNewRoomType();
+            } else if (response == 2) {
+                // view room type details
+            } else if (response == 3) {
+                // update room type
+            } else if (response == 4) {
+                // delete room type
+            } else if (response == 5) {
+                // view all room types
+            } else if (response == 6) {
+                // create new room
+            } else if (response == 7) {
+                // update room
+            } else if (response == 8) {
+            } else if (response == 9) {
+            } else if (response == 10) {
+            } else {
+                System.out.println("Invalid choice. Please try again.");
+            }
+        }
     }
+    
+    // ---------- Operations Manager Functionalities ----------
+    
+    public void createNewRoomType() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("\n--- Create New Room Type ---");
+
+        System.out.print("Enter Type Name: ");
+        String typeName = sc.nextLine();
+
+        System.out.print("Enter Description: ");
+        String description = sc.nextLine();
+
+        System.out.print("Enter Size (in square meters): ");
+        BigDecimal size = sc.nextBigDecimal();
+        sc.nextLine(); // Consume newline
+
+        System.out.print("Enter Bed Type: ");
+        String bed = sc.nextLine();
+
+        System.out.print("Enter Capacity (number of guests): ");
+        Long capacity = sc.nextLong();
+        sc.nextLine(); // Consume newline
+
+        System.out.print("Enter Amenities (comma-separated): ");
+        String amenities = sc.nextLine();
+
+        System.out.println("Select Room Type Status: ");
+        RoomTypeStatusEnum roomTypeStatus = selectEnum(RoomTypeStatusEnum.class);
+
+        System.out.print("Enter Tier Number: ");
+        Integer tierNumber = sc.nextInt();
+        sc.nextLine(); // Consume newline
+
+        System.out.print("Enter Inventory (number of rooms): ");
+        Long inventory = sc.nextLong();
+        sc.nextLine(); // Consume newline
+
+        // Create RoomType object
+        RoomType roomType = new RoomType();
+        roomType.setTypeName(typeName);
+        roomType.setDescription(description);
+        roomType.setSize(size);
+        roomType.setBed(bed);
+        roomType.setCapacity(capacity);
+        roomType.setAmenities(amenities);
+        roomType.setRoomTypeStatus(roomTypeStatus);
+        roomType.setTierNumber(tierNumber);
+        roomType.setInventory(inventory);
+
+        // Assuming a session bean method to create room type
+        Long roomTypeID = operationManagerSessionBeanRemote.createNewRoomType(roomType); 
+        System.out.println("New Room Type created with ID: " + roomTypeID);
+    
+    }
+    
     
     // ---------- Sales Manager View ----------
     
@@ -520,3 +629,5 @@ public class MainApp {
    
     }
 }
+
+
