@@ -8,12 +8,12 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import util.RoomTypeStatusEnum;
 
@@ -28,14 +28,23 @@ public class RoomType implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomTypeID;
+    @Column(length = 64, nullable = false, unique = true)
     private String typeName;
+    @Column(length = 255, nullable = true)
     private String description;
+    @Column(nullable = false)
     private BigDecimal size;
+    @Column(length = 32, nullable = false)
     private String bed;
+    @Column(nullable = false)
     private Long capacity;
+    @Column(length = 255, nullable = true)
     private String amenities;
+    @Column(nullable = false)
     private RoomTypeStatusEnum roomTypeStatus;
+    @Column(nullable = false)
     private Integer tierNumber;
+    @Column(nullable = false)
     private Long inventory;
     @OneToMany(mappedBy =  "roomType", fetch = FetchType.EAGER)
     private List<Room> rooms = new ArrayList<Room>(); 

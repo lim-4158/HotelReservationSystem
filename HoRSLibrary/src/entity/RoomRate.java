@@ -7,10 +7,12 @@ package entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import util.RoomRateTypeEnum;
 
@@ -25,13 +27,20 @@ public class RoomRate implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomRateID;
+    
+    @Column(length = 64, nullable = false, unique = true)
     private String roomRateName;
+    @Column(nullable = false)
     private RoomRateTypeEnum rateType;
+    @Column(nullable = false)
     private BigDecimal nightlyRateAmount; 
+    @Column(nullable = false)
     private LocalDate startDate;
+    @Column(nullable = false)
     private LocalDate endDate;
     
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
     private RoomType roomType; 
 
     public Long getRoomRateID() {

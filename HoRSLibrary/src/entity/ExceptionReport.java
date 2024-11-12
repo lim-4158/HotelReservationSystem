@@ -6,10 +6,12 @@ package entity;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import util.ExceptionReportTypeEnum;
 
@@ -26,10 +28,12 @@ public class ExceptionReport implements Serializable {
     private Long reportID;
     private Long resID;
     
-    @OneToOne 
+    @OneToOne(optional = true)
+    @JoinColumn(nullable = true)
     private RoomReservation roomReservation;
-    
+    @Column(nullable = false)
     private ExceptionReportTypeEnum reportType;
+    @Column(nullable = false)
     private LocalDate creationDate;
 
     public ExceptionReport() {

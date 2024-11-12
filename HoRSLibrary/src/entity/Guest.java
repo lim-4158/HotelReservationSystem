@@ -7,12 +7,11 @@ package entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 
 /**
@@ -27,12 +26,25 @@ public class Guest extends Visitor implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long guestID;
     
+    @Column (length = 32, nullable = false)
     private String firstName;
+    
+    @Column(length = 32, nullable = false)
     private String lastName;
+    
+    @Column(length = 64, nullable = false, unique = true) 
     private String email;
+    
+    @Column(length = 8, nullable = false)
     private String phoneNumber;
+    
+    @Column(length = 20, nullable = false, unique = true)
     private String passportNumber;
+    
+    @Column(length = 32, nullable = false, unique = true)
     private String username;
+    
+    @Column(length = 64, nullable = false)
     private String password;
     
     @OneToMany(mappedBy = "guest")

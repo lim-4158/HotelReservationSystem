@@ -23,9 +23,9 @@ public class Employee implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long employeeID;
-    @Column(nullable = false)
+    @Column(length = 32, nullable = false, unique = true)
     private String username; 
-    @Column(nullable = false)
+    @Column(length = 64, nullable = false)
     private String password;
     @Column(nullable = false)
     private EmployeeRoleEnum role;

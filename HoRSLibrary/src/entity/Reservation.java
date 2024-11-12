@@ -27,20 +27,30 @@ public class Reservation implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reservationID;
+    
+    @Column(nullable = false)
     private LocalDate reservationDate;
+    
+    @Column(nullable = false)
     private LocalDate checkInDate;
+    
+    @Column(nullable = false)
     private LocalDate checkOutDate;
     private BigDecimal totalAmount;
     private ReservationTypeEnum reservationType;
+    
+    @Column(nullable = false)
     private int numberOfRooms; 
     
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
     private Guest guest;
     
-    @ManyToOne
+    @ManyToOne(optional = true)
     private Partner partner;
     
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
     private RoomType roomType;
 
     public Reservation() {

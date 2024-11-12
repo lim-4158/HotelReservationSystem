@@ -5,11 +5,12 @@
 package entity;
 
 import java.io.Serializable;
-import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import util.RoomStatusEnum;
 
@@ -24,11 +25,18 @@ public class Room implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomID;
-    private String partnerName;
+    
+    @Column(length = 10, nullable = false, unique = true)
     private String roomNumber;
+    
+    @Column(nullable = false)
     private RoomStatusEnum roomStatus;
+    
+    @Column(nullable = false)
     private boolean isDisabled = false;
-    @ManyToOne
+    
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
     private RoomType roomType;
     
     public Room(){
@@ -42,7 +50,6 @@ public class Room implements Serializable {
     }
     
     public Room(String partnerName, String roomNumber, RoomStatusEnum roomStatus, RoomType roomType) {
-        this.partnerName = partnerName;
         this.roomNumber = roomNumber;
         this.roomStatus = roomStatus;
         this.roomType = roomType;
@@ -101,20 +108,6 @@ public class Room implements Serializable {
     @Override
     public String toString() {
         return "entity.Room[ id=" + roomID + " ]";
-    }
-
-    /**
-     * @return the partnerName
-     */
-    public String getPartnerName() {
-        return partnerName;
-    }
-
-    /**
-     * @param partnerName the partnerName to set
-     */
-    public void setPartnerName(String partnerName) {
-        this.partnerName = partnerName;
     }
 
     /**

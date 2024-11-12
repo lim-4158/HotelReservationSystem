@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
@@ -23,15 +24,16 @@ public class RoomReservation implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomReservationId;
-    
-        
-    @ManyToOne
+   
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
     private Room room;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
     private Reservation reservation;
 
-    @OneToOne (mappedBy = "roomReservation")
+    @OneToOne (mappedBy = "roomReservation", optional = true)
     private ExceptionReport exceptionReport;
 
     public RoomReservation() {
