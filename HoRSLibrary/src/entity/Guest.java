@@ -29,22 +29,22 @@ public class Guest extends Visitor implements Serializable {
     @Column (length = 32, nullable = false)
     private String firstName;
     
-    @Column(length = 32, nullable = false)
+    @Column(length = 32, nullable = true)
     private String lastName;
     
     @Column(length = 64, nullable = false, unique = true) 
     private String email;
     
-    @Column(length = 8, nullable = false)
+    @Column(length = 8, nullable = true)
     private String phoneNumber;
     
-    @Column(length = 20, nullable = false, unique = true)
+    @Column(length = 20, nullable = true, unique = true)
     private String passportNumber;
     
-    @Column(length = 32, nullable = false, unique = true)
+    @Column(length = 32, nullable = true, unique = true)
     private String username;
     
-    @Column(length = 64, nullable = false)
+    @Column(length = 64, nullable = true)
     private String password;
     
     @OneToMany(mappedBy = "guest")
@@ -58,6 +58,11 @@ public class Guest extends Visitor implements Serializable {
         this.passportNumber = passportNumber;
         this.username = username;
         this.password = password;
+    }
+    
+    public Guest(String firstName, String email) {
+        this.firstName = firstName;
+        this.email = email;
     }
 
     public Guest() {
