@@ -236,7 +236,7 @@ public class MainApp {
         
         } catch (RoomTypeNotFoundException e) {
             System.out.println("Error updating Room Type: " + e.getMessage());
-            e.printStackTrace();
+            
         }  
     }
 
@@ -516,7 +516,6 @@ public class MainApp {
                 System.out.print("New Type Name: ");
                 String newTypeName = sc.nextLine().trim();
                 if (!newTypeName.isEmpty()) {
-                    System.out.println("Attempting to update Type Name to: " + newTypeName);
                     operationManagerSessionBeanRemote.updateTypeName(roomTypeID, newTypeName);
                     roomType.setTypeName(newTypeName);
                 }
@@ -566,7 +565,7 @@ public class MainApp {
                     roomType.setAmenities(newAmenities);
                 }
                 
-                System.out.println("Select new Room Type Status (enter 0 to keep unchanged): ");
+                System.out.println("Select new Room Type Status: ");
                 RoomTypeStatusEnum newStatus = selectEnum(RoomTypeStatusEnum.class);
                 if (newStatus != null) {
                     operationManagerSessionBeanRemote.updateRoomTypeStatus(roomTypeID, newStatus);
@@ -603,7 +602,7 @@ public class MainApp {
             }
         } catch (RoomTypeNotFoundException e) {
             System.out.println("Error updating Room Type: " + e.getMessage());
-            e.printStackTrace();
+            
         }
     }
     
@@ -618,7 +617,6 @@ public class MainApp {
         try {
             RoomType roomType = operationManagerSessionBeanRemote.retrieveRoomTypeByName(typeName);
             Long roomTypeID = roomType.getRoomTypeID();
-            System.out.println("roomtype id is " + roomTypeID);
             
             if (roomTypeID != null) {
                 System.out.print("Are you sure you want to delete Room Type '" + typeName + "'? (yes/no): ");
@@ -684,6 +682,7 @@ public class MainApp {
         
         } catch (Exception e) {
             System.out.println("Error creating Room: " + e.getMessage());
+            e.printStackTrace();
         }
     }
     
@@ -768,6 +767,7 @@ public class MainApp {
             }
         } catch (Exception e) {
             System.out.println("Error deleting Room: " + e.getMessage());
+            e.printStackTrace();
         }
     }
     

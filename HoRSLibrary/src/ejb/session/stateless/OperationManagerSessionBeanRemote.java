@@ -60,6 +60,5 @@ public interface OperationManagerSessionBeanRemote {
 
     // Helper Methods
     public boolean roomIsInUse(Room room);
-    public boolean roomTypeIsInUse(RoomType roomType, LocalDate inputDate);
-    
+    public boolean roomTypeIsInUse(RoomType roomType);   
 }

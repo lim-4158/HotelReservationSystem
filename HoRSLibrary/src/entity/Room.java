@@ -32,9 +32,6 @@ public class Room implements Serializable {
     @Column(nullable = false)
     private RoomStatusEnum roomStatus;
     
-    @Column(nullable = false)
-    private boolean isDisabled = false;
-    
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
     private RoomType roomType;
@@ -62,20 +59,7 @@ public class Room implements Serializable {
     public void setRoomType(RoomType roomType) {
         this.roomType = roomType;
     }
-    
-    /**
-     * @return the isDisabled
-     */
-    public boolean isIsDisabled() {
-        return isDisabled;
-    }
-
-    /**
-     * @param isDisabled the isDisabled to set
-     */
-    public void setIsDisabled(boolean isDisabled) {
-        this.isDisabled = isDisabled;
-    }
+   
 
     public Long getRoomID() {
         return roomID;

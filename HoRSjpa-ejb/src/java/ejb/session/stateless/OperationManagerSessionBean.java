@@ -88,22 +88,18 @@ public class OperationManagerSessionBean
 
     @Override
     public void deleteRoomType(Long roomTypeID) throws RoomTypeNotFoundException {
-
-        // get input date
-        LocalDate currentDate = LocalDate.now();
-
         RoomType roomType = retrieveRoomTypeByID(roomTypeID);
 
-        if (roomTypeIsInUse(roomType, currentDate)) {
-            System.out.println("entered here");
+        if (roomTypeIsInUse(roomType)) {
+            // If the RoomType is in use, disable it instead of deleting
             roomType.setRoomTypeStatus(RoomTypeStatusEnum.DISABLED);
             em.merge(roomType);
+            System.out.println("Room Type is in use and has been disabled.");
         } else {
+            // If the RoomType is not in use, it is safe to delete
             em.remove(roomType);
-            System.out.println("it has entered here yayayayay");
-
+            System.out.println("Room Type deleted successfully.");
         }
-
     }
 
     @Override
@@ -216,23 +212,33 @@ public class OperationManagerSessionBean
     }
 
     @Override
-    public void deleteRoom(Long roomID) throws RoomNotFoundException { // FIX THIS
-        // as long as there is any dependencies like roomreservation, like even in the
-        // past
+    public void deleteRoom(Long roomID) throws RoomNotFoundException {
         try {
-            Room r = retrieveRoomById(roomID);
-
-            if (!roomIsInUse(r)) {
-                r.getRoomType().getRooms().remove(r);
-                em.merge(r);
-            } else {
-                r.setIsDisabled(true);
-            }
-
+            // Retrieve the room by ID
             Room room = retrieveRoomById(roomID);
-            em.remove(room);
+
+            // Check if the room is in use (has any associated RoomReservations)
+            if (roomIsInUse(room)) {
+                // If the room is in use, disable it instead of deleting
+                room.setRoomStatus(RoomStatusEnum.DISABLED);
+                System.out.println("set room enum");
+                System.out.println(room.getRoomStatus());
+                em.merge(room);
+                System.out.println("Room is in use and has been disabled.");
+            } else {
+                // If the room is not in use, dissociate it from its RoomType
+                RoomType roomType = room.getRoomType();
+                if (roomType != null) {
+                    roomType.getRooms().remove(room);
+                    em.merge(roomType);
+                }
+
+                // Now remove the room itself
+                em.remove(room);
+                System.out.println("Room deleted successfully.");
+            }
         } catch (NoResultException e) {
-            throw new RoomNotFoundException("no room found");
+            throw new RoomNotFoundException("Room with ID " + roomID + " not found.");
         }
     }
 
@@ -296,24 +302,29 @@ public class OperationManagerSessionBean
     // helper methods
     @Override
     public boolean roomIsInUse(Room room) {
+        // Query to count RoomReservations that are associated with the given room
         Query query = em.createQuery(
-                "SELECT COUNT(rr) " +
-                        "FROM RoomReservation rr " +
-                        "WHERE rr.room = :room");
+            "SELECT COUNT(rr) FROM RoomReservation rr WHERE rr.room = :room"
+        );
         query.setParameter("room", room);
 
         Long count = (Long) query.getSingleResult();
+
+        // Return true if there are any RoomReservations associated with this room
         return count > 0;
     }
-
+    
     @Override
-    public boolean roomTypeIsInUse(RoomType roomType, LocalDate inputDate) {
-        // Check if the room type has no associated rooms
-        List<Room> rooms = roomType.getRooms();
-        if (rooms == null || rooms.isEmpty()) {
-            return false; // Room type is not in use if it has no rooms
-        }
+    public boolean roomTypeIsInUse(RoomType roomType) {
+        // Query to count the rooms associated with this RoomType in the database
+        Query query = em.createQuery(
+            "SELECT COUNT(r) FROM Room r WHERE r.roomType = :roomType"
+        );
+        query.setParameter("roomType", roomType);
 
-        return true;
+        Long roomCount = (Long) query.getSingleResult();
+
+        // RoomType is in use if there are any associated rooms
+        return roomCount > 0;
     }
 }
