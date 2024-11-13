@@ -22,8 +22,7 @@ import util.exceptions.RoomTypeNotFoundException;
  */
 @Remote
 public interface OperationManagerSessionBeanRemote {
-    
-    // Retrieving By Name / Number Methods
+        // Retrieving By Name / Number Methods
     public RoomType retrieveRoomTypeByName(String typeName) throws RoomTypeNotFoundException;
     public Room retrieveRoomByNumber(String roomNum) throws RoomNotFoundException;
     
@@ -59,5 +58,9 @@ public interface OperationManagerSessionBeanRemote {
     // Exception Report Methods
     public List<ExceptionReport> retrieveExceptionReportsByDate(LocalDate date);
     public ExceptionReport retrieveExceptionReportByID(Long exceptionReportID);
+
+    // Helper Methods
+    public boolean roomIsInUse(Room room);
+    public boolean roomTypeIsInUse(RoomType roomType, LocalDate inputDate);
     
 }

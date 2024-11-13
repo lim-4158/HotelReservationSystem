@@ -216,17 +216,16 @@ public class OperationManagerSessionBean implements OperationManagerSessionBeanR
     }
        
     @Override
-    public void deleteRoom(Long roomID) throws RoomNotFoundException {
-        
+    public void deleteRoom(Long roomID) throws RoomNotFoundException { // FIX THIS
+        // as long as there is any dependencies like roomreservation, like even in the past     
         try {
             Room r = retrieveRoomById(roomID);
         
-            if (!roomIsInUse(r, LocalDate.now())){
+            if (!roomIsInUse(r)){
                 r.getRoomType().getRooms().remove(r);
                 em.merge(r);
             } else {
                 r.setIsDisabled(true);
-
             }
 
             Room room = retrieveRoomById(roomID);
@@ -240,7 +239,6 @@ public class OperationManagerSessionBean implements OperationManagerSessionBeanR
     public void updatePartnerName(Long roomID, String newPartnerName) throws RoomNotFoundException {
         try {
             Room room = retrieveRoomById(roomID);
-            room.setPartnerName(newPartnerName);
             em.merge(room);
         } catch (Exception e) {
             throw new RoomNotFoundException("room not found");
@@ -305,21 +303,20 @@ public class OperationManagerSessionBean implements OperationManagerSessionBeanR
     }    
     
     // helper methods
-    public boolean roomIsInUse(Room room, LocalDate inputDate) {
+    @Override
+    public boolean roomIsInUse(Room room) {
         Query query = em.createQuery(
             "SELECT COUNT(rr) " +
             "FROM RoomReservation rr " +
-            "JOIN rr.reservation res " +
-            "WHERE rr.room = :room " +
-            "AND res.checkOutDate > :inputDate"
+            "WHERE rr.room = :room"
         );
         query.setParameter("room", room);
-        query.setParameter("inputDate", inputDate);
 
         Long count = (Long) query.getSingleResult();
         return count > 0;
     }
     
+    @Override
     public boolean roomTypeIsInUse(RoomType roomType, LocalDate inputDate) {
     // Check if the room type has no associated rooms
         List<Room> rooms = roomType.getRooms();

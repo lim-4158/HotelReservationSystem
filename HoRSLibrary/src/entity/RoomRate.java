@@ -38,10 +38,20 @@ public class RoomRate implements Serializable {
     private LocalDate startDate;
     @Column(nullable = false)
     private LocalDate endDate;
+    private boolean isDisabled = false;
     
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
     private RoomType roomType; 
+
+    public boolean isIsDisabled() {
+        return isDisabled;
+    }
+
+    public void setIsDisabled(boolean isDisabled) {
+        this.isDisabled = isDisabled;
+    }
+
 
     public Long getRoomRateID() {
         return roomRateID;

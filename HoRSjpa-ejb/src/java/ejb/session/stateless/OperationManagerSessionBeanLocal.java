@@ -59,5 +59,9 @@ public interface OperationManagerSessionBeanLocal {
     // Exception Report Methods
     public List<ExceptionReport> retrieveExceptionReportsByDate(LocalDate date);
     public ExceptionReport retrieveExceptionReportByID(Long exceptionReportID);
+
+    // Helper Methods
+    public boolean roomIsInUse(Room room);
+    public boolean roomTypeIsInUse(RoomType roomType, LocalDate inputDate);
   
 }
