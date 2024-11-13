@@ -883,8 +883,12 @@ public class MainApp {
         rate.setNightlyRateAmount(nightlyRate);
         rate.setStartDate(startDate);
         rate.setEndDate(endDate);
-        // Assuming RoomType association is handled elsewhere or optional
-        // If necessary, prompt for RoomType and set it here
+        RoomType roomType = selectRoomType();
+        if (roomType == null) {
+            System.out.println("Invalid Room Type selection. Room Rate creation aborted.");
+            return;
+        }
+        rate.setRoomType(roomType);
         
         Long roomRateID = salesManagerSessionBeanRemote.createNewRoomRate(rate); 
         System.out.println("New Room Rate created with ID: " + roomRateID);
@@ -929,7 +933,7 @@ public class MainApp {
                 rate.setRoomRateName(newRateName);
             }
 
-            System.out.println("Select new Rate Type (enter 0 to keep unchanged): ");
+            System.out.println("Select new Rate Type: ");
             RoomRateTypeEnum newRateType = selectEnum(RoomRateTypeEnum.class);
             if (newRateType != null) {
                 salesManagerSessionBeanRemote.updateRateType(rateID, newRateType);
@@ -958,6 +962,15 @@ public class MainApp {
                 LocalDate newEndDate = LocalDate.parse(endDateInput, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 salesManagerSessionBeanRemote.updateEndDate(rateID, newEndDate);
                 rate.setEndDate(newEndDate);
+            }
+            
+            // New section to update isDisabled field
+            System.out.print("Enter new Disabled Status (true/false, leave blank to keep unchanged): ");
+            String isDisabledInput = sc.nextLine();
+            if (!isDisabledInput.isEmpty()) {
+                boolean isDisabled = Boolean.parseBoolean(isDisabledInput);
+                salesManagerSessionBeanRemote.updateIsDisabled(rateID, isDisabled);
+                rate.setIsDisabled(isDisabled);
             }
 
             System.out.println("Room Rate updated successfully.");
@@ -1163,6 +1176,7 @@ public class MainApp {
         System.out.println("Nightly Rate Amount: $" + rate.getNightlyRateAmount());
         System.out.println("Start Date: " + rate.getStartDate());
         System.out.println("End Date: " + rate.getEndDate());
+        System.out.println("Is Disabled: " + rate.isIsDisabled());
         // If associated with RoomType, display it
         if (rate.getRoomType() != null) {
             System.out.println("Associated Room Type: " + rate.getRoomType().getTypeName());

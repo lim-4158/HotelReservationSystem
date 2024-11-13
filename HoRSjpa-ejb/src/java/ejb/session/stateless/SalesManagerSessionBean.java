@@ -11,9 +11,11 @@ import java.time.LocalDate;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.RoomRateTypeEnum;
+import util.exceptions.RoomRateNotFoundException;
 
 /**
  *
@@ -25,6 +27,38 @@ public class SalesManagerSessionBean implements SalesManagerSessionBeanRemote, S
     @PersistenceContext(unitName = "HoRSjpa-ejbPU")
     private EntityManager em;
     
+    // Retrieval Methods
+    @Override
+    public RoomRate retrieveRoomRateByName(String rateName) {
+        Query q = em.createQuery("SELECT r FROM RoomRate r WHERE r.roomRateName = :rateName ");
+        q.setParameter("rateName", rateName);
+ 
+        return (RoomRate) q.getSingleResult();
+    }
+    @Override
+    public RoomRate retrieveRoomRateByID(Long rateID) throws RoomRateNotFoundException {
+        RoomRate roomRate = em.find(RoomRate.class, rateID);
+
+        if (roomRate == null) {
+            throw new RoomRateNotFoundException("RoomRate with ID " + rateID + " not found.");
+        }
+
+        return roomRate;
+    }
+    
+    // 21. View All Room Rates
+    @Override
+    public List<RoomRate> retrieveAllRoomRates() {
+        return em.createQuery("SELECT r FROM RoomRate r", RoomRate.class).getResultList();
+    }
+    @Override
+    public List<RoomType> retrieveAllRoomTypes() {
+        Query q = em.createQuery("SELECT rt FROM RoomType rt"); 
+        return q.getResultList(); 
+    }
+    
+    // 17. Create New Room Rate
+    @Override
     public Long createNewRoomRate(RoomRate roomRate) {
         em.persist(roomRate);
         em.flush();
@@ -32,79 +66,126 @@ public class SalesManagerSessionBean implements SalesManagerSessionBeanRemote, S
         return roomRate.getRoomRateID();
     }
     
-    public void updateRateName(String rateName, String newRateName) {
-        RoomRate rate = retrieveRoomRateByName(rateName);
-        rate.setRoomRateName(newRateName);
+    // 19. Update Room Rate
+    @Override
+    public void updateRateName(Long rateID, String newRateName) throws RoomRateNotFoundException {
+        try {
+            RoomRate rate = retrieveRoomRateByID(rateID);
+            rate.setRoomRateName(newRateName);
+            em.merge(rate);
+        } catch (NoResultException e) {
+            throw new RoomRateNotFoundException("Room Rate with ID " + rateID + " not found.");
+        }
+    }
+    @Override
+    public void updateRoomType(Long rateID, RoomType newRoomType) throws RoomRateNotFoundException {
+        try {
+            RoomRate rate = retrieveRoomRateByID(rateID);
+            rate.setRoomType(newRoomType);
+            em.merge(rate);
+        } catch (NoResultException e) {
+            throw new RoomRateNotFoundException("Room Rate Not Found.");
+        }
+    }
+    @Override
+    public void updateRateType(Long rateID, RoomRateTypeEnum rateTypeEnum) throws RoomRateNotFoundException {
+        try {
+            RoomRate rate = retrieveRoomRateByID(rateID);
+            rate.setRateType(rateTypeEnum);
+            em.merge(rate);
+        } catch (NoResultException e) {
+            throw new RoomRateNotFoundException("Room Rate with ID " + rateID + " not found.");
+        }
+    }
+    @Override
+    public void updateRateAmount(Long rateID, BigDecimal newAmount) throws RoomRateNotFoundException {
+        try {
+            RoomRate rate = retrieveRoomRateByID(rateID);
+            rate.setNightlyRateAmount(newAmount);
+            em.merge(rate);
+        } catch (NoResultException e) {
+            throw new RoomRateNotFoundException("Room Rate with ID " + rateID + " not found.");
+        }
+    }
+    @Override
+    public void updateStartDate(Long rateID, LocalDate newDate) throws RoomRateNotFoundException {
+        try {
+            RoomRate rate = retrieveRoomRateByID(rateID);
+            rate.setStartDate(newDate);
+            em.merge(rate);
+        } catch (NoResultException e) {
+            throw new RoomRateNotFoundException("Room Rate with ID " + rateID + " not found.");
+        }
+    }
+    @Override
+    public void updateEndDate(Long rateID, LocalDate newDate) throws RoomRateNotFoundException {
+        try {
+            RoomRate rate = retrieveRoomRateByID(rateID);
+            rate.setEndDate(newDate);
+            em.merge(rate);
+        } catch (NoResultException e) {
+            throw new RoomRateNotFoundException("Room Rate with ID " + rateID + " not found.");
+        }
+    }
+    @Override
+    public void updateIsDisabled(Long rateID, boolean isDisabled) throws RoomRateNotFoundException {
+        RoomRate rate = retrieveRoomRateByID(rateID);
+        if (rate == null) {
+            throw new RoomRateNotFoundException("Room Rate with ID " + rateID + " not found.");
+        }
+        rate.setIsDisabled(isDisabled);
         em.merge(rate);
-    
     }
-    
-    public void updateRoomType(String rateName, RoomType newRoomType) {
-        RoomRate rate = retrieveRoomRateByName(rateName);
-        rate.setRoomType(newRoomType);
-        em.merge(rate);
-    
-    }
-    
-    public void updateRateType(String rateName, RoomRateTypeEnum rateTypeEnum) {
-        RoomRate rate = retrieveRoomRateByName(rateName);
-        rate.setRateType(rateTypeEnum);
-        em.merge(rate);
-    }
-    
-    public void updateRateAmount(String rateName, BigDecimal newAmount) {
-        RoomRate rate = retrieveRoomRateByName(rateName);
-        rate.setNightlyRateAmount(newAmount);
-        em.merge(rate);
-    }
-    
-    public void updateStartDate(String rateName, LocalDate newDate) {
-        RoomRate rate = retrieveRoomRateByName(rateName);
-        rate.setStartDate(newDate);
-        em.merge(rate);
-    }
-    
-    public void updateEndDate(String rateName, LocalDate newDate) {
-        RoomRate rate = retrieveRoomRateByName(rateName);
-        rate.setEndDate(newDate);
-        em.merge(rate);
-    }  
-    
-    public void deleteRoomRate(String rateName) {
-        RoomRate rate = retrieveRoomRateByName(rateName);
-                
-//        try {
-            
-            em.remove(rate);  // Delete the entity
-//        } catch (NoResultException e) {
-//            System.out.println("RoomRate not found for deletion.");
-//        }
-    }
-    
-    public List<RoomRate> retrieveAllRoomRates() {
-        return em.createQuery("SELECT r FROM RoomRate r", RoomRate.class).getResultList();
-    }
-    
-    
-    public RoomRate retrieveRoomRateByName(String rateName) {
-        Query q = em.createQuery("SELECT r FROM RoomRate r WHERE r.roomRateName = :rateName ");
-        q.setParameter("rateName", rateName);
- 
-        return (RoomRate) q.getSingleResult();
-    }
-    
-    
-    public List<RoomType> retrieveAllRoomTypes() {
-        Query q = em.createQuery("SELECT rt FROM RoomType rt"); 
-        return q.getResultList(); 
-    }
-    
-    
-    
-    
 
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+    // 20. Delete Room Rate
+    
+    @Override
+    public void deleteRoomRate(Long roomRateID) throws RoomRateNotFoundException {
+        try {
+            // Step 1: Retrieve the RoomRate by ID
+            RoomRate roomRate = em.find(RoomRate.class, roomRateID);
 
- 
+            if (roomRate == null) {
+                throw new RoomRateNotFoundException("RoomRate ID " + roomRateID + " not found.");
+            }
+
+            // Step 2: Check if the RoomRate is in use
+            if (!isRoomRateInUse(roomRate)) {
+                // If not in use, delete it
+                em.remove(roomRate);
+                System.out.println("RoomRate deleted successfully.");
+            } else {
+                // If in use, disable it by setting an `isDisabled` flag or similar
+                roomRate.setIsDisabled(true);
+                em.merge(roomRate);
+                System.out.println("RoomRate is in use and has been disabled.");
+            }
+        } catch (NoResultException e) {
+            throw new RoomRateNotFoundException("RoomRate with ID " + roomRateID + " not found.");
+        }
+    }
+    
+    private boolean isRoomRateInUse(RoomRate roomRate) {
+        // Retrieve the RoomType associated with the given RoomRate
+        RoomType roomType = roomRate.getRoomType();
+
+        if (roomType != null) {
+            // Query to count the number of RoomRates associated with this RoomType
+            Query query = em.createQuery(
+                "SELECT COUNT(rr) " +
+                "FROM RoomRate rr " +
+                "WHERE rr.roomType = :roomType"
+            );
+            query.setParameter("roomType", roomType);
+
+            Long count = (Long) query.getSingleResult();
+
+            // If there is more than one RoomRate, it's not in use; if exactly one, it is in use
+            return count == 1;
+        }
+
+        // If the RoomType is null, we assume the RoomRate is not in use
+        return false;
+    }
+
 }

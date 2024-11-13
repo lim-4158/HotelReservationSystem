@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 import javax.ejb.Remote;
 import util.RoomRateTypeEnum;
+import util.exceptions.RoomRateNotFoundException;
 
 /**
  *
@@ -18,29 +19,31 @@ import util.RoomRateTypeEnum;
  */
 @Remote
 public interface SalesManagerSessionBeanRemote {
+        // Retrieval Methods
     
-    public Long createNewRoomRate(RoomRate roomRate);
-
-    public void updateRateName(String rateName, String newRateName);
-
-    public void updateRoomType(String rateName, RoomType newRoomType);
-
-    public void updateRateType(String rateName, RoomRateTypeEnum rateTypeEnum);
-
-    public void updateRateAmount(String rateName, BigDecimal newAmount);
-
-    public void updateStartDate(String rateName, LocalDate newDate);
-
-    public void updateEndDate(String rateName, LocalDate newDate);
-
-    public void deleteRoomRate(String rateName);
-
-    public List<RoomRate> retrieveAllRoomRates();
-
     public RoomRate retrieveRoomRateByName(String rateName);
-
+    public RoomRate retrieveRoomRateByID(Long rateID) throws RoomRateNotFoundException;
+    
+    // 21. View All Room Rates
+    
+    public List<RoomRate> retrieveAllRoomRates();  
     public List<RoomType> retrieveAllRoomTypes();
     
+    // 17. Create New Room Rate
     
+    public Long createNewRoomRate(RoomRate roomRate);
+    
+    // 19. Update Room Rate
+    
+    public void updateRateName(Long rateID, String newRateName) throws RoomRateNotFoundException;
+    public void updateRoomType(Long rateID, RoomType newRoomType) throws RoomRateNotFoundException;
+    public void updateRateType(Long rateID, RoomRateTypeEnum rateTypeEnum) throws RoomRateNotFoundException;
+    public void updateRateAmount(Long rateID, BigDecimal newAmount) throws RoomRateNotFoundException;
+    public void updateStartDate(Long rateID, LocalDate newDate) throws RoomRateNotFoundException;
+    public void updateEndDate(Long rateID, LocalDate newDate) throws RoomRateNotFoundException;
+    public void updateIsDisabled(Long rateID, boolean isDisabled) throws RoomRateNotFoundException;
+
+    // 20. Delete Room Rate
+    public void deleteRoomRate(Long roomRateID) throws RoomRateNotFoundException;
     
 }
