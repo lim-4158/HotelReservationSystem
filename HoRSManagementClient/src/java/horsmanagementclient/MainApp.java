@@ -430,10 +430,7 @@ public class MainApp {
         Scanner sc = new Scanner(System.in);
         System.out.println("\n--- Create New Room ---");
         
-        try {
-            System.out.print("Enter Partner Name: ");
-            String partnerName = sc.nextLine().trim();
-            
+        try {        
             System.out.print("Enter Room Number: ");
             String roomNumber = sc.nextLine().trim();
             
@@ -445,7 +442,6 @@ public class MainApp {
             
             // Create Room object
             Room room = new Room();
-            room.setPartnerName(partnerName);
             room.setRoomNumber(roomNumber);
             room.setRoomStatus(roomStatus);
             room.setRoomType(roomType);
@@ -478,13 +474,7 @@ public class MainApp {
                 displayRoom(room);
                 
                 System.out.println("\nEnter new details (leave blank to keep unchanged):");
-                
-                System.out.print("New Partner Name: ");
-                String newPartnerName = sc.nextLine().trim();
-                if (!newPartnerName.isEmpty()) {
-                    operationManagerSessionBeanRemote.updatePartnerName(roomID, newPartnerName);
-                    // Assuming a method to update partner name if necessary
-                }
+              
                 
                 System.out.print("New Room Number: ");
                 String newRoomNumber = sc.nextLine().trim();
@@ -1019,7 +1009,6 @@ public class MainApp {
     }
         private void displayRoom(Room room) {
         System.out.println("Room ID: " + room.getRoomID());
-        System.out.println("Partner Name: " + room.getPartnerName());
         System.out.println("Room Number: " + room.getRoomNumber());
         System.out.println("Room Status: " + room.getRoomStatus());
         if (room.getRoomType() != null) {

@@ -47,7 +47,6 @@ public interface OperationManagerSessionBeanRemote {
     // CRUD Room Methods
     public Long createNewRoom(Room r);
     public void deleteRoom(Long roomID) throws RoomNotFoundException;
-    public void updatePartnerName(Long roomID, String newPartnerName) throws RoomNotFoundException;
     public void updateRoomNumber(Long roomID, String newRoomNumber) throws RoomNotFoundException; 
     public void updateRoomStatus(Long roomID, RoomStatusEnum newRoomStatus) throws RoomNotFoundException;
     public void updateRoomType(Long roomID, RoomType newRoomType) throws RoomNotFoundException;

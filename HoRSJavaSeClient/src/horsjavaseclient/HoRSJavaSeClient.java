@@ -20,7 +20,8 @@ public class HoRSJavaSeClient {
     public static void main(String[] args) {
         // TODO code application logic here
         
-        PartnerWebService_Service partner = new PartnerWebService_Service(); 
+        PartnerWebService_Service partnerWebService_Service = new PartnerWebService_Service(); 
+        
         //replace method with actual method below
         //List<Partner> partners = partner.getPartnerWebServicePort().method();
     }

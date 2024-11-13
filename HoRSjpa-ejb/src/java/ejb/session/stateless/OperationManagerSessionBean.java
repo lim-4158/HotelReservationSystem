@@ -236,16 +236,7 @@ public class OperationManagerSessionBean implements OperationManagerSessionBeanR
         }
     }
     
-    @Override
-    public void updatePartnerName(Long roomID, String newPartnerName) throws RoomNotFoundException {
-        try {
-            Room room = retrieveRoomById(roomID);
-            room.setPartnerName(newPartnerName);
-            em.merge(room);
-        } catch (Exception e) {
-            throw new RoomNotFoundException("room not found");
-        }
-    }
+
    
     @Override
     public void updateRoomNumber(Long roomID, String newRoomNumber) throws RoomNotFoundException {
