@@ -32,19 +32,19 @@ public class RoomType implements Serializable {
     private String typeName;
     @Column(length = 255, nullable = true)
     private String description;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private BigDecimal size;
-    @Column(length = 32, nullable = false)
+    @Column(length = 32, nullable = true)
     private String bed;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Long capacity;
     @Column(length = 255, nullable = true)
     private String amenities;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private RoomTypeStatusEnum roomTypeStatus;
     @Column(nullable = false)
     private Integer tierNumber;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Long inventory;
     @OneToMany(mappedBy =  "roomType", fetch = FetchType.EAGER)
     private List<Room> rooms = new ArrayList<Room>(); 
@@ -73,6 +73,7 @@ public class RoomType implements Serializable {
         this.roomTypeStatus = roomTypeStatus;
         this.tierNumber = tierNumber;
         this.inventory = inventory;
+        
     }
     
     

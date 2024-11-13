@@ -662,10 +662,7 @@ public class MainApp {
         Scanner sc = new Scanner(System.in);
         System.out.println("\n--- Create New Room ---");
         
-        try {
-            System.out.print("Enter Partner Name: ");
-            String partnerName = sc.nextLine().trim();
-            
+        try {        
             System.out.print("Enter Room Number: ");
             String roomNumber = sc.nextLine().trim();
             
@@ -709,13 +706,7 @@ public class MainApp {
                 displayRoom(room);
                 
                 System.out.println("\nEnter new details (leave blank to keep unchanged):");
-                
-                System.out.print("New Partner Name: ");
-                String newPartnerName = sc.nextLine().trim();
-                if (!newPartnerName.isEmpty()) {
-                    operationManagerSessionBeanRemote.updatePartnerName(roomID, newPartnerName);
-                    // Assuming a method to update partner name if necessary
-                }
+              
                 
                 System.out.print("New Room Number: ");
                 String newRoomNumber = sc.nextLine().trim();

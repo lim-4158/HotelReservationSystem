@@ -1,4 +1,4 @@
-/*
+    /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/WebServices/EjbWebService.java to edit this template
  */
@@ -26,8 +26,11 @@ public class PartnerWebService {
     /**
      * This is a sample web service operation
      */
-    @WebMethod(operationName = "hello")
-    public Partner partnerLogIn(@WebParam(name = "name") String txt) {
-        return new Partner(); 
+    @WebMethod(operationName = "partnerLogIn")
+    public Partner partnerLogIn(@WebParam(name = "name") String name, 
+                                    @WebParam(name = "password") String password) {
+        return partnerSessionBean.partnerLogIn(name, password); 
     }
+    
+    
 }

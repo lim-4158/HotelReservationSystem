@@ -25,12 +25,12 @@ import util.exceptions.RoomTypeNotFoundException;
  * @author jamiewee
  */
 @Stateless
-public class OperationManagerSessionBean implements OperationManagerSessionBeanRemote, OperationManagerSessionBeanLocal {
+public class OperationManagerSessionBean
+        implements OperationManagerSessionBeanRemote, OperationManagerSessionBeanLocal {
 
     @PersistenceContext(unitName = "HoRSjpa-ejbPU")
     private EntityManager em;
-    
-        
+
     // Retrieving By Id Methods
     @Override
     public RoomType retrieveRoomTypeByID(Long roomTypeId) throws RoomTypeNotFoundException {
@@ -54,7 +54,7 @@ public class OperationManagerSessionBean implements OperationManagerSessionBeanR
             throw new RoomNotFoundException("No room found with ID: " + roomId);
         }
     }
-    
+
     // Retrieving By Name / Number Methods
     @Override
     public RoomType retrieveRoomTypeByName(String typeName) throws RoomTypeNotFoundException {
@@ -66,7 +66,7 @@ public class OperationManagerSessionBean implements OperationManagerSessionBeanR
             throw new RoomTypeNotFoundException("No room type found with the name: " + typeName);
         }
     }
-    
+
     @Override
     public Room retrieveRoomByNumber(String roomNum) throws RoomNotFoundException {
         try {
@@ -77,7 +77,7 @@ public class OperationManagerSessionBean implements OperationManagerSessionBeanR
             throw new RoomNotFoundException("No Room Found.");
         }
     }
-    
+
     // CRUD Room Type Methods
     @Override
     public Long createNewRoomType(RoomType rt) {
@@ -85,25 +85,25 @@ public class OperationManagerSessionBean implements OperationManagerSessionBeanR
         em.flush();
         return rt.getRoomTypeID();
     }
-    
+
     @Override
     public void deleteRoomType(Long roomTypeID) throws RoomTypeNotFoundException {
-        
+
         // get input date
         LocalDate currentDate = LocalDate.now();
-        
+
         RoomType roomType = retrieveRoomTypeByID(roomTypeID);
-        
-       if (roomTypeIsInUse(roomType, currentDate)) {
-           System.out.println("entered here");
-           roomType.setRoomTypeStatus(RoomTypeStatusEnum.DISABLED);
-           em.merge(roomType);
-       } else {
-           em.remove(roomType);
-           System.out.println("it has entered here yayayayay");
-           
-       }
-        
+
+        if (roomTypeIsInUse(roomType, currentDate)) {
+            System.out.println("entered here");
+            roomType.setRoomTypeStatus(RoomTypeStatusEnum.DISABLED);
+            em.merge(roomType);
+        } else {
+            em.remove(roomType);
+            System.out.println("it has entered here yayayayay");
+
+        }
+
     }
 
     @Override
@@ -115,7 +115,7 @@ public class OperationManagerSessionBean implements OperationManagerSessionBeanR
         } catch (NoResultException e) {
             throw new RoomTypeNotFoundException("No room type found with that name.");
         }
-        
+
     }
 
     @Override
@@ -124,8 +124,7 @@ public class OperationManagerSessionBean implements OperationManagerSessionBeanR
             RoomType roomType = retrieveRoomTypeByID(roomTypeID);
             roomType.setDescription(newDescription);
             em.merge(roomType);
-        }
-        catch (NoResultException e) {
+        } catch (NoResultException e) {
             throw new RoomTypeNotFoundException("No room type found with that name.");
         }
     }
@@ -175,7 +174,8 @@ public class OperationManagerSessionBean implements OperationManagerSessionBeanR
     }
 
     @Override
-    public void updateRoomTypeStatus(Long roomTypeID, RoomTypeStatusEnum newRoomTypeStatus) throws RoomTypeNotFoundException {
+    public void updateRoomTypeStatus(Long roomTypeID, RoomTypeStatusEnum newRoomTypeStatus)
+            throws RoomTypeNotFoundException {
         try {
             RoomType roomType = retrieveRoomTypeByID(roomTypeID);
             roomType.setRoomTypeStatus(newRoomTypeStatus);
@@ -214,14 +214,15 @@ public class OperationManagerSessionBean implements OperationManagerSessionBeanR
         em.flush();
         return r.getRoomID();
     }
-       
+
     @Override
     public void deleteRoom(Long roomID) throws RoomNotFoundException { // FIX THIS
-        // as long as there is any dependencies like roomreservation, like even in the past     
+        // as long as there is any dependencies like roomreservation, like even in the
+        // past
         try {
             Room r = retrieveRoomById(roomID);
-        
-            if (!roomIsInUse(r)){
+
+            if (!roomIsInUse(r)) {
                 r.getRoomType().getRooms().remove(r);
                 em.merge(r);
             } else {
@@ -234,17 +235,7 @@ public class OperationManagerSessionBean implements OperationManagerSessionBeanR
             throw new RoomNotFoundException("no room found");
         }
     }
-    
-    @Override
-    public void updatePartnerName(Long roomID, String newPartnerName) throws RoomNotFoundException {
-        try {
-            Room room = retrieveRoomById(roomID);
-            em.merge(room);
-        } catch (Exception e) {
-            throw new RoomNotFoundException("room not found");
-        }
-    }
-   
+
     @Override
     public void updateRoomNumber(Long roomID, String newRoomNumber) throws RoomNotFoundException {
         try {
@@ -264,7 +255,7 @@ public class OperationManagerSessionBean implements OperationManagerSessionBeanR
             em.merge(room);
         } catch (Exception e) {
             throw new RoomNotFoundException("room not found");
-        } 
+        }
     }
 
     @Override
@@ -283,42 +274,41 @@ public class OperationManagerSessionBean implements OperationManagerSessionBeanR
     public List<Room> retrieveAllRooms() {
         return em.createQuery("SELECT r FROM Room r", Room.class).getResultList();
     }
-    
+
     @Override
     public List<RoomType> retrieveAllRoomTypes() {
         return em.createQuery("SELECT rt FROM RoomType rt", RoomType.class).getResultList();
     }
-    
+
     // exception report methods
     @Override
     public List<ExceptionReport> retrieveExceptionReportsByDate(LocalDate date) {
         return em.createQuery("SELECT e FROM ExceptionReport e WHERE e.creationDate = :date", ExceptionReport.class)
-                 .setParameter("date", date)
-                 .getResultList();
+                .setParameter("date", date)
+                .getResultList();
     }
-    
+
     @Override
     public ExceptionReport retrieveExceptionReportByID(Long exceptionReportID) {
         return em.find(ExceptionReport.class, exceptionReportID);
-    }    
-    
+    }
+
     // helper methods
     @Override
     public boolean roomIsInUse(Room room) {
         Query query = em.createQuery(
-            "SELECT COUNT(rr) " +
-            "FROM RoomReservation rr " +
-            "WHERE rr.room = :room"
-        );
+                "SELECT COUNT(rr) " +
+                        "FROM RoomReservation rr " +
+                        "WHERE rr.room = :room");
         query.setParameter("room", room);
 
         Long count = (Long) query.getSingleResult();
         return count > 0;
     }
-    
+
     @Override
     public boolean roomTypeIsInUse(RoomType roomType, LocalDate inputDate) {
-    // Check if the room type has no associated rooms
+        // Check if the room type has no associated rooms
         List<Room> rooms = roomType.getRooms();
         if (rooms == null || rooms.isEmpty()) {
             return false; // Room type is not in use if it has no rooms
