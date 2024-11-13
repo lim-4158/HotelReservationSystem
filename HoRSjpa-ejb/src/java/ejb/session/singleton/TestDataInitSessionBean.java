@@ -6,6 +6,7 @@ package ejb.session.singleton;
 
 import entity.Employee;
 import entity.Guest;
+import entity.Partner;
 import entity.Reservation;
 import entity.Room;
 import entity.RoomRate;
@@ -23,6 +24,7 @@ import util.EmployeeRoleEnum;
 import util.ReservationTypeEnum;
 import util.RoomRateTypeEnum;
 import util.RoomStatusEnum;
+import util.RoomTypeStatusEnum;
 
 /**
  *
@@ -54,18 +56,24 @@ public class TestDataInitSessionBean {
             em.persist(salesManager);
             em.persist(guestRelOfficer);
 
+            System.out.println("----------------------------------------------1");
             // -----------------------------created room type--------------------------------
-            RoomType grandSuite = new RoomType("Grand Suite", 1);
-            RoomType juniorSuite = new RoomType("Junior Suite", 2);
-            RoomType familyRoom = new RoomType("Family Room", 3);
-            RoomType premierRoom = new RoomType("Premier Room", 4);
-            RoomType deluxeRoom = new RoomType("Deluxe Room", 5);
+            RoomType grandSuite = new RoomType("Grand Suite", "", BigDecimal.ONE, "", 1l, "", RoomTypeStatusEnum.ENABLED, 1, 0L);
+            RoomType juniorSuite = new RoomType("Junior Suite",  "", BigDecimal.ONE, "", 1l, "", RoomTypeStatusEnum.ENABLED, 2, 0L);
+            RoomType familyRoom = new RoomType("Family Room",  "", BigDecimal.ONE, "", 1l, "", RoomTypeStatusEnum.ENABLED, 3, 0L);
+            RoomType premierRoom = new RoomType("Premier Room",  "", BigDecimal.ONE, "", 1l, "", RoomTypeStatusEnum.ENABLED, 4, 0L);
+            RoomType deluxeRoom = new RoomType("Deluxe Room", "", BigDecimal.ONE, "", 1l, "", RoomTypeStatusEnum.ENABLED, 5, 0L);
+            
+            System.out.println("----------------------------------------------2");
 
             em.persist(deluxeRoom);
             em.persist(premierRoom);
             em.persist(familyRoom);
             em.persist(juniorSuite);
             em.persist(grandSuite);
+            em.flush();
+            
+            System.out.println("----------------------------------------------3");
 
             // -----------------------------created room rate--------------------------------
             em.persist(new RoomRate("Deluxe Room Published", deluxeRoom, RoomRateTypeEnum.PUBLISHED, new BigDecimal("100")));
@@ -105,11 +113,13 @@ public class TestDataInitSessionBean {
                 em.persist(new Room(grandSuite, "0" + i + "05", RoomStatusEnum.AVAILABLE));
             }            
             
-            Guest guest1 = new Guest("John", "Doe", "john.doe@example.com", "1234567890", "a", "guest1", "password");
-            Guest guest2 = new Guest("Jane", "Smith", "jane.smith@example.com", "0987654321", "a", "guest2", "password");
-            Guest guest3 = new Guest("Alice", "Johnson", "alice.johnson@example.com", "1122334455", "a", "guest3", "password");
-            Guest guest4 = new Guest("Bob", "Brown", "bob.brown@example.com", "5566778899", "a", "guest4", "password");
-            Guest guest5 = new Guest("Charlie", "Davis", "charlie.davis@example.com", "6677889900", "a", "guest5", "password");
+            
+            // ADDITIONAL FROM THIS POINT ONWARDS
+            Guest guest1 = new Guest("John", "Doe", "john.doe@example.com", "12345678", "ab", "guest1", "password");
+            Guest guest2 = new Guest("Jane", "Smith", "jane.smith@example.com", "09876543", "ac", "guest2", "password");
+            Guest guest3 = new Guest("Alice", "Johnson", "alice.johnson@example.com", "22334455", "ad", "guest3", "password");
+            Guest guest4 = new Guest("Bob", "Brown", "bob.brown@example.com", "55667799", "ae", "guest4", "password");
+            Guest guest5 = new Guest("Charlie", "Davis", "charlie.davis@example.com", "77889900", "af", "guest5", "password");
 
             em.persist(guest1);
             em.persist(guest2);
@@ -139,6 +149,27 @@ public class TestDataInitSessionBean {
             em.persist(reservation6);
             em.persist(reservation7);
             
+            // ---------- Initialize Partners ----------
+            Partner partner1 = new Partner();
+            partner1.setPartnerName("Travel Agency A");
+            partner1.setUsername("travela");
+            partner1.setPassword("travelpassA"); // In production, ensure passwords are hashed
+            em.persist(partner1);
+
+            Partner partner2 = new Partner();
+            partner2.setPartnerName("Travel Agency B");
+            partner2.setUsername("travelb");
+            partner2.setPassword("travelpassB");
+            em.persist(partner2);
+
+            // Additional Partners can be added here (up to 10)
+            Partner partner3 = new Partner();
+            partner3.setPartnerName("Travel Agency C");
+            partner3.setUsername("travelc");
+            partner3.setPassword("travelpassC");
+            em.persist(partner3);
+            
+            em.flush();
             
         }
     }

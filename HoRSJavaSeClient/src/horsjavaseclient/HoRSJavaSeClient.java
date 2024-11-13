@@ -4,8 +4,7 @@
  */
 package horsjavaseclient;
 
-import java.util.List;
-import ws.partner.Partner;
+import ws.partner.PartnerWebService;
 import ws.partner.PartnerWebService_Service;
 
 /**
@@ -20,10 +19,10 @@ public class HoRSJavaSeClient {
     public static void main(String[] args) {
         // TODO code application logic here
         
-        PartnerWebService_Service partnerWebService_Service = new PartnerWebService_Service(); 
-        
-        //replace method with actual method below
-        //List<Partner> partners = partner.getPartnerWebServicePort().method();
+        MainApp mainApp = new MainApp();
+        mainApp.runApp();    
+    
     }
+    
     
 }

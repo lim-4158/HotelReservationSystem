@@ -34,9 +34,9 @@ public class RoomRate implements Serializable {
     private RoomRateTypeEnum rateType;
     @Column(nullable = false)
     private BigDecimal nightlyRateAmount; 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private LocalDate startDate;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private LocalDate endDate;
     
     @ManyToOne(optional = false)
