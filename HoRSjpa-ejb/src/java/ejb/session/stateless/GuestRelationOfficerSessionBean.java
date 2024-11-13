@@ -44,7 +44,7 @@ public class GuestRelationOfficerSessionBean implements GuestRelationOfficerSess
     @Override
     public List<Reservation> findReservationsByGuest(Long guestId) {
         Query query = em.createQuery(
-            "SELECT r FROM Reservation r WHERE r.guest.guestId = :guestId", Reservation.class
+            "SELECT r FROM Reservation r WHERE r.guest.guestID = :guestId", Reservation.class
         );
         query.setParameter("guestId", guestId);
         return query.getResultList();

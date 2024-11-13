@@ -364,7 +364,6 @@ public class MainApp {
         System.out.println("Guest checked out successfully. Check-out date set to " + LocalDate.now());
     }
 
-
     // ---------- Operations Manager View ----------
     
     public void operationsManagerView() {
