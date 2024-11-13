@@ -35,7 +35,7 @@ public class Guest extends Visitor implements Serializable {
     @Column(length = 64, nullable = false, unique = true) 
     private String email;
     
-    @Column(length = 8, nullable = true)
+    @Column(length = 20, nullable = true)
     private String phoneNumber;
     
     @Column(length = 20, nullable = true, unique = true)

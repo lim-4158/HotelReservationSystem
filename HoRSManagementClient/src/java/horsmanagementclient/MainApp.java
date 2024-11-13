@@ -165,11 +165,9 @@ public class MainApp {
     }
     
     //  2. Walk In Reserve Room
-    
     private void doWalkInReserveRoom() {
-        
         Scanner sc = new Scanner(System.in);
-        
+
         try {
             System.out.println("*** Walk-in Room Reservation ***");
 
@@ -183,7 +181,7 @@ public class MainApp {
             System.out.print("Enter required room count: ");
             int requiredRooms = sc.nextInt();
             sc.nextLine(); // Consume newline
-            
+
             // Step 2: Search for available rooms
             List<RoomType> availableRooms = guestRelationOfficerSessionBeanRemote.searchAvailableRooms(checkInDate, checkOutDate, requiredRooms);
 
@@ -196,7 +194,7 @@ public class MainApp {
                 for (int i = 0; i < availableRooms.size(); i++) {
                     RoomType roomType = availableRooms.get(i);
                     System.out.println((i + 1) + ". Room Type: " + roomType.getTypeName());
-                    System.out.println("   Total Amount for Stay: " + 
+                    System.out.println("   Total Amount for Stay: " +
                         guestRelationOfficerSessionBeanRemote.calculateTotalAmountForStay(roomType.getTypeName(), checkInDate, checkOutDate, requiredRooms));
                     System.out.println();
                 }
@@ -218,29 +216,37 @@ public class MainApp {
                 // Step 5: Calculate total amount for the selected room type
                 BigDecimal totalAmount = guestRelationOfficerSessionBeanRemote.calculateTotalAmountForStay(roomTypeName, checkInDate, checkOutDate, requiredRooms);
 
-                // Step 6: Create the reservation
-                RoomType rt = operationManagerSessionBeanRemote.retrieveRoomTypeByName(roomTypeName);
-                
+                // Step 6: Retrieve or create the Guest
                 System.out.print("Enter First Name: ");
                 String firstName = sc.nextLine().trim();
 
                 System.out.print("Enter Email: ");
                 String email = sc.nextLine().trim();
-                
-                Guest guest = new Guest(firstName, email);
-                Reservation newReservation = new Reservation(LocalDate.now(), checkInDate, checkOutDate, ReservationTypeEnum.WALKIN, guest, rt, requiredRooms);
+
+                // Check if guest already exists
+                Guest guest = guestRelationOfficerSessionBeanRemote.findGuestByEmail(email);
+                if (guest == null) {
+                    guest = new Guest(firstName, email); // Create new guest if not found
+                    System.out.println("New guest created and will be persisted with the reservation.");
+                } else {
+                    System.out.println("Existing guest found with email: " + email);
+                }
+
+                // Step 7: Create the reservation, which will cascade persist the guest if new
+                RoomType rt = operationManagerSessionBeanRemote.retrieveRoomTypeByName(roomTypeName);
+                Reservation newReservation = new Reservation(LocalDate.now(), checkInDate, checkOutDate, totalAmount, ReservationTypeEnum.WALKIN, requiredRooms, guest, rt);
+                // Persist the reservation (and guest, if new, due to cascade)
                 guestRelationOfficerSessionBeanRemote.createReservation(newReservation);
 
                 System.out.println("Room reserved successfully! Total amount: " + totalAmount);
             }
-        
+
         } catch (RoomTypeNotFoundException e) {
             System.out.println("Error updating Room Type: " + e.getMessage());
-            
-        }  
+        }
     }
 
-    
+ 
     // 3. Check In Guest
 
     private void doCheckInGuest() {
