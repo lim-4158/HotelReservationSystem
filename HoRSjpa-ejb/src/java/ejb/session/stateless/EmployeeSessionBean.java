@@ -10,6 +10,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import util.exceptions.InvalidLoginException;
 
 /**
  *
@@ -24,7 +25,7 @@ public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeS
     private SystemAdminSessionBeanLocal systemAdminSessionBeanLocal;
     // USE CASE 1
     @Override
-    public Employee employeeLogin(String username, String password) // throws EntityManagerException, InvalidLoginCredentialException
+    public Employee employeeLogin(String username, String password) throws InvalidLoginException
     {
         List<Employee> employees = systemAdminSessionBeanLocal.retrieveAllEmployees();
         
@@ -35,13 +36,7 @@ public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeS
                 return employee;
             }
         }
-        // PLACEHOLDER CODE
         
-        return new Employee();
-        
-        // throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
+        throw new InvalidLoginException("Invalid login credentials. Please check your username and password.");
     }
-    
-    
-
 }

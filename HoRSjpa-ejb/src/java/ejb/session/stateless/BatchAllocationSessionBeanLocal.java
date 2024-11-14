@@ -16,5 +16,6 @@ public interface BatchAllocationSessionBeanLocal {
     public void allocateRooms(LocalDate date);
     public void getAllExceptionReports();
     public void getAllRoomReservations();
+    public void getAllReservations();
     
 }

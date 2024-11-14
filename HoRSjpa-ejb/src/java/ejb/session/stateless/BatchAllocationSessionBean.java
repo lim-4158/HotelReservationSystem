@@ -41,8 +41,11 @@ public class BatchAllocationSessionBean implements BatchAllocationSessionBeanRem
             int totalInventory = (int) rt.getRooms().stream()
                 .filter(room -> room.getRoomStatus() != RoomStatusEnum.DISABLED)
                 .count();
+           
             System.out.println(rt.getTypeName() + " : " + totalInventory);
-            
+            for (Room r : rt.getRooms()) {
+                System.out.println(r.getRoomNumber());
+            }
         }
         
         // Allocate reservations with the highest priority room type first
@@ -51,6 +54,10 @@ public class BatchAllocationSessionBean implements BatchAllocationSessionBeanRem
         q.setParameter("checkInDate", date);
         
         List<Reservation> reservations = q.getResultList();
+        
+        for (Reservation r : reservations) {
+            System.out.println(r.toString());
+        }
         
         for (Reservation r : reservations) {
             
@@ -63,7 +70,10 @@ public class BatchAllocationSessionBean implements BatchAllocationSessionBeanRem
             
             // For each room, attempt to allocate
             for (int i = 0; i < requiredRooms; i++) {
+                System.out.println("ALLOCATING " + (i+1) + "/" + requiredRooms);
                 Map.Entry<Boolean, RoomReservation> allocated = allocate(rt, date, r);
+                
+                System.out.println("ALLOCATED RESULT: " + allocated.getKey() + " " + allocated.getValue());
                 
                 if(allocated.getKey()) {
                     System.out.println("Reservation: " + allocated.getValue().getReservation().toString());
@@ -74,16 +84,27 @@ public class BatchAllocationSessionBean implements BatchAllocationSessionBeanRem
                     // TYPE 1: check for the other room types, allocate, and then generate exception report
                     boolean isType1 = false;
 
+                    System.out.println("Attempting to allocate type 1 exception");
 
                     int tierNumber = rt.getTierNumber();
                     Query query = em.createQuery(
                             "SELECT rt FROM RoomType rt WHERE rt.tierNumber > :currentTierNumber ORDER BY rt.tierNumber ASC", RoomType.class).setParameter("currentTierNumber", tierNumber);
 
                     List<RoomType> roomtypes = query.getResultList();
+                    
+                    System.out.println("List of Room Types of higher priority than " + rt.getTypeName());
+                    
+                    for (RoomType rtsss : roomtypes) {
+                        System.out.println(rtsss.getTypeName());
+                    }
 
                     for (RoomType rt1 : roomtypes) {
+                        
+                        System.out.println("Attempting to allocate to the next higher room type: " + rt1.getTypeName());
 
                         Map.Entry<Boolean, RoomReservation> nextAllocated = allocate(rt1, date, r);
+                        System.out.println("NEXTALLOCATED RESULT: " + nextAllocated.getKey() + " : " + nextAllocated.getValue());
+                        
                         if (nextAllocated.getKey()) {
                             isType1 = true;
                             
@@ -116,11 +137,19 @@ public class BatchAllocationSessionBean implements BatchAllocationSessionBeanRem
     }
     
     private Map.Entry<Boolean, RoomReservation> allocate(RoomType rt, LocalDate date, Reservation r) {
+        
+        System.out.println("---------- ALLOCATE FUNCTION TRIGGERED -----------");
+        
+        System.out.println("Allocating roomtype: " + rt.getTypeName());
+        System.out.println("");
+      
         List<Room> rooms = rt.getRooms();
             
         boolean allocated = false;
 
         for(Room room : rooms){
+            
+            System.out.println("CHECKING ROOM : " + room.getRoomNumber());
 
             boolean exist = true;
 
@@ -131,11 +160,18 @@ public class BatchAllocationSessionBean implements BatchAllocationSessionBeanRem
             List<RoomReservation> roomreservations = q1.getResultList();
 
             for (RoomReservation rr : roomreservations){
+                System.out.println("roomreservation id : " + rr.getRoomReservationId() + " : Reservation : " + rr.getReservation().toString());
+                System.out.println("roomreservation id : " + rr.getRoomReservationId() + " : Rooms : " + rr.getRoom().getRoomNumber());
                 Reservation currentReservation = rr.getReservation();
                 LocalDate checkOutDate = currentReservation.getCheckOutDate();
+                LocalDate checkInDate = currentReservation.getCheckInDate();
 
-                if (checkOutDate.isAfter(date)) { // the room reservation is occupied
+                System.out.println(checkInDate + " -- " + checkOutDate);
+                System.out.println("FOR TARGET RESERVATION: " + r.getCheckInDate() + " -- " + r.getCheckOutDate());
+                 
+                if ((date.isAfter(checkInDate) || date.equals(checkInDate)) && checkOutDate.isAfter(date)) { // the room reservation is occupied
                     exist = false;
+                    System.out.println("THIS ROOM IS OCCUPIED" + room.getRoomNumber());
                     break;
                 }
 
@@ -143,6 +179,7 @@ public class BatchAllocationSessionBean implements BatchAllocationSessionBeanRem
 
             if (exist == true) {
                 RoomReservation rv = new RoomReservation(room, r);
+                System.out.println("THIS ROOM IS NOT OCCUPIED" + room.getRoomNumber());
                 allocated = true;
                 em.persist(rv);
                 em.flush();
