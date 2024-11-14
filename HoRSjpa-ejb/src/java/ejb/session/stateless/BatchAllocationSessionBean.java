@@ -138,6 +138,7 @@ public class BatchAllocationSessionBean implements BatchAllocationSessionBeanRem
         return new AbstractMap.SimpleEntry<>(allocated, null);
     }
     
+    @Override
     public void getAllRoomReservations() {
         // Step 1: Query all RoomReservation records
         TypedQuery<RoomReservation> query = em.createQuery("SELECT rr FROM RoomReservation rr", RoomReservation.class);
@@ -159,6 +160,7 @@ public class BatchAllocationSessionBean implements BatchAllocationSessionBeanRem
         }
     }
     
+    @Override
     public void getAllExceptionReports() {
         // Step 1: Query all RoomReservation records
         TypedQuery<ExceptionReport> query = em.createQuery("SELECT er FROM ExceptionReport er", ExceptionReport.class);
