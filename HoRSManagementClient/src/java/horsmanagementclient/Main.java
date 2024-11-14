@@ -7,6 +7,7 @@ package horsmanagementclient;
 import ejb.session.stateless.BatchAllocationSessionBeanRemote;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.GuestRelationOfficerSessionBeanRemote;
+import ejb.session.stateless.GuestSessionBeanRemote;
 import ejb.session.stateless.OperationManagerSessionBeanRemote;
 import ejb.session.stateless.SalesManagerSessionBeanRemote;
 import ejb.session.stateless.SystemAdminSessionBeanRemote;
@@ -17,6 +18,9 @@ import javax.ejb.EJB;
  * @author kevinlim
  */
 public class Main {
+
+    @EJB
+    private static GuestSessionBeanRemote guestSessionBeanRemote;
 
     /**
      * @param args the command line arguments
@@ -33,10 +37,11 @@ public class Main {
     private static SystemAdminSessionBeanRemote systemAdminSessionBeanRemote;
     @EJB
     private static BatchAllocationSessionBeanRemote batchAllocationSessionBeanRemote;
+    
 
     public static void main(String[] args)
     {
-        MainApp mainApp = new MainApp(employeeSessionBeanRemote, guestRelationOfficerSessionBeanRemote, operationManagerSessionBeanRemote, salesManagerSessionBeanRemote, systemAdminSessionBeanRemote, batchAllocationSessionBeanRemote);
+        MainApp mainApp = new MainApp(employeeSessionBeanRemote, guestRelationOfficerSessionBeanRemote, operationManagerSessionBeanRemote, salesManagerSessionBeanRemote, systemAdminSessionBeanRemote, batchAllocationSessionBeanRemote, guestSessionBeanRemote);
         mainApp.runApp();   
     }
 }

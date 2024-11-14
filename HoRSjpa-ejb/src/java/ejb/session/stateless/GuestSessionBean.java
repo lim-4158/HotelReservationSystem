@@ -79,7 +79,7 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
     public Reservation retrieveReservationById(Long reservationID) throws ReservationNotFoundException {
         try {
             return em.createQuery(
-                    "SELECT r FROM Reservation r WHERE r.id = :reservationId", Reservation.class)
+                    "SELECT r FROM Reservation r WHERE r.reservationID = :reservationId", Reservation.class)
                     .setParameter("reservationId", reservationID)
                     .getSingleResult();
         } catch (NoResultException e) {

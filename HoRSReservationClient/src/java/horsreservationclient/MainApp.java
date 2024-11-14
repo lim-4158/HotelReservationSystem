@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Scanner;
 import util.ReservationTypeEnum;
 import util.exceptions.GuestNotFoundException;
+import util.exceptions.ReservationNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
 
 public class MainApp {
@@ -147,7 +148,7 @@ public class MainApp {
             } else if (response == 2) {
                 doReserveHotelRoom(guest);
             } else if (response == 3) {
-//                doViewReservationDetails();
+                doViewReservationDetails();
             } else if (response == 4) {
                 doViewAllReservations();
             } else if (response == 5) {
@@ -244,7 +245,7 @@ public class MainApp {
                 BigDecimal totalAmount = guestSessionBeanRemote.calculateTotalAmountForStay(roomTypeName, checkInDate, checkOutDate, requiredRooms);
                 RoomType rt = guestSessionBeanRemote.retrieveRoomTypeByName(roomTypeName);
 
-                Reservation newReservation = new Reservation(LocalDate.now(), checkInDate, checkOutDate, totalAmount, ReservationTypeEnum.WALKIN, requiredRooms, null, rt);
+                Reservation newReservation = new Reservation(LocalDate.now(), checkInDate, checkOutDate, totalAmount, ReservationTypeEnum.ONLINE, requiredRooms, null, rt);
                 Long guestId = guest.getGuestID();
                         
                 // Call the updated createReservation method
@@ -254,7 +255,7 @@ public class MainApp {
                 System.out.println("Room reserved successfully! Reservation ID: " + reservationId + ", Total amount: " + totalAmount);
 
                 
-                System.out.println("NEW RESERVATION PERSISTED, ID IS " + newReservation.getReservationID());
+                System.out.println("NEW RESERVATION PERSISTED, ID IS " + reservationId);
                 
 
                 System.out.println("Room reserved successfully! Total amount: " + totalAmount);
@@ -267,21 +268,47 @@ public class MainApp {
         }
     }
 
-//    private void doViewReservationDetails() {
-//        Scanner scanner = new Scanner(System.in);
-//        System.out.println("*** View Reservation Details ***\n");
-//
-//        System.out.print("Enter Reservation ID: ");
-//        Long reservationID = scanner.nextLong();
-//        scanner.nextLine(); // consume newline
-//
-//        try {
-//            Reservation reservation = guestSessionBeanRemote.retrieveReservationById(reservationID);
-//            System.out.println("Reservation Details:\n" + reservation.toString() + "\n");
-//        } catch (ReservationNotFoundException e) {
-//            System.out.println("Error: " + e.getMessage() + "\n");
-//        }
-//    }
+    private void doViewReservationDetails() {
+
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("*** View All Reservations ***\n");
+
+        System.out.print("Enter Guest Email: ");
+        String email = scanner.nextLine().trim();
+
+        try {
+            List<Reservation> reservations = guestSessionBeanRemote.viewAllReservations(email);
+            if (reservations.isEmpty()) {
+                System.out.println("No reservations found for the specified email.\n");
+            } else {
+                System.out.println("Reservations:");
+                for (Reservation reservation : reservations) {
+                    System.out.println("[" + reservation.getReservationID() + "] - Reservation ID: " + reservation.getReservationID());
+                    System.out.println("    Reservation Date: " + reservation.getReservationDate());
+                    System.out.println("    Check-In Date: " + reservation.getCheckInDate());
+                    System.out.println("    Check-Out Date: " + reservation.getCheckOutDate());
+                    System.out.println("-----------------------------------------");
+                }
+                System.out.println();
+
+                // Prompt the user to select a reservation by ID
+                System.out.print("Enter Reservation ID to view details: ");
+                Long reservationID = scanner.nextLong();
+                scanner.nextLine();
+
+                try {
+                    Reservation reservation = guestSessionBeanRemote.retrieveReservationById(reservationID);
+                    System.out.println("Reservation Details:\n" + reservation.toString() + "\n");
+                } catch (ReservationNotFoundException e) {
+                    System.out.println("Error: " + e.getMessage() + "\n");
+                }
+            }
+        } catch (GuestNotFoundException e) {
+            System.out.println("Error: " + e.getMessage() + "\n");
+        }
+     }
+
 
     private void doViewAllReservations() {
         Scanner scanner = new Scanner(System.in);

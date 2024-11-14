@@ -60,6 +60,8 @@ public class SalesManagerSessionBean implements SalesManagerSessionBeanRemote, S
     // 17. Create New Room Rate
     @Override
     public Long createNewRoomRate(RoomRate roomRate) {
+        RoomType rt = roomRate.getRoomType();
+        rt.getRoomRates().add(roomRate);
         em.persist(roomRate);
         em.flush();
         
@@ -152,6 +154,8 @@ public class SalesManagerSessionBean implements SalesManagerSessionBeanRemote, S
             // Step 2: Check if the RoomRate is in use
             if (!isRoomRateInUse(roomRate)) {
                 // If not in use, delete it
+                RoomType rt = roomRate.getRoomType();
+                rt.getRoomRates().remove(roomRate);
                 em.remove(roomRate);
                 System.out.println("RoomRate deleted successfully.");
             } else {

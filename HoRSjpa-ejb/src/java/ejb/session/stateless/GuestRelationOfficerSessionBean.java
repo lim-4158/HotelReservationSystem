@@ -46,6 +46,14 @@ public class GuestRelationOfficerSessionBean implements GuestRelationOfficerSess
     }
     
     @Override
+    public Long createGuest(Guest g) {
+        em.persist(g);
+        em.flush();
+        
+        return g.getGuestID();
+    }
+    
+    @Override
     public Long createReservation(Long roomTypeId, String guestEmail, Reservation r) throws RoomTypeNotFoundException {
         RoomType rt = retrieveRoomTypeByID(roomTypeId);
         Guest g = findGuestByEmail(guestEmail);
@@ -81,6 +89,12 @@ public class GuestRelationOfficerSessionBean implements GuestRelationOfficerSess
             return null; // Return null if no guest is found
         }
     }
+    
+    @Override
+    public Guest findGuestById(Long id) {
+        return em.find(Guest.class, id);
+    }
+
     
     @Override
     public List<RoomType> searchAvailableRooms(LocalDate checkInDate, LocalDate checkOutDate, int requiredInventory) {

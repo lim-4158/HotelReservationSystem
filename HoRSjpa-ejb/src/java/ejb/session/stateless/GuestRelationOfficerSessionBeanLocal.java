@@ -23,6 +23,7 @@ public interface GuestRelationOfficerSessionBeanLocal {
     // Retrieval Methods
     public RoomType retrieveRoomTypeByID(Long roomTypeId) throws RoomTypeNotFoundException;
     public Guest findGuestByEmail(String email);
+    public Guest findGuestById(Long id);
     public List<Reservation> findReservationsByGuest(Long guestId);
     public List<RoomType> getAllRoomTypes();
     
@@ -34,6 +35,7 @@ public interface GuestRelationOfficerSessionBeanLocal {
     
     // 2. Walk-in Reserve Room
     public Long createReservation(Long roomTypeId, String guestEmail, Reservation r) throws RoomTypeNotFoundException;
+    public Long createGuest(Guest g);
             
     // 3. & 4. CheckIn and CheckOut Guests
     public void checkOutGuest(Long reservationID, LocalDate date);

@@ -7,7 +7,6 @@ package entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -43,7 +42,7 @@ public class Reservation implements Serializable {
     @Column(nullable = false)
     private int numberOfRooms; 
     
-    @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+    @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
     private Guest guest;
     
@@ -194,7 +193,18 @@ public class Reservation implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.Reservation[ id=" + reservationID + " + guestname = " + guest.getFirstName() + " + roomtype " + roomType.getTypeName() + " " + numberOfRooms +  "]" ;
+        return "Reservation Details:\n" +
+               "    Reservation ID: " + reservationID + "\n" +
+               "    Guest Name: " + guest.getFirstName() + " " + guest.getLastName() + "\n" +
+               "    Reservation Date: " + reservationDate + "\n" +
+               "    Check-In Date: " + checkInDate + "\n" +
+               "    Check-Out Date: " + checkOutDate + "\n" +
+               "    Room Type: " + roomType.getTypeName() + "\n" +
+               "    Number of Rooms: " + numberOfRooms + "\n" +
+               "    Total Amount: $" + totalAmount + "\n" +
+               "    Reservation Type: " + reservationType + "\n" +
+               "-----------------------------------------";
     }
+
     
 }
