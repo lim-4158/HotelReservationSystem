@@ -14,5 +14,7 @@ import javax.ejb.Remote;
 @Remote
 public interface BatchAllocationSessionBeanRemote {
     public void allocateRooms(LocalDate date); 
+    public void getAllExceptionReports();
+    public void getAllRoomReservations();
 
 }

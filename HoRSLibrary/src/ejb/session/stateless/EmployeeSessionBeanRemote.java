@@ -7,6 +7,7 @@ package ejb.session.stateless;
 import entity.Employee;
 import java.util.List;
 import javax.ejb.Remote;
+import util.exceptions.InvalidLoginException;
 
 /**
  *
@@ -15,8 +16,6 @@ import javax.ejb.Remote;
 @Remote
 public interface EmployeeSessionBeanRemote {
     
-    public Employee employeeLogin(String username, String password);
-
-
+        public Employee employeeLogin(String username, String password) throws InvalidLoginException;
     
 }

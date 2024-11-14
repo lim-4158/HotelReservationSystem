@@ -37,7 +37,7 @@ public class OperationManagerSessionBean
         try {
             Query q = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.roomTypeID = :roomTypeId");
             q.setParameter("roomTypeId", roomTypeId);
-            return (RoomType) q.getSingleResult();
+            return (RoomType) q.getSingleResult(); 
         } catch (NoResultException e) {
             System.out.println("NO ROOM TYPE FOUND");
             throw new RoomTypeNotFoundException("No room type found with ID: " + roomTypeId);
