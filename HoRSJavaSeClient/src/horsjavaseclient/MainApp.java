@@ -354,7 +354,8 @@ public class MainApp {
         System.out.println("\n--- Your Reservations ---");
         int i = 1; 
         for (Reservation r : reservations) {
-            System.out.println(i + " : " + r.getFirstName() + " " + r.getGuest().getEmail());
+            System.out.println(i + " : " + r.getCheckInDate().toString() + " --- " + 
+                    r.getCheckOutDate() + " " + r.getGuest().getFirstName()+ " " + r.getGuest().getEmail());
             i++; 
             System.out.println("----------------------------");
         }
@@ -362,9 +363,9 @@ public class MainApp {
     
     private void displayReservation(Reservation reservation) {
         System.out.println("Reservation ID: " + reservation.getReservationID());
-        System.out.println("Reservation Date: " + reservation.getReservationDate());
-        System.out.println("Check-in Date: " + reservation.getCheckInDate());
-        System.out.println("Check-out Date: " + reservation.getCheckOutDate());
+        System.out.println("Reservation Date: " + reservation.getReservationDate().toString());
+        System.out.println("Check-in Date: " + reservation.getCheckInDate().toString());
+        System.out.println("Check-out Date: " + reservation.getCheckOutDate().toString());
         System.out.println("Reservation Type: " + reservation.getReservationType());
         System.out.println("Guest Name: " + reservation.getGuest().getFirstName() + " " + reservation.getGuest().getLastName());
         System.out.println("Room Type: " + reservation.getRoomType().getTypeName());

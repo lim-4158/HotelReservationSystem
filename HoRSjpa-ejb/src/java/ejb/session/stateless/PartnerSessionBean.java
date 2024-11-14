@@ -34,6 +34,8 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
 
     @EJB 
     private GuestRelationOfficerSessionBeanLocal guestRelationOfficerSessionBeanLocal; 
+    @EJB
+    private GuestSessionBeanLocal guestSessionBeanLocal; 
     
     // i dont think i should return null
     @Override
@@ -72,7 +74,7 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
     public BigDecimal calculateTotalAmountForStay(String roomTypeName, String checkInDate, String checkOutDate, int requiredRooms) {
         LocalDate checkInDateLD = convertToLocalDate(checkInDate); 
         LocalDate checkOutDateLD = convertToLocalDate(checkOutDate); 
-        return guestRelationOfficerSessionBeanLocal.calculateTotalAmountForStay(roomTypeName, checkInDateLD, checkOutDateLD, requiredRooms); 
+        return guestSessionBeanLocal.calculateTotalAmountForStay(roomTypeName, checkInDateLD, checkOutDateLD, requiredRooms); 
     }
 
     @Override
@@ -123,13 +125,14 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
         LocalDate checkOutDateLD = convertToLocalDate(checkOutDate); 
         LocalDate bookingDateLD = convertToLocalDate(bookingDate); 
         Reservation reservation = new Reservation(bookingDateLD, checkInDateLD, checkOutDateLD, totalAmount, ReservationTypeEnum.PARTNER, requiredRooms, partner, selectedRoomType, guest); 
-        em.persist(reservation);
 
         // is partner already persisted? or should i em.persist()
         // retrieve partner reservation list and add to it 
         List<Reservation> partnerReservations = partner.getReservations(); 
         partnerReservations.add(reservation); 
         partner.setReservations(partnerReservations);
+        
+        em.persist(reservation);
         
         // check if guest currently exist in database, if not, persist entity 
         // add reservation to reservation list

@@ -189,6 +189,7 @@ public class TestDataInitSessionBean {
                 Reservation reservation5 = new Reservation(LocalDate.now(), allocationDate, allocationDate.plusDays(2), ReservationTypeEnum.ONLINE, guest5, deluxeRoom, 1);
                 Reservation reservation6 = new Reservation(LocalDate.now(), allocationDate, allocationDate.plusDays(3), ReservationTypeEnum.ONLINE, guest1, deluxeRoom, 2); // For Type 2 test
                 Reservation reservation7 = new Reservation(LocalDate.now(), allocationDate, allocationDate.plusDays(3), ReservationTypeEnum.ONLINE, guest2, familyRoom, 2); // For Type 2 test
+                Reservation reservation8 = new Reservation(LocalDate.now(), allocationDate, allocationDate.plusDays(3), ReservationTypeEnum.ONLINE, guest5, juniorSuite, 2); // For Type 2 test
 
                 // Associate Reservations with Guests and RoomTypes
                 // Reservation 1
@@ -239,6 +240,13 @@ public class TestDataInitSessionBean {
                 reservation7.setRoomType(familyRoom);
                 familyRoom.getReservations().add(reservation7);
                 em.persist(reservation7);
+                
+                // Reservation 8
+                reservation8.setGuest(guest5);
+                guest5.getReservations().add(reservation8);
+                reservation8.setRoomType(juniorSuite);
+                juniorSuite.getReservations().add(reservation8); 
+                em.persist(reservation8);
 
                 // ---------- Initialize Partners ----------
                 Partner partner1 = new Partner();

@@ -34,9 +34,7 @@ public class PartnerWebService {
 
     @EJB
     private PartnerSessionBeanLocal partnerSessionBeanLocal;
-    @EJB 
-    private GuestRelationOfficerSessionBeanLocal guestRelationOfficerSessionBeanLocal; 
-
+    
     /**
      * This is a sample web service operation
      */
