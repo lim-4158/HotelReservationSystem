@@ -36,11 +36,11 @@ public class MainApp {
 
             System.out.println("Welcome to the Partner Portal of HoRS");
 
-//            Partner partner = partnerLogIn();
-            PartnerWebService_Service service = new PartnerWebService_Service();
-            PartnerWebService port = service.getPartnerWebServicePort();            
-            Partner partner = port.partnerLogIn("travela", "travelpassA");
-        
+            Partner partner = partnerLogIn();
+//            PartnerWebService_Service service = new PartnerWebService_Service();
+//            PartnerWebService port = service.getPartnerWebServicePort();            
+//            Partner partner = port.partnerLogIn("travela", "travelpassA");
+//        
             
             if (partner != null) {
                 
@@ -362,11 +362,11 @@ public class MainApp {
     }    
     
     private void displayReservation(Reservation reservation) {
-        System.out.println("Reservation ID: " + reservation.getReservationID());
+//        System.out.println("Reservation ID: " + reservation.getReservationID());
         System.out.println("Reservation Date: " + reservation.getReservationDate().toString());
         System.out.println("Check-in Date: " + reservation.getCheckInDate().toString());
         System.out.println("Check-out Date: " + reservation.getCheckOutDate().toString());
-        System.out.println("Reservation Type: " + reservation.getReservationType());
+//        System.out.println("Reservation Type: " + reservation.getReservationType());
         System.out.println("Guest Name: " + reservation.getGuest().getFirstName() + " " + reservation.getGuest().getLastName());
         System.out.println("Room Type: " + reservation.getRoomType().getTypeName());
         System.out.println("Total Amount: $" + reservation.getTotalAmount());
