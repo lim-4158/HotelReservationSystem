@@ -19,6 +19,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import util.ExceptionReportTypeEnum;
+import util.RoomStatusEnum;
 
 /**
  *
@@ -35,6 +36,15 @@ public class BatchAllocationSessionBean implements BatchAllocationSessionBeanRem
     @Override
     public void allocateRooms(LocalDate date) {
         
+        List<RoomType> rts = em.createQuery("SELECT rt FROM RoomType rt").getResultList(); 
+        for (RoomType rt : rts) {
+            int totalInventory = (int) rt.getRooms().stream()
+                .filter(room -> room.getRoomStatus() != RoomStatusEnum.DISABLED)
+                .count();
+            System.out.println(rt.getTypeName() + " : " + totalInventory);
+            
+        }
+        
         // Allocate reservations with the highest priority room type first
         Query q = em.createQuery(
         "SELECT r FROM Reservation r WHERE r.checkInDate = :checkInDate ORDER BY r.roomType.tierNumber DESC", Reservation.class);
@@ -44,7 +54,7 @@ public class BatchAllocationSessionBean implements BatchAllocationSessionBeanRem
         
         for (Reservation r : reservations) {
             
-            System.out.println("allocating reservation ID : " + r.getReservationID());
+            System.out.println("allocating reservation : " + r.toString());
             // Get the desired Room Type
             RoomType rt = r.getRoomType();
             
@@ -54,6 +64,11 @@ public class BatchAllocationSessionBean implements BatchAllocationSessionBeanRem
             // For each room, attempt to allocate
             for (int i = 0; i < requiredRooms; i++) {
                 Map.Entry<Boolean, RoomReservation> allocated = allocate(rt, date, r);
+                
+                if(allocated.getKey()) {
+                    System.out.println("Reservation: " + allocated.getValue().getReservation().toString());
+                    System.out.println("Room Number: " + allocated.getValue().getRoom().getRoomNumber());
+                }
             
                 if (!allocated.getKey()) {
                     // TYPE 1: check for the other room types, allocate, and then generate exception report
@@ -172,6 +187,28 @@ public class BatchAllocationSessionBean implements BatchAllocationSessionBeanRem
             for (ExceptionReport exceptionReport : exceptionReports) {
                 System.out.println("Reservation ID: " + exceptionReport.getResID());
                 System.out.println("Exception Type: " + exceptionReport.getReportType());
+                System.out.println("--------------------------------------");
+            }
+        }
+    }
+    
+    @Override
+    public void getAllReservations() {
+        // Step 1: Query all RoomReservation records
+        TypedQuery<Reservation> query = em.createQuery("SELECT r FROM Reservation r", Reservation.class);
+        List<Reservation> reservations = query.getResultList();
+
+        // Step 2: Print each RoomReservation record
+        if (reservations.isEmpty()) {
+            System.out.println("No Reservations found.");
+        } else {
+            System.out.println("Reservations:");
+            for (Reservation reservation : reservations) {
+                System.out.println("Reservation ID: " + reservation.getReservationID());
+                System.out.println("Reservation Guest: " + reservation.getGuest());
+                System.out.println("Room Type: " + reservation.getRoomType());
+                System.out.println("Number of Rooms: " + reservation.getNumberOfRooms());
+                
                 System.out.println("--------------------------------------");
             }
         }
