@@ -14,5 +14,7 @@ import javax.ejb.Local;
 @Local
 public interface BatchAllocationSessionBeanLocal {
     public void allocateRooms(LocalDate date);
+    public void getAllExceptionReports();
+    public void getAllRoomReservations();
     
 }

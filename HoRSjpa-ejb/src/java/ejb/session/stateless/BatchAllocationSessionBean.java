@@ -17,6 +17,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import util.ExceptionReportTypeEnum;
 
 /**
@@ -43,6 +44,7 @@ public class BatchAllocationSessionBean implements BatchAllocationSessionBeanRem
         
         for (Reservation r : reservations) {
             
+            System.out.println("allocating reservation ID : " + r.getReservationID());
             // Get the desired Room Type
             RoomType rt = r.getRoomType();
             
@@ -69,6 +71,8 @@ public class BatchAllocationSessionBean implements BatchAllocationSessionBeanRem
                         Map.Entry<Boolean, RoomReservation> nextAllocated = allocate(rt1, date, r);
                         if (nextAllocated.getKey()) {
                             isType1 = true;
+                            
+                            System.out.println("GENERATING TYPE 1 EXCEPTION");
 
                             RoomReservation rv = nextAllocated.getValue();
                             ExceptionReport er1 = new ExceptionReport(rv, ExceptionReportTypeEnum.TYPE1, LocalDate.now(), r.getReservationID());
@@ -81,6 +85,8 @@ public class BatchAllocationSessionBean implements BatchAllocationSessionBeanRem
 
                     // TYPE 2: check for the other room types, allocate, and then generate exception report
                     if (!isType1) {
+                        
+                        System.out.println("GENERATING TYPE 2 EXCEPTION");
                         ExceptionReport er2 = new ExceptionReport(ExceptionReportTypeEnum.TYPE2, LocalDate.now(), r.getReservationID());
                         em.persist(er2);
                         em.flush();
@@ -130,6 +136,45 @@ public class BatchAllocationSessionBean implements BatchAllocationSessionBeanRem
         }
         
         return new AbstractMap.SimpleEntry<>(allocated, null);
+    }
+    
+    public void getAllRoomReservations() {
+        // Step 1: Query all RoomReservation records
+        TypedQuery<RoomReservation> query = em.createQuery("SELECT rr FROM RoomReservation rr", RoomReservation.class);
+        List<RoomReservation> roomReservations = query.getResultList();
+
+        // Step 2: Print each RoomReservation record
+        if (roomReservations.isEmpty()) {
+            System.out.println("No Room Reservations found.");
+        } else {
+            System.out.println("Room Reservations:");
+            for (RoomReservation roomReservation : roomReservations) {
+                System.out.println("RoomReservation ID: " + roomReservation.getRoomReservationId());
+                System.out.println("Room Number: " + roomReservation.getRoom().getRoomNumber());
+                System.out.println("Reservation ID: " + roomReservation.getReservation().getReservationID());
+                System.out.println("Room Reservation RoomType: " + roomReservation.getReservation().getRoomType().getTypeName());
+                System.out.println("Guest: " + roomReservation.getReservation().getGuest().getFirstName());
+                System.out.println("--------------------------------------");
+            }
+        }
+    }
+    
+    public void getAllExceptionReports() {
+        // Step 1: Query all RoomReservation records
+        TypedQuery<ExceptionReport> query = em.createQuery("SELECT er FROM ExceptionReport er", ExceptionReport.class);
+        List<ExceptionReport> exceptionReports = query.getResultList();
+
+        // Step 2: Print each RoomReservation record
+        if (exceptionReports.isEmpty()) {
+            System.out.println("No Exception Reports found.");
+        } else {
+            System.out.println("Exception Reports:");
+            for (ExceptionReport exceptionReport : exceptionReports) {
+                System.out.println("Reservation ID: " + exceptionReport.getResID());
+                System.out.println("Exception Type: " + exceptionReport.getReportType());
+                System.out.println("--------------------------------------");
+            }
+        }
     }
 
 
