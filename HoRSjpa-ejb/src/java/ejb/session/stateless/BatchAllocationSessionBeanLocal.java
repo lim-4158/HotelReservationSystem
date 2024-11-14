@@ -4,6 +4,7 @@
  */
 package ejb.session.stateless;
 
+import java.time.LocalDate;
 import javax.ejb.Local;
 
 /**
@@ -12,5 +13,6 @@ import javax.ejb.Local;
  */
 @Local
 public interface BatchAllocationSessionBeanLocal {
+    public void allocateRooms(LocalDate date);
     
 }
