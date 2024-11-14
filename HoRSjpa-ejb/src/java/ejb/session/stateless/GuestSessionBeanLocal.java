@@ -42,7 +42,7 @@ public interface GuestSessionBeanLocal {
     public BigDecimal calculateTotalAmountForStay(String roomTypeName, LocalDate checkInDate, LocalDate checkOutDate, int requiredRooms);
     
     // 4. Reserve Hotel Room - implement do reservation for more than one room
-    public Long createReservation(Long guestId, Reservation reservation) throws GuestNotFoundException;   
+    public Long createReservation(Long roomTypeId, Long guestId, Reservation reservation) throws GuestNotFoundException, RoomTypeNotFoundException;  
     // 5. View My Reservation Details
     public Reservation viewReservationDetails(Long reservationID) throws ReservationNotFoundException;
     
