@@ -49,9 +49,9 @@ public class RoomType implements Serializable {
     @OneToMany(mappedBy =  "roomType", fetch = FetchType.EAGER)
     private List<Room> rooms = new ArrayList<Room>();       
     @OneToMany (mappedBy = "roomType", fetch = FetchType.EAGER)
-    private List<Reservation> reservations;
+    private List<Reservation> reservations = new ArrayList<Reservation>();
     @OneToMany(mappedBy = "roomType", fetch = FetchType.EAGER)
-    private List<RoomRate> roomRates; 
+    private List<RoomRate> roomRates = new ArrayList<RoomRate>(); 
 
     public RoomType() {
     }
