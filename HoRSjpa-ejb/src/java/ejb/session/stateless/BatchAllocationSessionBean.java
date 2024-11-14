@@ -48,12 +48,14 @@ public class BatchAllocationSessionBean implements BatchAllocationSessionBeanRem
             }
         }
         
+        System.out.println("printing out reservations here --->");
         // Allocate reservations with the highest priority room type first
         Query q = em.createQuery(
         "SELECT r FROM Reservation r WHERE r.checkInDate = :checkInDate ORDER BY r.roomType.tierNumber DESC", Reservation.class);
         q.setParameter("checkInDate", date);
         
         List<Reservation> reservations = q.getResultList();
+        System.out.println(reservations.size());
         
         for (Reservation r : reservations) {
             System.out.println(r.toString());
@@ -107,6 +109,9 @@ public class BatchAllocationSessionBean implements BatchAllocationSessionBeanRem
                         
                         if (nextAllocated.getKey()) {
                             isType1 = true;
+                            
+                            r.setRoomType(rt1);
+                            rt1.getReservations().add(r);
                             
                             System.out.println("GENERATING TYPE 1 EXCEPTION");
 

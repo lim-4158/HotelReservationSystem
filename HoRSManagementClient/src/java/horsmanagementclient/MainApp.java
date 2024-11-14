@@ -60,7 +60,7 @@ public class MainApp {
 
     public void runApp() {
         
-        LocalDate startDate = LocalDate.parse("2024-11-15", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        LocalDate startDate = LocalDate.parse("2024-11-16", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
         batchAllocationSessionBeanRemote.allocateRooms(startDate);
         
@@ -90,8 +90,8 @@ public class MainApp {
 //
                 Employee employee;
                 try {
-                    employee = employeeSessionBeanRemote.employeeLogin("guestrelo", "password");
-//                    employee = employeeSessionBeanRemote.employeeLogin("opmanager", "password");
+//                    employee = employeeSessionBeanRemote.employeeLogin("guestrelo", "password");
+                    employee = employeeSessionBeanRemote.employeeLogin("opmanager", "password");
                 } catch (InvalidLoginException e) {
                     //login failed
                     System.out.println("Login failed");
@@ -884,19 +884,22 @@ public class MainApp {
 
         System.out.print("Enter Nightly Rate Amount: ");
         BigDecimal nightlyRate = sc.nextBigDecimal();
-        sc.nextLine(); // Consume newline
-
-        System.out.print("Enter Start Date (yyyy-MM-dd): ");
-        LocalDate startDate = getInputDate();
-        System.out.print("Enter End Date (yyyy-MM-dd): ");
-        LocalDate endDate = getInputDate();
-
+        sc.nextLine(); 
+        
         RoomRate rate = new RoomRate();
         rate.setRoomRateName(rateName);
         rate.setRateType(rateType);
         rate.setNightlyRateAmount(nightlyRate);
-        rate.setStartDate(startDate);
-        rate.setEndDate(endDate);
+
+        if (rateType.equals(RoomRateTypeEnum.PEAK) || rateType.equals(RoomRateTypeEnum.PROMOTION)) {
+            System.out.print("Enter Start Date (yyyy-MM-dd): ");
+            LocalDate startDate = getInputDate();
+            System.out.print("Enter End Date (yyyy-MM-dd): ");
+            LocalDate endDate = getInputDate();
+            rate.setStartDate(startDate);
+            rate.setEndDate(endDate);
+        }
+   
         RoomType roomType = selectRoomType();
         if (roomType == null) {
             System.out.println("Invalid Room Type selection. Room Rate creation aborted.");
