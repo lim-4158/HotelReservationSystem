@@ -74,12 +74,12 @@ public class GuestRelationOfficerSessionBean implements GuestRelationOfficerSess
                 continue;
             }
 
+            int totalInventory1 = (int) roomType.getRooms().size();
+            System.out.println(roomType.getTypeName() + " total unfiltered inventory is " + totalInventory1);
+                    
             int totalInventory = (int) roomType.getRooms().stream()
                 .filter(room -> room.getRoomStatus() != RoomStatusEnum.DISABLED)
                 .count();
-
-            System.out.println("REACHED HERE! ----------------");
-            System.out.println("total inventory is " + totalInventory);
             
             if (isRoomTypeAvailable(roomType, checkInDate, checkOutDate, requiredInventory, totalInventory)) {
                 availableRoomTypes.add(roomType);
