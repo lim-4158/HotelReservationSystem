@@ -4,9 +4,6 @@
  */
 package horsjavaseclient;
 
-import ws.partner.PartnerWebService;
-import ws.partner.PartnerWebService_Service;
-
 /**
  *
  * @author kevinlim

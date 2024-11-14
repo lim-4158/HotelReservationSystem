@@ -76,6 +76,18 @@ public class Reservation implements Serializable {
         this.numberOfRooms = numberOfRooms;
         this.guest = guest;
         this.roomType = roomType;
+    }    
+    
+    public Reservation(LocalDate reservationDate, LocalDate checkInDate, LocalDate checkOutDate, BigDecimal totalAmount, ReservationTypeEnum reservationType, int numberOfRooms, Partner partner, RoomType roomType, Guest guest) {
+        this.reservationDate = reservationDate;
+        this.checkInDate = checkInDate;
+        this.checkOutDate = checkOutDate;
+        this.totalAmount = totalAmount;
+        this.reservationType = reservationType;
+        this.numberOfRooms = numberOfRooms;
+        this.partner = partner;
+        this.roomType = roomType;
+        this.guest = guest;
     }
 
     public int getNumberOfRooms() {

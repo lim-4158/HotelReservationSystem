@@ -35,7 +35,7 @@ public class Partner implements Serializable {
     
     @OneToMany (mappedBy = "partner")
     private List<Reservation> reservations = new ArrayList<Reservation>();
-
+    
     public Partner() {
     }
 
@@ -76,9 +76,15 @@ public class Partner implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
-    
-    
 
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

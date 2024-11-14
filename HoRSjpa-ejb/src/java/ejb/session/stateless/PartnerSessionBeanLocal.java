@@ -4,7 +4,13 @@
  */
 package ejb.session.stateless;
 
+import entity.Guest;
 import entity.Partner;
+import entity.Reservation;
+import entity.RoomType;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -15,5 +21,27 @@ import javax.ejb.Local;
 public interface PartnerSessionBeanLocal {
  
     public Partner partnerLogIn(String username, String password);
+            
+    public List<Reservation> viewAllReservations(Long partnerId); 
+    
+    public Reservation viewReservation(Long reservationId); 
+    
+    public BigDecimal calculateTotalAmountForStay(String roomTypeName, Date checkInDate, Date checkOutDate, int requiredRooms);
+
+    public Guest findGuestByEmail(String email);
+    
+    public List<RoomType> searchAvailableRooms(Date checkInDate, Date checkOutDate, int requiredInventory); 
+    
+    public void reserveRoom(
+                    Date bookingDate,
+                    Date checkInDate,
+                    Date checkOutDate,
+                    BigDecimal totalAmount,
+                    int requiredRooms,
+                    Guest guest,
+                    RoomType selectedRoomType,
+                    Partner partner
+            );
+    
     
 }

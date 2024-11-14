@@ -65,6 +65,13 @@ public class Guest extends Visitor implements Serializable {
         this.email = email;
     }
 
+    public Guest(String firstName, String lastName, String email, String phoneNumber) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+    }
+
     public Guest() {
         
     }
