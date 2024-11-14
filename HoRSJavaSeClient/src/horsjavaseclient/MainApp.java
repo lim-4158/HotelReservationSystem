@@ -36,7 +36,11 @@ public class MainApp {
 
             System.out.println("Welcome to the Partner Portal of HoRS");
 
-            Partner partner = partnerLogIn();
+//            Partner partner = partnerLogIn();
+            PartnerWebService_Service service = new PartnerWebService_Service();
+            PartnerWebService port = service.getPartnerWebServicePort();            
+            Partner partner = port.partnerLogIn("travela", "travelpassA");
+        
             
             if (partner != null) {
                 
@@ -57,14 +61,42 @@ public class MainApp {
                             scanner.nextLine(); // Consume newline
 
                             if (response == 1) {
-                                searchRoom();
+//                                searchRoom();
+                                Scanner sc = new Scanner(System.in);
+
+                                System.out.println("*** Partner Room Search ***");
+
+                                System.out.print("Enter Check-in Date (YYYY-MM-DD): ");
+                                String checkInDate = "2024-12-12";
+
+                                System.out.print("Enter Check-out Date (YYYY-MM-DD): ");
+                                String checkOutDate = "2024-12-13";
+
+                                System.out.print("Enter required room count: ");
+                                int requiredRooms = 1;
+        
+                                // Call the web service to search for available rooms
+                                List<RoomType> availableRooms = port.searchAvailableRoom(checkInDate, checkOutDate, requiredRooms);
+
+                                if (availableRooms == null || availableRooms.isEmpty()) {
+                                    System.out.println("No rooms available for the specified dates and required inventory.");
+                                } else {
+                                    System.out.println("\nAvailable Room Types:");
+                                    for (int i = 0; i < availableRooms.size(); i++) {
+                                        RoomType roomType = availableRooms.get(i);
+                                        System.out.println((i + 1) + ". Room Type: " + roomType.getTypeName());
+                                        // Assuming the web service provides a method to calculate total amount
+                                        BigDecimal totalAmount = port.calculateTotalAmountForStay( roomType.getTypeName(), checkInDate, checkOutDate, requiredRooms);
+                                        System.out.println("   Total Amount for Stay: $" + totalAmount + "\n");
+                                    }
+                                }                                
+    
                             } else if (response == 2) {
                                 reserveRoom(partner);
                             } else if (response == 3) {
-                                viewReservationDetails();
+                                viewReservationDetails(partner.getPartnerID());
                             } else if (response == 4) {
-                                List<Reservation> reservations = viewAllReservations(partner.getPartnerID());
-                                displayReservations(reservations);
+                                List<Reservation> reservations = viewAllReservations(partner.getPartnerID());                               
                             } else if (response == 5) {
                                 System.out.println("Logging out...");
                                 break;
@@ -159,11 +191,15 @@ public class MainApp {
         System.out.println("*** Walk-in Room Reservation ***");
 
         // Step 1: Get check-in, check-out dates and required room count
+        
+        System.out.print("Enter todat's Date (YYYY-MM-DD): ");
+        String todayDate = getInputDate();
+        
         System.out.print("Enter Check-in Date (YYYY-MM-DD): ");
-        Date checkInDate = getInputDate();
+        String checkInDate = getInputDate();
 
         System.out.print("Enter Check-out Date (YYYY-MM-DD): ");
-        Date checkOutDate = getInputDate();
+        String checkOutDate = getInputDate();
 
         System.out.print("Enter required room count: ");
         int requiredRooms = 0;
@@ -237,7 +273,11 @@ public class MainApp {
             Guest existingGuest = port.findGuestByEmail(email);
             Guest guest;
             if (existingGuest == null) {
-                guest = new Guest(firstName, lastName, email, phoneNumber);
+                guest = new Guest();
+                guest.setFirstName(firstName);
+                guest.setLastName(lastName);
+                guest.setEmail(email);
+                guest.setPhoneNumber(phoneNumber);
                 System.out.println("New guest created for the reservation.");
             } else {
                 guest = existingGuest;
@@ -246,7 +286,7 @@ public class MainApp {
 
             // Persist the reservation via web service
             port.reserveRoom(
-                    LocalDate.now(),
+                    todayDate, 
                     checkInDate,
                     checkOutDate,
                     totalAmount,
@@ -264,36 +304,27 @@ public class MainApp {
         PartnerWebService_Service service = new PartnerWebService_Service(); 
         PartnerWebService port = service.getPartnerWebServicePort();
         List<Reservation> reservations = port.viewAllReservations(partnerId);
+        displayReservations(reservations);
         return reservations;
     }
     
-    public void viewReservationDetails() {
-        // Implementation to view reservation details
-        PartnerWebService_Service service = new PartnerWebService_Service();        
+    public void viewReservationDetails(Long partnerId) {
+
+        List<Reservation> reservations = viewAllReservations(partnerId); 
         Scanner sc = new Scanner(System.in);
+        
+        System.out.print("Select a reservation: ");
+        int choice = sc.nextInt(); 
+        
+        Reservation reservation = reservations.get(choice - 1); 
+        
+        PartnerWebService_Service service = new PartnerWebService_Service(); 
         PartnerWebService port = service.getPartnerWebServicePort();
-
-        System.out.print("Enter Reservation ID: ");
-        Long reservationId = 0L;
-        while (true) {
-            try {
-                reservationId = Long.parseLong(sc.nextLine().trim());
-                if (reservationId <= 0) {
-                    System.out.print("Please enter a positive number for Reservation ID: ");
-                } else {
-                    break;
-                }
-            } catch (NumberFormatException e) {
-                System.out.print("Invalid input. Please enter a valid number for Reservation ID: ");
-            }
-        }
-
-        Reservation reservation = port.viewReservation(reservationId);
-        if (reservation != null) {
-            displayReservation(reservation);
-        } else {
-            System.out.println("Reservation with ID " + reservationId + " not found.");
-        }
+        
+        Reservation r = port.viewReservation(reservation.getReservationID());
+        
+        displayReservation(r);
+        
     }
     
     public static String getInputDate() {
@@ -321,8 +352,10 @@ public class MainApp {
         }
 
         System.out.println("\n--- Your Reservations ---");
+        int i = 1; 
         for (Reservation r : reservations) {
-            displayReservation(r);
+            System.out.println(i + " : " + r.getFirstName() + " " + r.getGuest().getEmail());
+            i++; 
             System.out.println("----------------------------");
         }
     }    

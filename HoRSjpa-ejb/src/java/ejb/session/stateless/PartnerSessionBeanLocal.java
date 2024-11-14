@@ -9,7 +9,6 @@ import entity.Partner;
 import entity.Reservation;
 import entity.RoomType;
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -26,16 +25,16 @@ public interface PartnerSessionBeanLocal {
     
     public Reservation viewReservation(Long reservationId); 
     
-    public BigDecimal calculateTotalAmountForStay(String roomTypeName, Date checkInDate, Date checkOutDate, int requiredRooms);
+    public BigDecimal calculateTotalAmountForStay(String roomTypeName, String checkInDate, String checkOutDate, int requiredRooms);
 
     public Guest findGuestByEmail(String email);
     
-    public List<RoomType> searchAvailableRooms(Date checkInDate, Date checkOutDate, int requiredInventory); 
+    public List<RoomType> searchAvailableRooms(String checkInDate, String checkOutDate, int requiredInventory); 
     
     public void reserveRoom(
-                    Date bookingDate,
-                    Date checkInDate,
-                    Date checkOutDate,
+                    String bookingDate,
+                    String checkInDate,
+                    String checkOutDate,
                     BigDecimal totalAmount,
                     int requiredRooms,
                     Guest guest,

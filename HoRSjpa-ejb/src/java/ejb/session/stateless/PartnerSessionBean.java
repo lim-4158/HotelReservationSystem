@@ -10,7 +10,7 @@ import entity.Reservation;
 import entity.RoomType;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -69,7 +69,7 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
 
 
     @Override
-    public BigDecimal calculateTotalAmountForStay(String roomTypeName, Date checkInDate, Date checkOutDate, int requiredRooms) {
+    public BigDecimal calculateTotalAmountForStay(String roomTypeName, String checkInDate, String checkOutDate, int requiredRooms) {
         LocalDate checkInDateLD = convertToLocalDate(checkInDate); 
         LocalDate checkOutDateLD = convertToLocalDate(checkOutDate); 
         return guestRelationOfficerSessionBeanLocal.calculateTotalAmountForStay(roomTypeName, checkInDateLD, checkOutDateLD, requiredRooms); 
@@ -87,7 +87,8 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
     }
 
     @Override
-    public List<RoomType> searchAvailableRooms(Date checkInDate, Date checkOutDate, int requiredInventory) {
+    public List<RoomType> searchAvailableRooms(String checkInDate, String checkOutDate, int requiredInventory) {
+        System.out.println("searchAvailableRooms PartnerSessionBean triggered");
         LocalDate checkInDateLD = convertToLocalDate(checkInDate); 
         LocalDate checkOutDateLD = convertToLocalDate(checkOutDate); 
         List<RoomType> allRoomTypes = guestRelationOfficerSessionBeanLocal.getAllRoomTypes();
@@ -110,12 +111,14 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
                 availableRoomTypes.add(roomType);
             }
         }
+        
+        System.out.println("fucking hell");
 
         return availableRoomTypes;
     }
 
     @Override
-    public void reserveRoom(Date bookingDate, Date checkInDate, Date checkOutDate, BigDecimal totalAmount, int requiredRooms, Guest guest, RoomType selectedRoomType, Partner partner) {
+    public void reserveRoom(String bookingDate, String checkInDate, String checkOutDate, BigDecimal totalAmount, int requiredRooms, Guest guest, RoomType selectedRoomType, Partner partner) {
         LocalDate checkInDateLD = convertToLocalDate(checkInDate); 
         LocalDate checkOutDateLD = convertToLocalDate(checkOutDate); 
         LocalDate bookingDateLD = convertToLocalDate(bookingDate); 
@@ -147,10 +150,9 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
         
     }
     
-    public static LocalDate convertToLocalDate(Date date) {
-        return date.toInstant()
-                   .atZone(ZoneId.systemDefault())
-                   .toLocalDate();
+    public static LocalDate convertToLocalDate(String dateString) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return LocalDate.parse(dateString, formatter);
     }
 
  

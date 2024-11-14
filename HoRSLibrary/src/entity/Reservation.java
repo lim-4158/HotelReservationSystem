@@ -194,7 +194,7 @@ public class Reservation implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.Reservation[ id=" + reservationID + " ]";
+        return "entity.Reservation[ id=" + reservationID + " + guestname = " + guest.getFirstName() + " + roomtype " + roomType + " " + numberOfRooms +  "]" ;
     }
     
 }

@@ -76,6 +76,10 @@ public class Guest extends Visitor implements Serializable {
         
     }
 
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
+
     public String getUsername() {
         return username;
     }
