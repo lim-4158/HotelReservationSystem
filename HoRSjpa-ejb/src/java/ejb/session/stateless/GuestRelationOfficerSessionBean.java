@@ -21,6 +21,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.RoomStatusEnum;
 import util.RoomTypeStatusEnum;
+import util.exceptions.RoomTypeNotFoundException;
 
 /**
  *
@@ -33,7 +34,25 @@ public class GuestRelationOfficerSessionBean implements GuestRelationOfficerSess
     private EntityManager em;
     
     @Override
-    public Long createReservation(Reservation r) {
+    public RoomType retrieveRoomTypeByID(Long roomTypeId) throws RoomTypeNotFoundException {
+        try {
+            Query q = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.roomTypeID = :roomTypeId");
+            q.setParameter("roomTypeId", roomTypeId);
+            return (RoomType) q.getSingleResult(); 
+        } catch (NoResultException e) {
+            System.out.println("NO ROOM TYPE FOUND");
+            throw new RoomTypeNotFoundException("No room type found with ID: " + roomTypeId);
+        }
+    }
+    
+    @Override
+    public Long createReservation(Long roomTypeId, String guestEmail, Reservation r) throws RoomTypeNotFoundException {
+        RoomType rt = retrieveRoomTypeByID(roomTypeId);
+        Guest g = findGuestByEmail(guestEmail);
+        
+        g.getReservations().add(r);
+        rt.getReservations().add(r);
+        
         em.persist(r);
         em.flush();
         return r.getReservationID();

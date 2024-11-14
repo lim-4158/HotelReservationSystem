@@ -230,8 +230,9 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
 
     // 4. Reserve Hotel Room - implement do reservation for more than one room
     @Override
-    public Long createReservation(Long guestId, Reservation reservation) throws GuestNotFoundException {
+    public Long createReservation(Long roomTypeId, Long guestId, Reservation reservation) throws GuestNotFoundException, RoomTypeNotFoundException {
 
+        RoomType rt = retrieveRoomTypeByID(roomTypeId);
         Guest guest = retrieveGuestById(guestId);
 
         reservation.setGuest(guest);
@@ -240,6 +241,7 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
 
         // Step 2: Add the reservation to the guest's reservations list
         guest.getReservations().add(reservation);
+        rt.getReservations().add(reservation);
 
         // Step 3: Persist the reservation
         em.persist(reservation);

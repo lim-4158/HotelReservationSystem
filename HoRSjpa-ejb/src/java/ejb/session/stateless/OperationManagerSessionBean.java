@@ -205,11 +205,22 @@ public class OperationManagerSessionBean
 
     // CRUD Room Methods
     @Override
-    public Long createNewRoom(Room r) {
+    public Long createNewRoom(Long roomTypeId, Room r) throws RoomTypeNotFoundException {
+        
+        RoomType rt = retrieveRoomTypeByID(roomTypeId);
+        
+        if (rt == null) {
+            throw new IllegalArgumentException("RoomType with ID " + roomTypeId + " does not exist.");
+        }
+
+        r.setRoomType(rt);
+        rt.getRooms().add(r);
         em.persist(r);
         em.flush();
+
         return r.getRoomID();
     }
+
 
     @Override
     public void deleteRoom(Long roomID) throws RoomNotFoundException {

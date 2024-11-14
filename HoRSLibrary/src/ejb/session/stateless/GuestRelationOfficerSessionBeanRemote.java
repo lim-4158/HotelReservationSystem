@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import javax.ejb.Remote;
+import util.exceptions.RoomTypeNotFoundException;
 
 /**
  *
@@ -19,6 +20,7 @@ import javax.ejb.Remote;
 @Remote
 public interface GuestRelationOfficerSessionBeanRemote {
     // Retrieval Methods
+    public RoomType retrieveRoomTypeByID(Long roomTypeId) throws RoomTypeNotFoundException;
     public Guest findGuestByEmail(String email);
     public List<Reservation> findReservationsByGuest(Long guestId);
     public List<RoomType> getAllRoomTypes();
@@ -30,7 +32,7 @@ public interface GuestRelationOfficerSessionBeanRemote {
     public boolean isRoomTypeAvailable(RoomType roomType, LocalDate checkInDate, LocalDate checkOutDate, int requiredInventory, int totalInventory);
     
     // 2. Walk-in Reserve Room
-    public Long createReservation(Reservation r);
+    public Long createReservation(Long roomTypeId, String guestEmail, Reservation r) throws RoomTypeNotFoundException;
     
     // 3. & 4. CheckIn and CheckOut Guests
     public void checkOutGuest(Long reservationID, LocalDate date);

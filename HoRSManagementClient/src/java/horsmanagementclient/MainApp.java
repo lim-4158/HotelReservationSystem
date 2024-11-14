@@ -255,7 +255,7 @@ public class MainApp {
                 RoomType rt = operationManagerSessionBeanRemote.retrieveRoomTypeByName(roomTypeName);
                 Reservation newReservation = new Reservation(LocalDate.now(), checkInDate, checkOutDate, totalAmount, ReservationTypeEnum.WALKIN, requiredRooms, guest, rt);
                 // Persist the reservation (and guest, if new, due to cascade)
-                guestRelationOfficerSessionBeanRemote.createReservation(newReservation);
+                guestRelationOfficerSessionBeanRemote.createReservation(rt.getRoomTypeID(), guest.getEmail(), newReservation);
 
                 System.out.println("Room reserved successfully! Total amount: " + totalAmount);
             }
@@ -697,7 +697,7 @@ public class MainApp {
             room.setRoomType(roomType);
 
             // Assuming a session bean method to create room
-            Long roomID = operationManagerSessionBeanRemote.createNewRoom(room);
+            Long roomID = operationManagerSessionBeanRemote.createNewRoom(roomType.getRoomTypeID(), room);
             System.out.println("New Room created with ID: " + roomID);
 
         } catch (Exception e) {

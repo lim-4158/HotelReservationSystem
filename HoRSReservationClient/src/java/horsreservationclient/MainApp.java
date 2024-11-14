@@ -249,7 +249,7 @@ public class MainApp {
                         
                 // Call the updated createReservation method
                 
-                Long reservationId = guestSessionBeanRemote.createReservation(guestId, newReservation);
+                Long reservationId = guestSessionBeanRemote.createReservation(rt.getRoomTypeID(), guestId, newReservation);
 
                 System.out.println("Room reserved successfully! Reservation ID: " + reservationId + ", Total amount: " + totalAmount);
 
