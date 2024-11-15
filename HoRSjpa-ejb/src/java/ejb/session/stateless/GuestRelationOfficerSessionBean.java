@@ -185,7 +185,7 @@ public class GuestRelationOfficerSessionBean implements GuestRelationOfficerSess
         Query query = em.createQuery(
             "SELECT rr.nightlyRateAmount " +
             "FROM RoomRate rr " +
-            "WHERE rr.roomRateName = CONCAT(:roomTypeName, ' Published')"
+            "WHERE rr.roomRateName = CONCAT(:roomTypeName, ' Published')"            
         );
         query.setParameter("roomTypeName", roomTypeName);
 
