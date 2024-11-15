@@ -10,7 +10,6 @@ import entity.Room;
 import entity.RoomType;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -18,6 +17,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import util.RoomRateTypeEnum;
 import util.RoomStatusEnum;
 import util.exceptions.GuestNotFoundException;
 import util.exceptions.ReservationNotFoundException;
@@ -164,13 +164,15 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
         return count.intValue();
     }
 
-    public BigDecimal calculateTotalAmountForStay(String roomTypeName, LocalDate checkInDate, LocalDate checkOutDate, int requiredRooms) {
+    @Override
+    public BigDecimal calculateTotalAmountForStay(String roomTypeName, LocalDate checkInDate, LocalDate checkOutDate, int requiredRooms) throws RoomTypeNotFoundException {
         BigDecimal totalAmount = BigDecimal.ZERO;
 
         // Loop from checkInDate to the day before checkOutDate
         LocalDate currentDate = checkInDate;
+        Long roomTypeId = retrieveRoomTypeByName(roomTypeName).getRoomTypeID();
         while (currentDate.isBefore(checkOutDate)) {
-            BigDecimal dailyRate = getApplicableRateForDate(roomTypeName, currentDate);
+            BigDecimal dailyRate = getApplicableRateForDate(roomTypeId, currentDate);
 
             // Multiply daily rate by the required number of rooms for each night
             totalAmount = totalAmount.add(dailyRate.multiply(BigDecimal.valueOf(requiredRooms)));
@@ -183,31 +185,38 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
     }
 
     // Helper method to determine the applicable rate for a specific date
-    private BigDecimal getApplicableRateForDate(String roomTypeName, LocalDate date) {
+    private BigDecimal getApplicableRateForDate(Long roomTypeId, LocalDate date) {
         // Query for promotion rate
+        
         Query promotionRateQuery = em.createQuery(
                 "SELECT rr.nightlyRateAmount FROM RoomRate rr "
-                + "WHERE rr.roomRateName LIKE :promotionRoomTypeName "
+                + "WHERE rr.rateType = :promotionRateType "
+                + "AND rr.roomType.roomTypeID = :roomTypeId "
                 + "AND :date BETWEEN rr.startDate AND rr.endDate"
         );
-        promotionRateQuery.setParameter("promotionRoomTypeName", roomTypeName + " Promotion");
+        promotionRateQuery.setParameter("promotionRateType", RoomRateTypeEnum.PROMOTION);
+        promotionRateQuery.setParameter("roomTypeId", roomTypeId);
         promotionRateQuery.setParameter("date", date);
 
         // Query for peak rate
         Query peakRateQuery = em.createQuery(
                 "SELECT rr.nightlyRateAmount FROM RoomRate rr "
-                + "WHERE rr.roomRateName LIKE :peakRoomTypeName "
+                + "WHERE rr.rateType = :peakRateType "
+                + "AND rr.roomType.roomTypeID = :roomTypeId "
                 + "AND :date BETWEEN rr.startDate AND rr.endDate"
         );
-        peakRateQuery.setParameter("peakRoomTypeName", roomTypeName + " Peak");
+        peakRateQuery.setParameter("peakRateType", RoomRateTypeEnum.PEAK);
+        peakRateQuery.setParameter("roomTypeId", roomTypeId);
         peakRateQuery.setParameter("date", date);
 
         // Query for normal rate
         Query normalRateQuery = em.createQuery(
                 "SELECT rr.nightlyRateAmount FROM RoomRate rr "
-                + "WHERE rr.roomRateName LIKE :normalRoomTypeName"
+                + "WHERE rr.rateType = :normalRateType "
+                + "AND rr.roomType.roomTypeID = :roomTypeId "
         );
-        normalRateQuery.setParameter("normalRoomTypeName", roomTypeName + " Normal");
+        normalRateQuery.setParameter("normalRateType", RoomRateTypeEnum.NORMAL);
+        normalRateQuery.setParameter("roomTypeId", roomTypeId);
 
         // promotion > peak > normal
         // Check if promotion rate is defined
