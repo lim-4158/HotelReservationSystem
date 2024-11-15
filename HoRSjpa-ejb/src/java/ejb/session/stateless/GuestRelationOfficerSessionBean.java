@@ -19,6 +19,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.ReservationTypeEnum;
 import util.RoomStatusEnum;
 import util.RoomTypeStatusEnum;
 import util.exceptions.RoomTypeNotFoundException;
@@ -54,15 +55,39 @@ public class GuestRelationOfficerSessionBean implements GuestRelationOfficerSess
     }
     
     @Override
-    public Long createReservation(Long roomTypeId, String guestEmail, Reservation r) throws RoomTypeNotFoundException {
-        RoomType rt = retrieveRoomTypeByID(roomTypeId);
-        Guest g = findGuestByEmail(guestEmail);
+    public Long createReservation(LocalDate bookingDate, LocalDate checkIn, LocalDate checkOut, BigDecimal totalAmount, int requiredRooms, Long roomTypeId, Guest guest, Reservation r) throws RoomTypeNotFoundException {
         
-        g.getReservations().add(r);
+        List<Guest> guests = em.createQuery("SELECT g FROM Guest g").getResultList(); 
+        for (Guest g  : guests) { 
+            System.out.println(g.getFirstName());
+        }
+        boolean isExistingGuest = false;
+        for (Guest g : guests) {
+            if (g.getFirstName().equals(guest.getFirstName()) && g.getEmail().equals(guest.getEmail())) {
+                isExistingGuest = true;
+                //do i need persist here?
+                //guest.getReservations().add(r);
+            }
+        }
+        if (!isExistingGuest) {
+            em.persist(guest);
+            em.flush();
+//            guest.getReservations().add(r);
+        } 
+        
+        RoomType rt = em.find(RoomType.class, roomTypeId); 
+        
+        Reservation reservation = new Reservation(bookingDate, checkIn, checkOut, totalAmount, ReservationTypeEnum.WALKIN, requiredRooms, guest, rt); 
+        em.persist(r);
+                
+        
+        guest.getReservations().add(r);
         rt.getReservations().add(r);
         
-        em.persist(r);
-        em.flush();
+        System.out.println("OKKKKKK YIPEE");
+        
+   
+        
         return r.getReservationID();
     }
     // for every single day from check in date to check out date non inclusive

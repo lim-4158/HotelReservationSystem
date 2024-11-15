@@ -246,24 +246,31 @@ public class MainApp {
                 // Step 6: Retrieve or create the Guest
                 System.out.print("Enter First Name: ");
                 String firstName = sc.nextLine().trim();
+                System.out.print("Enter Last Name: ");
+                String lastName = sc.nextLine().trim();
 
                 System.out.print("Enter Email: ");
                 String email = sc.nextLine().trim();
 
                 // Check if guest already exists
-                Guest guest = guestRelationOfficerSessionBeanRemote.findGuestByEmail(email);
-                if (guest == null) {
-                    guest = new Guest(firstName, email); // Create new guest if not found
-                    System.out.println("New guest created and will be persisted with the reservation.");
-                    guestRelationOfficerSessionBeanRemote.createGuest(guest);
+                Guest existingGuest = guestRelationOfficerSessionBeanRemote.findGuestByEmail(email);
+                Guest guest; 
+                if (existingGuest == null) {
+                    guest = new Guest(); // Create new guest if not found
+                    guest.setFirstName(firstName);
+                    guest.setLastName(lastName);
+                    guest.setEmail(email);
+                    System.out.println("New guest created with the reservation.");
                 } else {
+                    guest = existingGuest;
                     System.out.println("Existing guest found with email: " + email);
                 }
 
                 RoomType rt = operationManagerSessionBeanRemote.retrieveRoomTypeByName(roomTypeName);
+                System.out.println("retrieved room type ... ");
                 Reservation newReservation = new Reservation(LocalDate.now(), checkInDate, checkOutDate, totalAmount, ReservationTypeEnum.WALKIN, requiredRooms, guest, rt);
-                
-                guestRelationOfficerSessionBeanRemote.createReservation(rt.getRoomTypeID(), guest.getEmail(), newReservation);
+                System.out.println("creating new reservation");
+                guestRelationOfficerSessionBeanRemote.createReservation(LocalDate.now(), checkInDate, checkOutDate, totalAmount, requiredRooms, rt.getRoomTypeID(), guest, newReservation);
 
                 System.out.println("Room reserved successfully! Total amount: " + totalAmount);
             }

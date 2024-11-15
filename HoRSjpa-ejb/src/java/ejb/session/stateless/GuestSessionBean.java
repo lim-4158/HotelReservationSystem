@@ -208,7 +208,17 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
                 + "WHERE rr.roomRateName LIKE :normalRoomTypeName"
         );
         normalRateQuery.setParameter("normalRoomTypeName", roomTypeName + " Normal");
-
+        
+        
+        if (promotionRateQuery.getResultList().size() > 0) {
+            System.out.println(roomTypeName + "promo exist" + promotionRateQuery.getFirstResult());
+        }
+        if (peakRateQuery.getResultList().size() > 0) {
+            System.out.println(roomTypeName + "peak exist" + peakRateQuery.getFirstResult());
+        }
+        if (normalRateQuery.getResultList().size() > 0) {
+            System.out.println(roomTypeName + "normal exist" + normalRateQuery.getFirstResult());
+        }
         // promotion > peak > normal
         // Check if promotion rate is defined
         try {

@@ -107,7 +107,9 @@ public class PartnerWebService {
         
     @WebMethod(operationName = "findGuestByEmail")
     public Guest findGuestByEmail(@WebParam(name = "email") String email) {
-        return partnerSessionBeanLocal.findGuestByEmail(email); 
+        Guest g = partnerSessionBeanLocal.findGuestByEmail(email); 
+        g.setReservations(null);
+        return g; 
     }
      @WebMethod(operationName = "reserveRoom")
     public void reserveRoom(

@@ -124,15 +124,6 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
         LocalDate checkInDateLD = convertToLocalDate(checkInDate); 
         LocalDate checkOutDateLD = convertToLocalDate(checkOutDate); 
         LocalDate bookingDateLD = convertToLocalDate(bookingDate); 
-        Reservation reservation = new Reservation(bookingDateLD, checkInDateLD, checkOutDateLD, totalAmount, ReservationTypeEnum.PARTNER, requiredRooms, partner, selectedRoomType, guest); 
-
-        // is partner already persisted? or should i em.persist()
-        // retrieve partner reservation list and add to it 
-        List<Reservation> partnerReservations = partner.getReservations(); 
-        partnerReservations.add(reservation); 
-        partner.setReservations(partnerReservations);
-        
-        em.persist(reservation);
         
         // check if guest currently exist in database, if not, persist entity 
         // add reservation to reservation list
@@ -142,15 +133,31 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
             if (g.getLastName().equals(guest.getLastName()) && g.getEmail().equals(guest.getEmail())) {
                 isExistingGuest = true;
                 //do i need persist here?
-                guest.getReservations().add(reservation);
+//                guest.getReservations().add(reservation);
             }
         }
         if (!isExistingGuest) {
             em.persist(guest);
             em.flush();
-            guest.getReservations().add(reservation);
+//            guest.getReservations().add(reservation);
         }
         
+        Reservation reservation = new Reservation(bookingDateLD, checkInDateLD, checkOutDateLD, totalAmount, ReservationTypeEnum.PARTNER, requiredRooms, partner, selectedRoomType, guest); 
+
+        // is partner already persisted? or should i em.persist()
+        // retrieve partner reservation list and add to it 
+        List<Reservation> partnerReservations = partner.getReservations(); 
+        partnerReservations.add(reservation); 
+        partner.setReservations(partnerReservations);
+        
+        RoomType roomytypy = em.find(RoomType.class, selectedRoomType.getRoomTypeID()); 
+        roomytypy.getReservations().add(reservation); 
+        
+        guest.getReservations().add(reservation); 
+        
+        em.persist(reservation);
+        
+
     }
     
     public static LocalDate convertToLocalDate(String dateString) {
