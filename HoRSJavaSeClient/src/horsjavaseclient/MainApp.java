@@ -274,9 +274,10 @@ public class MainApp {
             String phoneNumber = sc.nextLine().trim();
 
             // Check if guest already exists
-            Guest existingGuest = port.findGuestByEmail(email);
-            System.out.println("hello");
-            System.out.println(existingGuest);
+//            Guest existingGuest = port.findGuestByEmail(email);
+//            System.out.println("hello");
+//            System.out.println(existingGuest);
+            Guest existingGuest = null; 
             Guest guest;
             if (existingGuest == null) {
                 System.out.println("EXISTING GUEST IS NULL");
