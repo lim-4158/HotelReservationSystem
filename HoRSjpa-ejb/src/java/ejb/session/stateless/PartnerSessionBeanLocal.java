@@ -11,6 +11,7 @@ import entity.RoomType;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.ejb.Local;
+import util.exceptions.RoomTypeNotFoundException;
 
 /**
  *
@@ -25,7 +26,7 @@ public interface PartnerSessionBeanLocal {
     
     public Reservation viewReservation(Long reservationId); 
     
-    public BigDecimal calculateTotalAmountForStay(String roomTypeName, String checkInDate, String checkOutDate, int requiredRooms);
+    public BigDecimal calculateTotalAmountForStay(String roomTypeName, String checkInDate, String checkOutDate, int requiredRooms) throws RoomTypeNotFoundException;
 
     public Guest findGuestByEmail(String email);
     

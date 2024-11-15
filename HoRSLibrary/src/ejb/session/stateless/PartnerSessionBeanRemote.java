@@ -4,7 +4,9 @@
  */
 package ejb.session.stateless;
 
+import java.math.BigDecimal;
 import javax.ejb.Remote;
+import util.exceptions.RoomTypeNotFoundException;
 
 /**
  *
@@ -12,5 +14,6 @@ import javax.ejb.Remote;
  */
 @Remote
 public interface PartnerSessionBeanRemote {
-    
+    public BigDecimal calculateTotalAmountForStay(String roomTypeName, String checkInDate, String checkOutDate, int requiredRooms) throws RoomTypeNotFoundException;
+
 }

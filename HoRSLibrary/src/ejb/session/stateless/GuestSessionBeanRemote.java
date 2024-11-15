@@ -37,7 +37,7 @@ public interface GuestSessionBeanRemote {
     // 3. Search Hotel Room
     public boolean doSearchHotelRoom(RoomType roomType, LocalDate checkInDate, LocalDate checkOutDate, int requiredInventory);
     public int getReservationsForRoomType(RoomType roomType, LocalDate date);
-    public BigDecimal calculateTotalAmountForStay(String roomTypeName, LocalDate checkInDate, LocalDate checkOutDate, int requiredRooms);
+    public BigDecimal calculateTotalAmountForStay(String roomTypeName, LocalDate checkInDate, LocalDate checkOutDate, int requiredRooms) throws RoomTypeNotFoundException;
     
     // 4. Reserve Hotel Room - implement do reservation for more than one room
     public Long createReservation(Long roomTypeId, Long guestId, Reservation reservation) throws GuestNotFoundException, RoomTypeNotFoundException;  

@@ -4,14 +4,12 @@
  */
 package ejb.session.ws;
 
-import ejb.session.stateless.GuestRelationOfficerSessionBeanLocal;
 import ejb.session.stateless.PartnerSessionBeanLocal;
 import entity.Guest;
 import entity.Partner;
 import entity.Reservation;
 import entity.RoomType;
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.jws.WebService;
@@ -20,6 +18,7 @@ import javax.jws.WebParam;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import util.exceptions.RoomTypeNotFoundException;
 
 /**
  *
@@ -96,13 +95,19 @@ public class PartnerWebService {
     }
     
     @WebMethod(operationName = "calculateTotalAmountForStay")
-    public BigDecimal calculateTotalAmountForStay(
+    public BigDecimal calculateTotalAmountForStay (
             @WebParam(name = "roomTypeName") String roomTypeName, 
             @WebParam(name = "checkInDate") String checkInDate, 
             @WebParam(name = "checkOutDate") String checkOutDate, 
             @WebParam(name = "requiredRooms") int requiredRooms) {
 
-        return partnerSessionBeanLocal.calculateTotalAmountForStay(roomTypeName, checkInDate, checkOutDate, requiredRooms);
+        try {
+            return partnerSessionBeanLocal.calculateTotalAmountForStay(roomTypeName, checkInDate, checkOutDate, requiredRooms);
+        } catch (RoomTypeNotFoundException e) {
+            System.out.println(e.getMessage());
+            return new BigDecimal(0);
+        }
+        
     }    
         
     @WebMethod(operationName = "findGuestByEmail")

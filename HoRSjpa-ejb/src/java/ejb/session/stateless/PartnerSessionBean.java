@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -21,6 +20,7 @@ import javax.persistence.PersistenceContext;
 import util.ReservationTypeEnum;
 import util.RoomStatusEnum;
 import util.RoomTypeStatusEnum;
+import util.exceptions.RoomTypeNotFoundException;
 
 /**
  *
@@ -71,7 +71,7 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
 
 
     @Override
-    public BigDecimal calculateTotalAmountForStay(String roomTypeName, String checkInDate, String checkOutDate, int requiredRooms) {
+    public BigDecimal calculateTotalAmountForStay(String roomTypeName, String checkInDate, String checkOutDate, int requiredRooms) throws RoomTypeNotFoundException {
         LocalDate checkInDateLD = convertToLocalDate(checkInDate); 
         LocalDate checkOutDateLD = convertToLocalDate(checkOutDate); 
         return guestSessionBeanLocal.calculateTotalAmountForStay(roomTypeName, checkInDateLD, checkOutDateLD, requiredRooms); 
