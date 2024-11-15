@@ -300,8 +300,17 @@ public class MainApp {
             return; // Exit if no guest is found
         }
 
-        // Step 3: Retrieve all reservations associated with this guest's ID
-        List<Reservation> reservations = guestRelationOfficerSessionBeanRemote.findReservationsByGuest(guest.getGuestID());
+        // Step 3: Retrieve all reservations associated with this guest's ID (check if booked through partner) 
+        
+        List<Reservation> reservations; 
+        
+        System.out.print("Did you book with a partner? (yes/no): ");
+        String confirmation = sc.nextLine().trim();
+        if (confirmation.equalsIgnoreCase("yes")) {
+            reservations = guestRelationOfficerSessionBeanRemote.findReservationsByGuestBookWithPartner(guest.getGuestID());
+        } else {
+            reservations = guestRelationOfficerSessionBeanRemote.findReservationsByGuestSelfBook(guest.getGuestID());
+        }
 
         if (reservations.isEmpty()) {
             System.out.println("No reservations found for the provided guest.");
