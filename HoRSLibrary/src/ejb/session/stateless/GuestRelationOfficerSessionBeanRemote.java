@@ -24,6 +24,9 @@ public interface GuestRelationOfficerSessionBeanRemote {
     public Guest findGuestByEmail(String email);
     public Guest findGuestById(Long id);
     public List<Reservation> findReservationsByGuest(Long guestId);
+    public List<Reservation> findReservationsByGuestSelfBook(Long guestId);
+    public List<Reservation> findReservationsByGuestBookWithPartner(Long guestId);
+    
     public List<RoomType> getAllRoomTypes();
     
     // 1. Walk-in Search Room
