@@ -36,9 +36,13 @@ public class MainApp {
 
             System.out.println("Welcome to the Partner Portal of HoRS");
 
-            Partner partner = partnerLogIn();
-//            PartnerWebService_Service service = new PartnerWebService_Service();
-//            PartnerWebService port = service.getPartnerWebServicePort();            
+            PartnerWebService_Service service = new PartnerWebService_Service();
+            PartnerWebService port = service.getPartnerWebServicePort();  
+            System.out.print("input username (not name) : ");
+            String username = scanner.nextLine(); 
+            System.out.print("input password : ");
+            String password = scanner.nextLine();             
+            Partner partner = port.partnerLogIn(username, password);            
 //            Partner partner = port.partnerLogIn("travela", "travelpassA");
 //        
             
@@ -61,35 +65,35 @@ public class MainApp {
                             scanner.nextLine(); // Consume newline
 
                             if (response == 1) {
-//                                searchRoom();
-                                Scanner sc = new Scanner(System.in);
+                                searchRoom();
+//                                Scanner sc = new Scanner(System.in);
 
-                                System.out.println("*** Partner Room Search ***");
-
-                                System.out.print("Enter Check-in Date (YYYY-MM-DD): ");
-                                String checkInDate = "2024-12-12";
-
-                                System.out.print("Enter Check-out Date (YYYY-MM-DD): ");
-                                String checkOutDate = "2024-12-13";
-
-                                System.out.print("Enter required room count: ");
-                                int requiredRooms = 1;
-        
-                                // Call the web service to search for available rooms
-                                List<RoomType> availableRooms = port.searchAvailableRoom(checkInDate, checkOutDate, requiredRooms);
-
-                                if (availableRooms == null || availableRooms.isEmpty()) {
-                                    System.out.println("No rooms available for the specified dates and required inventory.");
-                                } else {
-                                    System.out.println("\nAvailable Room Types:");
-                                    for (int i = 0; i < availableRooms.size(); i++) {
-                                        RoomType roomType = availableRooms.get(i);
-                                        System.out.println((i + 1) + ". Room Type: " + roomType.getTypeName());
-                                        // Assuming the web service provides a method to calculate total amount
-                                        BigDecimal totalAmount = port.calculateTotalAmountForStay( roomType.getTypeName(), checkInDate, checkOutDate, requiredRooms);
-                                        System.out.println("   Total Amount for Stay: $" + totalAmount + "\n");
-                                    }
-                                }                                
+//                                System.out.println("*** Partner Room Search ***");
+//
+//                                System.out.print("Enter Check-in Date (YYYY-MM-DD): ");
+//                                String checkInDate = "2024-12-12";
+//
+//                                System.out.print("Enter Check-out Date (YYYY-MM-DD): ");
+//                                String checkOutDate = "2024-12-13";
+//
+//                                System.out.print("Enter required room count: ");
+//                                int requiredRooms = 1;
+//        
+//                                // Call the web service to search for available rooms
+//                                List<RoomType> availableRooms = port.searchAvailableRoom(checkInDate, checkOutDate, requiredRooms);
+//
+//                                if (availableRooms == null || availableRooms.isEmpty()) {
+//                                    System.out.println("No rooms available for the specified dates and required inventory.");
+//                                } else {
+//                                    System.out.println("\nAvailable Room Types:");
+//                                    for (int i = 0; i < availableRooms.size(); i++) {
+//                                        RoomType roomType = availableRooms.get(i);
+//                                        System.out.println((i + 1) + ". Room Type: " + roomType.getTypeName());
+//                                        // Assuming the web service provides a method to calculate total amount
+//                                        BigDecimal totalAmount = port.calculateTotalAmountForStay( roomType.getTypeName(), checkInDate, checkOutDate, requiredRooms);
+//                                        System.out.println("   Total Amount for Stay: $" + totalAmount + "\n");
+//                                    }
+//                                }                                
     
                             } else if (response == 2) {
                                 reserveRoom(partner);
@@ -188,11 +192,11 @@ public class MainApp {
         PartnerWebService_Service service = new PartnerWebService_Service(); 
         PartnerWebService port = service.getPartnerWebServicePort();
 
-        System.out.println("*** Walk-in Room Reservation ***");
+        System.out.println("*** Partner Room Reservation ***");
 
         // Step 1: Get check-in, check-out dates and required room count
         
-        System.out.print("Enter todat's Date (YYYY-MM-DD): ");
+        System.out.print("Enter today's Date (YYYY-MM-DD): ");
         String todayDate = getInputDate();
         
         System.out.print("Enter Check-in Date (YYYY-MM-DD): ");
