@@ -275,8 +275,11 @@ public class MainApp {
 
             // Check if guest already exists
             Guest existingGuest = port.findGuestByEmail(email);
+            System.out.println("hello");
+            System.out.println(existingGuest);
             Guest guest;
             if (existingGuest == null) {
+                System.out.println("EXISTING GUEST IS NULL");
                 guest = new Guest();
                 guest.setFirstName(firstName);
                 guest.setLastName(lastName);

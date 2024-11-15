@@ -82,8 +82,10 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
         List<Guest> guests = em.createQuery("SELECT g FROM Guest g WHERE g.email = :email", Guest.class)
                     .setParameter("email", email).getResultList(); 
         if (guests.isEmpty()) {
+            System.out.println("no guest found by email");
             return null;
         } else {
+            System.out.println("GUEST FOUDN BY EMAIL");
             return guests.get(0);
         }    
     }
