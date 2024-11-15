@@ -186,7 +186,12 @@ public class MainApp {
             System.out.println("Available Room Types:");
             for (RoomType roomType : availableRooms) {
                 System.out.println("Room Type: " + roomType.getTypeName());
-                System.out.println("Total Amount for Stay: " + guestSessionBeanRemote.calculateTotalAmountForStay(roomType.getTypeName(), checkInDate, checkOutDate, requiredRooms) + "\n");
+                try {
+                    System.out.println("Total Amount for Stay: " + guestSessionBeanRemote.calculateTotalAmountForStay(roomType.getTypeName(), checkInDate, checkOutDate, requiredRooms) + "\n");
+                } catch (RoomTypeNotFoundException e) {
+                    System.out.println(e.getMessage());
+                    continue;
+                }   
             }
         }
     }

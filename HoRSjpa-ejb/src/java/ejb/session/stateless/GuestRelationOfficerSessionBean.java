@@ -105,7 +105,7 @@ public class GuestRelationOfficerSessionBean implements GuestRelationOfficerSess
     @Override
     public List<Reservation> findReservationsByGuestSelfBook(Long guestId) { 
         Query query = em.createQuery(
-            "SELECT r FROM Reservation r WHERE r.guest.guestID = :guestId AND (r.reservationTypeEnum = :type1 OR r.reservationTypeEnum = :type2)"
+            "SELECT r FROM Reservation r WHERE r.guest.guestID = :guestId AND (r.reservationType = :type1 OR r.reservationType = :type2)"
         );
         query.setParameter("guestId", guestId);
         query.setParameter("type1", ReservationTypeEnum.ONLINE);
@@ -116,7 +116,7 @@ public class GuestRelationOfficerSessionBean implements GuestRelationOfficerSess
     @Override
     public List<Reservation> findReservationsByGuestBookWithPartner(Long guestId) {
         Query query = em.createQuery(
-            "SELECT r FROM Reservation r WHERE r.guest.guestID = :guestId AND r.reservationTypeEnum = type"
+            "SELECT r FROM Reservation r WHERE r.guest.guestID = :guestId AND r.reservationType = type"
         );
         query.setParameter("guestId", guestId);
         query.setParameter("type", ReservationTypeEnum.PARTNER);
