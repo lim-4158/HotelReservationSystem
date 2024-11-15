@@ -46,6 +46,7 @@ public class DataInitSessionBean {
         try {
             // Check if Employees already exist to avoid duplicate initialization
             TypedQuery<Long> query = em.createQuery("SELECT COUNT(e) FROM Employee e", Long.class);
+            System.out.println("COYUNT ===== " + query.getResultList());
             Long count = query.getSingleResult();
 
             if (count == 0) {

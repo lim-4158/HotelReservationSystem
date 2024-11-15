@@ -33,7 +33,7 @@ public interface GuestRelationOfficerSessionBeanRemote {
     public boolean isRoomTypeAvailable(RoomType roomType, LocalDate checkInDate, LocalDate checkOutDate, int requiredInventory, int totalInventory);
     
     // 2. Walk-in Reserve Room
-    public Long createReservation(Long roomTypeId, String guestEmail, Reservation r) throws RoomTypeNotFoundException;
+    public Long createReservation(LocalDate bookingDate, LocalDate checkIn, LocalDate checkOut, BigDecimal totalAmount, int requiredRooms, Long roomTypeId, Guest guest, Reservation r) throws RoomTypeNotFoundException;
     public Long createGuest(Guest g);
     
     // 3. & 4. CheckIn and CheckOut Guests

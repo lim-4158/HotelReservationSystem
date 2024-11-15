@@ -123,7 +123,8 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
     }
 
     // 3. Search Hotel Room
-    public boolean doSearchHotelRoom(RoomType roomType, LocalDate checkInDate, LocalDate checkOutDate, int requiredInventory) {
+    public boolean doSearchHotelRoom(RoomType roomType, LocalDate checkInDate, LocalDate checkOutDate,
+            int requiredInventory) {
         LocalDate currentDate = checkInDate.plusDays(1); // Start from the day after checkInDate
 
         int totalInventory = (int) roomType.getRooms().stream()
@@ -148,15 +149,15 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
         // Sufficient rooms are available for each day in the date range
         return true;
     }
-    // take into account start and end date of peak + promo rates -> check how they apply; at this date is there peak / promo
+    // take into account start and end date of peak + promo rates -> check how they
+    // apply; at this date is there peak / promo
 
     public int getReservationsForRoomType(RoomType roomType, LocalDate date) {
         Query query = em.createQuery(
                 "SELECT COUNT(res) "
-                + "FROM Reservation res "
-                + "WHERE res.roomType = :roomType "
-                + "AND :date BETWEEN res.checkInDate AND res.checkOutDate"
-        );
+                        + "FROM Reservation res "
+                        + "WHERE res.roomType = :roomType "
+                        + "AND :date BETWEEN res.checkInDate AND res.checkOutDate");
         query.setParameter("roomType", roomType);
         query.setParameter("date", date);
 
@@ -165,7 +166,8 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
     }
 
     @Override
-    public BigDecimal calculateTotalAmountForStay(String roomTypeName, LocalDate checkInDate, LocalDate checkOutDate, int requiredRooms) throws RoomTypeNotFoundException {
+    public BigDecimal calculateTotalAmountForStay(String roomTypeName, LocalDate checkInDate, LocalDate checkOutDate,
+            int requiredRooms) throws RoomTypeNotFoundException {
         BigDecimal totalAmount = BigDecimal.ZERO;
 
         // Loop from checkInDate to the day before checkOutDate
@@ -187,13 +189,12 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
     // Helper method to determine the applicable rate for a specific date
     private BigDecimal getApplicableRateForDate(Long roomTypeId, LocalDate date) {
         // Query for promotion rate
-        
+
         Query promotionRateQuery = em.createQuery(
                 "SELECT rr.nightlyRateAmount FROM RoomRate rr "
-                + "WHERE rr.rateType = :promotionRateType "
-                + "AND rr.roomType.roomTypeID = :roomTypeId "
-                + "AND :date BETWEEN rr.startDate AND rr.endDate"
-        );
+                        + "WHERE rr.rateType = :promotionRateType "
+                        + "AND rr.roomType.roomTypeID = :roomTypeId "
+                        + "AND :date BETWEEN rr.startDate AND rr.endDate");
         promotionRateQuery.setParameter("promotionRateType", RoomRateTypeEnum.PROMOTION);
         promotionRateQuery.setParameter("roomTypeId", roomTypeId);
         promotionRateQuery.setParameter("date", date);
@@ -201,10 +202,9 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
         // Query for peak rate
         Query peakRateQuery = em.createQuery(
                 "SELECT rr.nightlyRateAmount FROM RoomRate rr "
-                + "WHERE rr.rateType = :peakRateType "
-                + "AND rr.roomType.roomTypeID = :roomTypeId "
-                + "AND :date BETWEEN rr.startDate AND rr.endDate"
-        );
+                        + "WHERE rr.rateType = :peakRateType "
+                        + "AND rr.roomType.roomTypeID = :roomTypeId "
+                        + "AND :date BETWEEN rr.startDate AND rr.endDate");
         peakRateQuery.setParameter("peakRateType", RoomRateTypeEnum.PEAK);
         peakRateQuery.setParameter("roomTypeId", roomTypeId);
         peakRateQuery.setParameter("date", date);
@@ -212,9 +212,8 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
         // Query for normal rate
         Query normalRateQuery = em.createQuery(
                 "SELECT rr.nightlyRateAmount FROM RoomRate rr "
-                + "WHERE rr.rateType = :normalRateType "
-                + "AND rr.roomType.roomTypeID = :roomTypeId "
-        );
+                        + "WHERE rr.rateType = :normalRateType "
+                        + "AND rr.roomType.roomTypeID = :roomTypeId ");
         normalRateQuery.setParameter("normalRateType", RoomRateTypeEnum.NORMAL);
         normalRateQuery.setParameter("roomTypeId", roomTypeId);
 
@@ -239,7 +238,8 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
 
     // 4. Reserve Hotel Room - implement do reservation for more than one room
     @Override
-    public Long createReservation(Long roomTypeId, Long guestId, Reservation reservation) throws GuestNotFoundException, RoomTypeNotFoundException {
+    public Long createReservation(Long roomTypeId, Long guestId, Reservation reservation)
+            throws GuestNotFoundException, RoomTypeNotFoundException {
 
         RoomType rt = retrieveRoomTypeByID(roomTypeId);
         Guest guest = retrieveGuestById(guestId);
@@ -256,7 +256,7 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
         em.persist(reservation);
 
         // Step 4: Flush to generate the ID and return it
-        
+
         em.flush();
         return reservation.getReservationID();
 
@@ -281,8 +281,7 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
     // 6. Display List of Reservation Records
     public List<Reservation> viewAllReservations(String email) throws GuestNotFoundException {
         TypedQuery<Guest> query = em.createQuery(
-                "SELECT g FROM Guest g WHERE g.email = :email", Guest.class
-        );
+                "SELECT g FROM Guest g WHERE g.email = :email", Guest.class);
         query.setParameter("email", email);
 
         List<Guest> guests = query.getResultList();
@@ -295,7 +294,7 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
 
         Guest guest = guests.get(0);
         // Initialize the reservations to avoid lazy loading outside the session
-        guest.getReservations().size();  // Accessing size() will trigger the lazy load
+        guest.getReservations().size(); // Accessing size() will trigger the lazy load
 
         return guest.getReservations();
     }
