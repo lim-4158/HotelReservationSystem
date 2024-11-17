@@ -125,13 +125,13 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
     // 3. Search Hotel Room
     public boolean doSearchHotelRoom(RoomType roomType, LocalDate checkInDate, LocalDate checkOutDate,
             int requiredInventory) {
-        LocalDate currentDate = checkInDate.plusDays(1); // Start from the day after checkInDate
+        LocalDate currentDate = checkInDate;
 
         int totalInventory = (int) roomType.getRooms().stream()
                 .filter(room -> room.getRoomStatus() != RoomStatusEnum.DISABLED)
                 .count();
 
-        while (currentDate.isBefore(checkOutDate)) { // Exclude checkOutDate
+        while (currentDate.isBefore(checkOutDate) || currentDate.equals(checkOutDate)) { // Exclude checkOutDate
             int bookedRoomsCount = getReservationsForRoomType(roomType, currentDate);
 
             // Calculate available rooms for the current day based on roomType's inventory
@@ -154,10 +154,12 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
 
     public int getReservationsForRoomType(RoomType roomType, LocalDate date) {
         Query query = em.createQuery(
-                "SELECT COUNT(res) "
-                        + "FROM Reservation res "
-                        + "WHERE res.roomType = :roomType "
-                        + "AND :date BETWEEN res.checkInDate AND res.checkOutDate");
+            "SELECT SUM(res.numberOfRooms) " +
+            "FROM Reservation res " +
+            "WHERE res.roomType = :roomType " +
+            "AND :date > res.checkInDate " +
+            "AND :date < res.checkOutDate"
+        );
         query.setParameter("roomType", roomType);
         query.setParameter("date", date);
 

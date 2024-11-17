@@ -173,7 +173,7 @@ public class GuestRelationOfficerSessionBean implements GuestRelationOfficerSess
     public boolean isRoomTypeAvailable(RoomType roomType, LocalDate checkInDate, LocalDate checkOutDate, int requiredInventory, int totalInventory) {
         LocalDate currentDate = checkInDate;
 
-        while (currentDate.isBefore(checkOutDate)) {
+        while (currentDate.isBefore(checkOutDate) || currentDate.equals(checkOutDate)) {
             int bookedRoomsCount = getReservationsForRoomType(roomType, currentDate);
             int availableRooms = totalInventory - bookedRoomsCount;
 
@@ -193,7 +193,8 @@ public class GuestRelationOfficerSessionBean implements GuestRelationOfficerSess
             "SELECT SUM(res.numberOfRooms) " +
             "FROM Reservation res " +
             "WHERE res.roomType = :roomType " +
-            "AND :date BETWEEN res.checkInDate AND res.checkOutDate"
+            "AND :date > res.checkInDate " +
+            "AND :date < res.checkOutDate"
         );
         query.setParameter("roomType", roomType);
         query.setParameter("date", date);
