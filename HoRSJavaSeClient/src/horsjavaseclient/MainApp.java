@@ -280,7 +280,6 @@ public class MainApp {
             Guest existingGuest = null; 
             Guest guest;
             if (existingGuest == null) {
-                System.out.println("EXISTING GUEST IS NULL");
                 guest = new Guest();
                 guest.setFirstName(firstName);
                 guest.setLastName(lastName);

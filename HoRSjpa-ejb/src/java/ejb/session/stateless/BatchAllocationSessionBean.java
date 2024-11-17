@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -149,7 +150,13 @@ public class BatchAllocationSessionBean implements BatchAllocationSessionBeanRem
         System.out.println("");
       
         List<Room> rooms = rt.getRooms();
-            
+        
+        rooms = rooms.stream().filter(room -> room.getRoomStatus() != RoomStatusEnum.DISABLED).filter(room -> room.getRoomStatus() != RoomStatusEnum.UNAVAILABLE).collect(Collectors.toList()); 
+        for (Room rooom : rooms) {
+            System.out.println("--------------  IIIIIOOOOOOOO------------");
+            System.out.println(rooom.getRoomID());
+        }
+        
         boolean allocated = false;
 
         for(Room room : rooms){

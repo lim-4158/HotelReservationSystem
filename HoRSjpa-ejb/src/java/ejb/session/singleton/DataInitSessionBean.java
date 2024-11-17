@@ -35,7 +35,7 @@ import util.RoomTypeStatusEnum;
  */
 @Singleton
 @LocalBean
-@Startup
+//@Startup
 public class DataInitSessionBean {
 
     @PersistenceContext(unitName = "HoRSjpa-ejbPU")

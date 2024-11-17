@@ -28,7 +28,7 @@ import util.RoomTypeStatusEnum;
  */
 @Singleton
 @LocalBean
-//@Startup
+@Startup
 public class TestDataInitSessionBean {
 
     @PersistenceContext(unitName = "HoRSjpa-ejbPU")
@@ -61,6 +61,7 @@ public class TestDataInitSessionBean {
                 RoomType familyRoom = new RoomType("Family Room",  "", BigDecimal.ONE, "", 1L, "", RoomTypeStatusEnum.ENABLED, 3, 0L);
                 RoomType premierRoom = new RoomType("Premier Room",  "", BigDecimal.ONE, "", 1L, "", RoomTypeStatusEnum.ENABLED, 2, 0L);
                 RoomType deluxeRoom = new RoomType("Deluxe Room", "", BigDecimal.ONE, "", 1L, "", RoomTypeStatusEnum.ENABLED, 1, 0L);
+//                RoomType presidentialSuite = new RoomType("Presidential Penthouse", "", BigDecimal.ONE, "", 1L, "", RoomTypeStatusEnum.ENABLED, 6, 0L);
 
                 System.out.println("----------------------------------------------2");
 
@@ -69,6 +70,7 @@ public class TestDataInitSessionBean {
                 em.persist(familyRoom);
                 em.persist(premierRoom);
                 em.persist(deluxeRoom);
+//                em.persist(presidentialSuite);
                 em.flush();
 
                 System.out.println("----------------------------------------------3");
@@ -150,6 +152,7 @@ public class TestDataInitSessionBean {
                     familyRoom.getRooms().add(room);
                     em.persist(room);
                 }
+                
 
                 // Creating Junior Suite instances
                 for (int i = 1; i <= 5; i++) {
@@ -164,7 +167,16 @@ public class TestDataInitSessionBean {
                     grandSuite.getRooms().add(room);
                     em.persist(room);
                 }            
-
+                
+//                Room room = new Room(presidentialSuite, "8001", RoomStatusEnum.AVAILABLE); 
+//                em.persist(room);
+//
+//                Guest guest1 = new Guest("John", "Doe", "john", "12345678", "ab", "john", "password");
+//                LocalDate.of(2024,5,1);//2024-05-01.
+//                Reservation reservation1 = new Reservation(LocalDate.now(), LocalDate.of(2025,1,1), LocalDate.of(2025,1,4), ReservationTypeEnum.ONLINE, guest1, presidentialSuite, 1);
+//                
+//                em.persist(guest1);
+//                em.persist(reservation1);
 
             }
         } catch (Exception e) {

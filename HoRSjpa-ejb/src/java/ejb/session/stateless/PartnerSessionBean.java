@@ -116,8 +116,6 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
             }
         }
         
-        System.out.println("fucking hell");
-
         return availableRoomTypes;
     }
 
