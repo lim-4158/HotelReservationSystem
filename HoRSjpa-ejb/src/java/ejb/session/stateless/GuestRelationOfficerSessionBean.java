@@ -20,6 +20,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.ReservationTypeEnum;
+import util.RoomRateTypeEnum;
 import util.RoomStatusEnum;
 import util.RoomTypeStatusEnum;
 import util.exceptions.RoomTypeNotFoundException;
@@ -204,14 +205,18 @@ public class GuestRelationOfficerSessionBean implements GuestRelationOfficerSess
     }
 
     @Override
-    public BigDecimal calculateTotalAmountForStay(String roomTypeName, LocalDate checkInDate, LocalDate checkOutDate, int numberOfRooms) {
+    public BigDecimal calculateTotalAmountForStay(Long roomTypeId, LocalDate checkInDate, LocalDate checkOutDate, int numberOfRooms) {
+        
         Query query = em.createQuery(
             "SELECT rr.nightlyRateAmount " +
             "FROM RoomRate rr " +
-            "WHERE rr.roomRateName = CONCAT(:roomTypeName, ' Published')"            
+            "WHERE rr.roomType.roomTypeID = :roomTypeId" + 
+            " AND rr.rateType = :publishedRateType "         
         );
-        query.setParameter("roomTypeName", roomTypeName);
-
+        query.setParameter("publishedRateType", RoomRateTypeEnum.PUBLISHED);
+        query.setParameter("roomTypeId", roomTypeId);
+        
+        // assuming only one pbulished rate
         BigDecimal nightlyRateAmount = (BigDecimal) query.getSingleResult();
 
         long numberOfNights = ChronoUnit.DAYS.between(checkInDate, checkOutDate);

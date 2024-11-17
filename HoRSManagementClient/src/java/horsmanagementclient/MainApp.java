@@ -64,16 +64,6 @@ public class MainApp {
 
     public void runApp() {
         
-//        LocalDate startDate = LocalDate.parse("2024-11-16", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-//
-//        batchAllocationSessionBeanRemote.allocateRooms(startDate);
-//        
-//        System.out.println("PRINTING ROOM RESERVATIONS ---------->>>>>>>>>");
-//        batchAllocationSessionBeanRemote.getAllRoomReservations();
-//        
-//        System.out.println("PRINTING EXCEPTION REPORTS ---------->>>>>>>>>");
-//        batchAllocationSessionBeanRemote.getAllExceptionReports();
-        
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
@@ -186,7 +176,7 @@ public class MainApp {
             System.out.println("Available Room Types:");
             for (RoomType roomType : availableRooms) {
                 System.out.println("Room Type: " + roomType.getTypeName());
-                System.out.println("Total Amount for Stay: " + guestRelationOfficerSessionBeanRemote.calculateTotalAmountForStay(roomType.getTypeName(), checkInDate, checkOutDate, requiredRooms) + "\n");
+                System.out.println("Total Amount for Stay: " + guestRelationOfficerSessionBeanRemote.calculateTotalAmountForStay(roomType.getRoomTypeID(), checkInDate, checkOutDate, requiredRooms) + "\n");
             }
         }
     }
@@ -222,7 +212,7 @@ public class MainApp {
                     RoomType roomType = availableRooms.get(i);
                     System.out.println((i + 1) + ". Room Type: " + roomType.getTypeName());
                     System.out.println("   Total Amount for Stay: "
-                            + guestRelationOfficerSessionBeanRemote.calculateTotalAmountForStay(roomType.getTypeName(), checkInDate, checkOutDate, requiredRooms));
+                            + guestRelationOfficerSessionBeanRemote.calculateTotalAmountForStay(roomType.getRoomTypeID(), checkInDate, checkOutDate, requiredRooms));
                     System.out.println();
                 }
 
@@ -241,7 +231,7 @@ public class MainApp {
                 String roomTypeName = selectedRoomType.getTypeName();
 
                 // Step 5: Calculate total amount for the selected room type
-                BigDecimal totalAmount = guestRelationOfficerSessionBeanRemote.calculateTotalAmountForStay(roomTypeName, checkInDate, checkOutDate, requiredRooms);
+                BigDecimal totalAmount = guestRelationOfficerSessionBeanRemote.calculateTotalAmountForStay(selectedRoomType.getRoomTypeID(), checkInDate, checkOutDate, requiredRooms);
 
                 // Step 6: Retrieve or create the Guest
                 System.out.print("Enter First Name: ");

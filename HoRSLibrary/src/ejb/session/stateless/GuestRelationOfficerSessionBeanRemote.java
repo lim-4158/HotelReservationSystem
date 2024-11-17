@@ -31,7 +31,7 @@ public interface GuestRelationOfficerSessionBeanRemote {
     
     // 1. Walk-in Search Room
     public List<RoomType> searchAvailableRooms(LocalDate checkInDate, LocalDate checkOutDate, int requiredInventory);
-    public BigDecimal calculateTotalAmountForStay(String roomTypeName, LocalDate checkInDate, LocalDate checkOutDate, int numberOfRooms);
+    public BigDecimal calculateTotalAmountForStay(Long roomTypeId, LocalDate checkInDate, LocalDate checkOutDate, int numberOfRooms);   
     public int getReservationsForRoomType(RoomType roomType, LocalDate date);
     public boolean isRoomTypeAvailable(RoomType roomType, LocalDate checkInDate, LocalDate checkOutDate, int requiredInventory, int totalInventory);
     

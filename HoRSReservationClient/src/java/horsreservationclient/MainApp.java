@@ -54,7 +54,7 @@ public class MainApp {
             System.out.print("> ");
 
             response = scanner.nextInt();
-            scanner.nextLine(); // consume newline
+            scanner.nextLine();
 
             if (response == 1) {
                 
@@ -141,7 +141,7 @@ public class MainApp {
             System.out.print("> ");
 
             response = scanner.nextInt();
-            scanner.nextLine(); // consume newline
+            scanner.nextLine();
 
             if (response == 1) {
                 doSearchHotelRoom();
@@ -204,7 +204,7 @@ public class MainApp {
         try {
             System.out.println("*** Reserve Hotel Room ***");
 
-            // Step 1: Get check-in, check-out dates and required room count
+            // Get check-in, check-out dates and required room count
             System.out.print("Enter Check-in Date (YYYY-MM-DD): ");
             LocalDate checkInDate = getInputDate();
 
@@ -215,14 +215,14 @@ public class MainApp {
             int requiredRooms = sc.nextInt();
             sc.nextLine();
 
-            // Step 2: Search for available rooms
+            // Search for available rooms
             List<RoomType> availableRooms = guestRelationOfficerSessionBeanRemote.searchAvailableRooms(checkInDate, checkOutDate, requiredRooms);
 
             if (availableRooms.isEmpty()) {
                 System.out.println("No rooms available for the specified dates and required inventory.");
                 return; // Exit the method if no rooms are available
             } else {
-                // Step 3: Display available rooms with indices for selection
+                // Display available rooms with indices for selection
                 System.out.println("Available Room Types:");
                 for (int i = 0; i < availableRooms.size(); i++) {
                     RoomType roomType = availableRooms.get(i);
@@ -232,11 +232,10 @@ public class MainApp {
                     System.out.println();
                 }
 
-                // Step 4: Allow the user to select a room type
+                // Allow the user to select a room type
                 System.out.print("Select a room type by entering the number: ");
                 int choice = sc.nextInt();
                 sc.nextLine();
-                System.out.println("SELECTED CHOICE " + choice);
 
                 // Validate the choice
                 if (choice < 1 || choice > availableRooms.size()) {
@@ -253,17 +252,9 @@ public class MainApp {
                 Reservation newReservation = new Reservation(LocalDate.now(), checkInDate, checkOutDate, totalAmount, ReservationTypeEnum.ONLINE, requiredRooms, null, rt);
                 Long guestId = guest.getGuestID();
                         
-                // Call the updated createReservation method
-                
                 Long reservationId = guestSessionBeanRemote.createReservation(rt.getRoomTypeID(), guestId, newReservation);
 
                 System.out.println("Room reserved successfully! Reservation ID: " + reservationId + ", Total amount: " + totalAmount);
-
-                
-                System.out.println("NEW RESERVATION PERSISTED, ID IS " + reservationId);
-                
-
-                System.out.println("Room reserved successfully! Total amount: " + totalAmount);
             }
 
         } catch (RoomTypeNotFoundException e) {
